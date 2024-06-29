@@ -13,7 +13,7 @@ export default function ToggleIcon() {
  
 
   return (
-    <div className={style.IconContainer}>
+    <div className='w-9 h-9 rounded-full flex justify-center items-center bg-black dark:bg-sky-500'>
       {theme === 'light' && (<BsMoonStars className={style.Icon} onClick={()=>setTheme("dark")}/>) }
       {theme === 'dark' && (<FaSun className={style.Icon} onClick={()=>setTheme("light")}/>)}
     </div>

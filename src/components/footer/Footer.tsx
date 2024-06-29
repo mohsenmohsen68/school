@@ -13,7 +13,7 @@ const Map = dynamic(() => import("../Map"), {
 
 export default function Footer() {
   return (
-    <div className='container dark:bg-slate-900 bg-slate-100 w-full h-fit'>
+    <div className='container dark:bg-slate-900 bg-slate-200 w-full h-fit mb-4'>
       <div className='w-full h-full p-3 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 child:dark:text-white'>
         <div className=' p-4 '>
           <div className='font-dana-demiBold mb-4'>درباره ما</div>
@@ -28,7 +28,7 @@ export default function Footer() {
           <div className='font-dana'>
             <ul className='flex flex-col font-dana'>
               <li>
-                <Link href={"./"}>قوانین و مقررات</Link>
+                <Link href={"./rules"}>قوانین و مقررات</Link>
               </li>
               <li>
                 <Link href={"./"}>ارسال تیکت</Link>
