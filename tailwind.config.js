@@ -6,9 +6,21 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        "dana": "Dana Regular",
+        "dana-medium": "Dana Medium",
+        "dana-demiBold": "Dana DemiBold",
+        "moraba": "moraba regular",
+        "moraba-medium": "moraba medium",
+        "moraba-demiBold": "moraba demibold",
+     },
+    },
   },
-  plugins: [],
+  plugins: [function({addVariant}){
+    addVariant('child','&>*');
+    addVariant('child-hover', '&>*:hover');
+  }],
   darkMode: 'class',
 }
 

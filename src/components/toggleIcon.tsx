@@ -2,22 +2,20 @@
 import React from "react";
 import style from "./toggleIcon.module.css";
 import { useTheme } from "next-themes";
+import { BsMoonStars } from "react-icons/bs";
+import { FaSun } from "react-icons/fa";
+
 
 export default function ToggleIcon() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  console.log('theme ...',theme)
+
+ 
 
   return (
-    <div>
-      <input
-        type='checkbox'
-        id='toggle_checkbox'
-        className={style.toggle_checkbox}
-        onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-      />
-      <label htmlFor='toggle_checkbox' className={style.label}>
-        <div id='star' className={style.starContainer}></div>
-        <div className={style.moon}></div>
-      </label>
+    <div className={style.IconContainer}>
+      {theme === 'light' && (<BsMoonStars className={style.Icon} onClick={()=>setTheme("dark")}/>) }
+      {theme === 'dark' && (<FaSun className={style.Icon} onClick={()=>setTheme("light")}/>)}
     </div>
   );
 }
