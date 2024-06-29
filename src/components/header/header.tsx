@@ -3,14 +3,14 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-const ToggleIcon = dynamic(() => import("./toggleIcon"), {
+const ToggleIcon = dynamic(() => import("../toggleIcon/toggleIcon"), {
   ssr: false
 });
 
 export default function header() {
   return (
-    <div className="flex justify-center">
-<div className='container dark:bg-slate-600 bg-slate-100 flex columns-2 md:columns-3 h-20 justify-between items-center '>
+   //<div className="flex justify-center">
+<div className='container justify-self-center dark:bg-slate-600 bg-slate-100 flex columns-2 md:columns-3 h-20 justify-between items-center '>
       <div className=' dark:bg-slate-900 bg-slate-100 hidden md:flex md:w-[10%] justify-center items-center h-full'>
         <Image src='/img/LOGO.jpg' width={76} height={76} alt='logo img' />
       </div>
@@ -37,7 +37,7 @@ export default function header() {
         <ToggleIcon />
       </div>
     </div>
-    </div>
+   // </div>
     
   );
 }
