@@ -11,7 +11,7 @@ const ToggleIcon = dynamic(() => import("../toggleIcon/toggleIcon"), {
 export default function header() {
   return (
     //<div className="flex justify-center">
-    <div className='container justify-self-center dark:bg-slate-600 bg-slate-200 flex columns-2 md:columns-3 h-20 justify-between items-center '>
+    <div className='w-screen justify-self-center dark:bg-slate-600 bg-slate-200 flex columns-2 md:columns-3 h-20 justify-between items-center '>
       <div className=' dark:bg-slate-900 bg-slate-200 hidden md:flex md:w-[10%] justify-center items-center h-full'>
         <Image src='/img/logo.webp' width={90} height={90} alt='logo img' />
       </div>
