@@ -14,7 +14,7 @@ export default function rules() {
         <Header />
       </div>
       <div className='flex justify-center w-full '>
-        <div className='container mt-2 mb-2 p-4 dark:bg-slate-900 bg-slate-200 dark:text-white'>
+        <div className='container mt-2 mb-2 p-4 dark:bg-slate-700 bg-slate-200 dark:text-white'>
           <div className='font-dana-demiBold mt-2 mb-2 w-full flex justify-center dark:text-slate-100'>
             شرایط و قوانین سبزلرن
           </div>

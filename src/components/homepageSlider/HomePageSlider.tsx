@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/react";
+import "swiper/css";
 
 // Import Swiper styles
 import { Navigation, Pagination } from "swiper/modules";
@@ -16,18 +18,18 @@ import Image from "next/image";
 
 export default function HomePageSlider() {
   return (
-    <div className=''>
-      <Swiper
-        slidesPerView={1}
-        loop={true}
-        pagination={{
-          clickable: true
-        }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className={styles.mySwiper}
-      >
-        <SwiperSlide className='relative'>
+    <div className="max-w-full ">
+<Swiper
+    slidesPerView={1}
+    loop={true}
+    pagination={{
+      clickable: true
+    }}
+    navigation={true}
+    modules={[ Navigation,Pagination]}
+    className={styles.swiper}
+    >
+      <SwiperSlide className='relative'>
           <Image
             src={"/img/computer.jpg"}
             width={0}
@@ -41,7 +43,8 @@ export default function HomePageSlider() {
             آموزش مهارت های نرم افزاری و برنامه نویسی کامپیوتر{" "}
           </div>
         </SwiperSlide>
-        <SwiperSlide className='relative'>
+      <SwiperSlide>
+       
           <Image
             src={"/img/spacenights.jpg"}
             width={0}
@@ -50,31 +53,32 @@ export default function HomePageSlider() {
             style={{ width: "100%", height: "88vh" }}
             alt='caption image'
           />
-          <div className='font-dana-demiBold text-base md:text-2xl absolute top-4  right-4 md:right-48 text-gray-200 dark:text-gray-200'>
+        <div className='font-dana-demiBold text-base md:text-2xl absolute top-4  right-4 md:right-48 text-gray-200 dark:text-gray-200'>
             {" "}
             بزرگترین و مجهزترین رصد خانه شمال غرب کشور{" "}
           </div>
-        </SwiperSlide>
-        <SwiperSlide>
+        
+      </SwiperSlide>
+      <SwiperSlide className='relative'>
           <Image
             src={"/img/robotics.jpg"}
             width={0}
             height={0}
-            sizes='100vw'
-            style={{ width: "100%", height: "88vh" }}
-            alt='caption image'
+            sizes='99vw'
+            style={{ width: "100%" ,overflow:'auto', height: "88vh" }}
+            alt='caption image' 
           />
           <div className='font-dana-demiBold text-base md:text-2xl absolute top-4  right-4 md:right-48 text-gray-700 dark:text-gray-700'>
             {" "}
             برگزاری کلاس های رباتیک برای تمام سنین{" "}
           </div>
         </SwiperSlide>
-        <SwiperSlide>
+      <SwiperSlide className='relative'>
           <Image
             src={"/img/lab.jpg"}
             width={0}
             height={0}
-            sizes='100vw'
+            sizes='99vw'
             style={{ width: "100%", height: "88vh" }}
             alt='caption image'
           />
@@ -96,21 +100,22 @@ export default function HomePageSlider() {
             />
           
         </SwiperSlide>
-        <SwiperSlide>
+      <SwiperSlide className='relative'>
           <Image
             src={"/img/stars.jpg"}
             width={0}
             height={0}
-            sizes='100vw'
+            sizes='99vw'
             style={{ width: "100%", height: "88vh" }}
             alt='caption image'
           />
-          <div className='font-dana-demiBold text-base md:text-2xl absolute top-24 right-4 md:right-48 text-red0 dark:text-red0'>
+          <div className='font-dana-demiBold text-base md:text-2xl absolute top-24 right-4 md:right-48 dark:text-red0'>
             {" "}
             رصد ستارگان و سیارات در شب های نجوم{" "}
           </div>
         </SwiperSlide>
-      </Swiper>
+    </Swiper>
     </div>
+    
   );
 }

@@ -5,7 +5,7 @@ import { FaInstagram } from "react-icons/fa6";
 import { FaTelegram } from "react-icons/fa6";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-const Map = dynamic(() => import("../Map"), {
+const Map = dynamic(() => import("../MapAddress/Map"), {
     loading: () => <p>loading...</p>,
     ssr: false
 })
@@ -13,7 +13,7 @@ const Map = dynamic(() => import("../Map"), {
 
 export default function Footer() {
   return (
-    <div className=' dark:bg-slate-900 bg-slate-200 w-full h-fit'>
+    <div className=' dark:bg-slate-700 bg-slate-200 w-full h-fit'>
       <div className='w-full h-full p-3 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 child:dark:text-white'>
         <div className=' p-4 '>
           <div className='font-dana-demiBold mb-4'>درباره ما</div>
