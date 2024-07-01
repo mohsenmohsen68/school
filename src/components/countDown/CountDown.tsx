@@ -23,8 +23,8 @@ export default function CountDown() {
 
 
   return (
-    <div className='flex justify-center w-screen '>
-      <div className='container flex justify-evenly items-center p-4 shadow-md my-4 bg-slate-200 dark:bg-slate-700 text-black dark:text-white'>
+    
+      <div className=' container grid grid-cols-2 md:grid-cols-4 text-sm md:text-lg items-center p-4 shadow-md my-4 bg-slate-200 dark:bg-slate-700 text-black dark:text-white'>
         <div className="flex flex-col items-center">
             <div className="font-dana-medium"> دانش آموزان عضو </div>
         <CircularProgress size="lg" thickness={2}  determinate value={value1}>
@@ -50,6 +50,5 @@ export default function CountDown() {
         </CircularProgress>
         </div>
       </div>
-    </div>
   );
 }

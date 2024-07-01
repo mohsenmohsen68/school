@@ -3,6 +3,7 @@ import Header from "@/components/header/header";
 import Footer from "@/components/footer/Footer";
 import HomePageSlider from "@/components/homepageSlider/HomePageSlider";
 import CountDown from "@/components/countDown/CountDown";
+import Promotion from "@/components/promotionSetction/Promotion";
 
 export default function Home() {
   return (
@@ -11,11 +12,17 @@ export default function Home() {
         <Header />
       </div>
 
-     <HomePageSlider/>
+      <HomePageSlider />
+      
+      <div className='container mx-auto'>
+        <CountDown />
+      </div>
 
-     <CountDown/>
+      <div className='container mx-auto'>
+        <Promotion />
+      </div>
 
-      <div className='flex justify-center h-full'>
+      <div className='container mx-auto '>
         <Footer />
       </div>
     </div>
