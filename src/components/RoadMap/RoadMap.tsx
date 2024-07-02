@@ -30,7 +30,7 @@ export default function RoadMap(props: prop): JSX.Element {
   console.log('hhhh',boxColor)
  
   return (
-    <div className='w-40 h-40 rounded-2xl overflow-hidden bg-slate-300 '>
+    <div className='w-40 h-40 rounded-2xl overflow-hidden bg-slate-300 shadow-md'>
       <div className={`flex flex-col items-center ${boxColor} justify-evenly p-4 w-full h-full `}>
         <div className='text-4xl'>{props.icon}</div>
 

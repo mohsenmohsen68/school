@@ -11,7 +11,7 @@ import Talent from "./Talant/Talent";
 import Learning from "./Learning/Learning";
 
 export default function Promotion() {
-    const [skill, setSkill] = useState(false);
+    const [skill, setSkill] = useState(true);
     const [community, setCommunity] = useState(false);
     const [guide, setGuide] = useState(false);
     const [talent, setTalent] = useState(false);

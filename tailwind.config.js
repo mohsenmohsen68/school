@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      content: {
+        'link': 'url("/img/arrowdown.svg")',
+      },
       fontFamily: {
         "dana": "Dana Regular",
         "dana-medium": "Dana Medium",
