@@ -12,6 +12,7 @@ import { GiAstronautHelmet } from "react-icons/gi";
 import { LiaRobotSolid } from "react-icons/lia";
 import Course from "@/components/Course/Course";
 import OurHelps from "@/components/OurHelps/OurHelps";
+import HorizontalSlider from "@/components/HorizontalSlider/HorizontalSlider";
 
 
 export default function Home() {
@@ -23,7 +24,7 @@ export default function Home() {
 
       <HomePageSlider />
       
-      <div className='md:container mx-auto'>
+      <div className='container mx-auto'>
         <CountDown />
       </div>
 
@@ -39,7 +40,7 @@ export default function Home() {
         <RoadMap icon={<LiaRobotSolid/>} title="رباتیک" color="green" coursesNumber="هفت" />
       </div>
 
-      <div className='md:container mx-auto'>
+      <div className='container mx-auto'>
         <Promotion />
       </div>
 
@@ -64,6 +65,13 @@ export default function Home() {
      
       <div className='md:container mx-auto '>
         <OurHelps/>
+      </div>
+
+      <TitleBar TitleName=" محبوب ترین دوره ها " desc="پرمخاطب ترین و بهترین دوره های پژوهش سرا " color='red' />
+     
+
+      <div className='container mx-auto  '>
+        <HorizontalSlider/>
       </div>
 
       <div className='md:container mx-auto '>
