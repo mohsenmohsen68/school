@@ -11,7 +11,7 @@ import { GiMaterialsScience } from "react-icons/gi";
 import { GiAstronautHelmet } from "react-icons/gi";
 import { LiaRobotSolid } from "react-icons/lia";
 import Course from "@/components/Course/Course";
-
+import OurHelps from "@/components/OurHelps/OurHelps";
 
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
 
       <HomePageSlider />
       
-      <div className='container mx-auto'>
+      <div className='md:container mx-auto'>
         <CountDown />
       </div>
 
@@ -32,20 +32,22 @@ export default function Home() {
     <TitleBar TitleName="نقشه راه ها" desc="نقشه های راه برای شروع اصولی یادگیری" color="green" />
 
     
-      <div className=" container mx-auto grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 place-items-center gap-2 ">
+      <div className=" md:container mx-auto grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 place-items-center gap-2 ">
         <RoadMap icon={<HiOutlineDesktopComputer/>} title="برنامه نویسی" color="yellow" coursesNumber="دوازده" />
         <RoadMap icon={<GiMaterialsScience />} title="علوم پایه" color="blue" coursesNumber="بیست و دو" />
         <RoadMap icon={<GiAstronautHelmet/>} title="نجوم" color="red" coursesNumber="هیجده" />
         <RoadMap icon={<LiaRobotSolid/>} title="رباتیک" color="green" coursesNumber="هفت" />
       </div>
 
-      <div className='container mx-auto'>
+      <div className='md:container mx-auto'>
         <Promotion />
       </div>
 
       <TitleBar TitleName="آخرین دوره های پژوهش سرا" desc="سکوی پرتاپ شما به سمت موفقیت" color='blue' />
     
-    <div className=" container mx-auto grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-4 place-items-center py-4">
+    <div className=" md:container mx-auto grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center py-4">
+      <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
+      <Course title='نجوم مقدماتی' img="/img/stars.jpg" teacherName='محسن ' teacherLastName="موحدی نژاد" rate={5} studentsNumber={402} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={2000000} discount={70}/>
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
@@ -56,11 +58,15 @@ export default function Home() {
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
       <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
-      <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
-      <Course title='رباتیک مقدماتی' img="/img/robotics.jpg" teacherName='هادی ' teacherLastName="حسینی" rate={4} studentsNumber={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." price={400000} discount={40}/>
-      </div>  
+      </div> 
 
-      <div className='container mx-auto '>
+      <TitleBar TitleName=" ما چه کمکی میتونیم بهت بکنیم " desc="از شروع مسیر کنارتیم و نمیذاریم آب تو دلت تکون بخوره" color='yellow' />
+     
+      <div className='md:container mx-auto '>
+        <OurHelps/>
+      </div>
+
+      <div className='md:container mx-auto '>
         <Footer />
       </div>
     </div>

@@ -22,7 +22,7 @@ const TitleBar = (props: Props): JSX.Element => {
   console.log(titleColor)
   return (
     <div className='flex justify-center'>
-      <div className=' container w-full h-fit px-9  my-9 '>
+      <div className=' md:container w-full h-fit px-9  my-9 '>
         <div className=' flex  '>
           <div className={`${titleColor} w-4 h-4 ml-4  `}></div>
           <div className='font-moraba-demiBold'>{props.TitleName}</div>
