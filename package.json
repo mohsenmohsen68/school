@@ -13,8 +13,10 @@
     "@alptugidin/react-circular-progress-bar": "^1.1.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.16.0",
     "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.15.21",
+    "@types/uuid": "^10.0.0",
     "keen-slider": "^6.8.6",
     "leaflet": "^1.9.4",
     "next": "14.2.4",
@@ -27,7 +29,8 @@
     "react-leaflet": "^4.2.1",
     "react-type-animation": "^3.2.0",
     "swiper": "^11.1.4",
-    "use-count-up": "^3.0.1"
+    "use-count-up": "^3.0.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.12",

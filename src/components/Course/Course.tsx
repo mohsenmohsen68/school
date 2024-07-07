@@ -19,7 +19,7 @@ type prop = {
 
 const Course = (props: prop): JSX.Element => {
   return (
-    <div className='flex flex-col w-60 h-96 bg-slate-200 dark:bg-slate-700 shadow-lg rounded-2xl overflow-hidden'>
+    <div className='flex flex-col w-60 h-96 bg-slate-200 dark:bg-slate-700 shadow-lg rounded-2xl overflow-hidden justify-self-center mx-auto'>
       <div className='relative h-2/5'>
         <Image
           src={props.img}

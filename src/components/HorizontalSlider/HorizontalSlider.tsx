@@ -34,7 +34,7 @@ export default function HorizontalSlider() {
         autoplay={{
              delay: 2500,
              disableOnInteraction: false,
-             pauseOnMouseEnter: true,
+            //  pauseOnMouseEnter: true,
           }}
         pagination={{
           clickable: true,
@@ -47,11 +47,11 @@ export default function HorizontalSlider() {
             0:{
                 slidesPerView: 1,
             },
-                454: {
+                680: {
                     slidesPerView: 2,
                 },
                 // when window width is <= 768px
-                722:{
+                770:{
                     slidesPerView:3 
                 },
                 1032: {
