@@ -15,7 +15,7 @@ const Footer = dynamic(() => import("@/components/footer/Footer"), {
   ssr: false
 });
 
-export default function page() {
+export default function Page() {
 
 const [pageNum, setPageNum] = useState<number>(1)
 const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -82,7 +82,7 @@ const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
 
             <Pagination 
             count={Math.floor(elements.length / 12) + 1} 
-            page={1} 
+            page={pageNum} 
             onChange={handleChange}
             renderItem={(item) => (
             <PaginationItem
