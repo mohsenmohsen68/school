@@ -13,6 +13,7 @@ import { LiaRobotSolid } from "react-icons/lia";
 import Course from "@/components/Course/Course";
 import OurHelps from "@/components/OurHelps/OurHelps";
 import HorizontalSlider from "@/components/HorizontalSlider/HorizontalSlider";
+import Comment from "@/components/Comment/Comment";
 
 
 export default function Home() {
@@ -73,6 +74,12 @@ export default function Home() {
       <div className='container mx-auto  '>
         <HorizontalSlider/>
       </div>
+
+      <div className='container mx-auto  '>
+        <Comment/>
+      </div>
+
+
 
       <div className='md:container mx-auto '>
         <Footer />
