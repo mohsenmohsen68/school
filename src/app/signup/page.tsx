@@ -20,6 +20,20 @@ interface userData {
 }
 
 export default function Page() {
+  const clickHandler =( values:userData) => {
+    const userBody = {
+      name: values.firstName,
+      lastname: values.lastName,
+      codemelli: values.userCode,
+      school: values.school,
+      paye: values.grade,
+      age: values.age,
+      username: values.userName,
+      password: values.password,
+      phoneNumber: values.phoneNumber
+    };
+    console.log(userBody);  
+  };
   return (
     <div className='w-full h-dvh flex justify-center items-center flex-col font-moraba'>
       <div className='flex flex-col justify-center items-center'>
@@ -44,6 +58,7 @@ export default function Page() {
             password2: "",
             img: ""
           }}
+          
           validate={(values) => {
             const errors: userData = {
               firstName: "",
@@ -126,24 +141,42 @@ export default function Page() {
             if (values.password2 !== values.password) {
               errors.password2 = "تکرار رمز عبور اشتباه است.";
             }
-            return errors;
+            if(errors.firstName === "" && errors.lastName === "" 
+           && errors.userName === ""
+           && errors.userCode === ""
+           && errors.fathersName === ""
+           && errors.school === ""
+           && errors.age === ""
+           && errors.grade === ""
+           && errors.phoneNumber === ""
+           && errors.password === ""
+           && errors.password2 === ""
+           && errors.img === ""){
+            return {}
+           }
+           else{
+             return errors;
+           }
           }}
-          onSubmit={(values, errors) => {
-            console.log("values", values);
-            console.log("errors", errors);
-          }}
+          onSubmit={(values, {setSubmitting} ) => {
+            setTimeout(()=>{
+              alert(JSON.stringify(values,null,2))
+              setSubmitting(false)
+            },4000)
+            console.log('hi');
+           }}
         >
           {({
             values,
+            errors,
+            touched,
             handleSubmit,
             handleChange,
             handleBlur,
             isSubmitting,
-            errors,
-            touched
+            submitForm
           }) => (
             <form
-              action=''
               onSubmit={handleSubmit}
               className='grid grid-cols-1 xs:grid-cols-2 gap-2 text-slate-800'
             >
@@ -358,11 +391,7 @@ export default function Page() {
                 <input type='checkbox' name='' id='' className='mx-2' />
                 مرا به خاطر بسپار
               </div>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                className='rounded-md bg-green-600 hover:bg-green-400 p-2 text-xl'
-              >
+              <button type="submit" disabled={isSubmitting}  className='rounded-md bg-green-600 hover:bg-green-400 p-2 text-xl'>
                 ثبت نام
               </button>
             </form>
