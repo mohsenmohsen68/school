@@ -1,12 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { FaUsers } from "react-icons/fa";
 import { GiReturnArrow } from "react-icons/gi";
-import { FaRegCommentDots } from "react-icons/fa6";
-import { GrArticle } from "react-icons/gr";
-import { BsFileEarmarkPost } from "react-icons/bs";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import CmsSidebar from "../cmsSidebar/CmsSidebar";
+
 const SideBarIcon = dynamic(() => import("../sideBarIcon/SideBarIcon"), {
   ssr: false
 });
@@ -44,17 +41,9 @@ export default function TeacherCMS() {
         </div>
       </div>
 
-      <div
-        id='sidebar'
-        className='h-dvh w-20 bg-slate-200 dark:bg-slate-700 flex flex-col overflow-hidden justify-start items-center child:text-3xl child:my-2'
-      >
-        <SideBarIcon title='users' icon={<FaUsers/>} />
-        <SideBarIcon title='articles' icon={<GrArticle/>} />
-        <SideBarIcon title='comments' icon={<FaRegCommentDots/>} />
-        <SideBarIcon title='posts' icon={<BsFileEarmarkPost/>} />
-        <SideBarIcon title='courses' icon={<FaChalkboardTeacher/>} />
+     
+      <CmsSidebar/> 
         
       </div>
-    </div>
   );
 }

@@ -1,70 +1,65 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   icon: JSX.Element;
   title: string;
+  showSubMenu:boolean,
+  onHandleEvent:()=>void
 };
 
 export default function SideBarIcon(props: Props): JSX.Element {
-  const [showUsers, setShowUsers] = useState<boolean>(false);
-  const [showCourses, setShowCourses] = useState<boolean>(false);
-  const [showArticles, setShowArticles] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState<boolean>(false);
-  const [showPosts, setShowPosts] = useState<boolean>(false);
+ 
+
+  //   setShowUsers(false);
+  //   setShowArticles(false);
+  //   setShowCourses(false);
+  //   setShowPosts(false);
+  //   setShowComments(false);
+  // };
 
   const clickHandler = () => {
+    console.log(props.title)
     switch (props.title) {
       case "users": {
-        setShowUsers(!showUsers);
-        setShowArticles(false);
-        setShowCourses(false);
-        setShowPosts(false);
-        setShowComments(false);
+      //  clearWindows();
+        // setShowUsers(true);
+        console.log('ddd')
       }
       case "comments": {
-        setShowUsers(false);
-        setShowArticles(false);
-        setShowCourses(false);
-        setShowPosts(false);
-        setShowComments(!showComments);
+      //  clearWindows();
+        // setShowComments(true);
       }
       case "posts": {
-        setShowUsers(false);
-        setShowArticles(false);
-        setShowCourses(false);
-        setShowPosts(!showPosts);
-        setShowComments(false);
+       // clearWindows();
+        // setShowPosts(true);
       }
       case "courses": {
-        setShowUsers(false);
-        setShowArticles(false);
-        setShowCourses(!showCourses);
-        setShowPosts(false);
-        setShowComments(false);
+       // clearWindows();
+        // setShowCourses(true);
       }
       case "articles": {
-        setShowUsers(false);
-        setShowArticles(!showArticles);
-        setShowCourses(false);
-        setShowPosts(false);
-        setShowComments(false);
+       // clearWindows();
+        // setShowArticles(true);
       }
       default: {
       }
     }
+    // console.log(showUsers,showPosts,showComments,showPosts,showCourses,showArticles)
   };
-
+  //console.log(showUsers,showPosts,showComments,showPosts,showCourses,showArticles)
   return (
     <div>
-      <div onClick={clickHandler} className="bg-red-500">{props.icon}</div>
-
-      {showUsers && <div>a</div>}
-      {showPosts && <div>v</div>}
-      {showComments && <div>x</div>}
-      {showArticles && <div>z</div>}
-      {showPosts && <div>q</div>}
-      {showCourses && <div>d</div>}
+      <div onClick={props.onHandleEvent} className=''>
+        {props.icon}
+      </div>
+     
+      {props.showSubMenu && props.title === 'users' && <div>a</div>}
+      {props.showSubMenu && props.title === 'courses' && <div>b</div>}
+      {props.showSubMenu && props.title === 'articles' && <div>c</div>}
+      {props.showSubMenu && props.title === 'posts' && <div>p</div>}
+      {props.showSubMenu && props.title === 'comments' && <div>cm</div>}
+      
     </div>
   );
 }
