@@ -17,7 +17,7 @@ const UserStatusIcon = dynamic(
   }
 );
 
-export default function TeacherCMS() {
+export default function CMS() {
   return (
     <div>
       <div
@@ -42,7 +42,9 @@ export default function TeacherCMS() {
       </div>
 
      
-      <CmsSidebar/> 
+      <CmsSidebar cmsType={'teacher'} /> 
+      {/* <CmsSidebar cmsType={'admin'} />  */}
+      {/* <CmsSidebar cmsType={'student'} />  */}
         
       </div>
   );
