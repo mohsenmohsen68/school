@@ -6,7 +6,7 @@ import "swiper/react";
 import "swiper/css";
 
 // Import Swiper styles
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { TypeAnimation } from "react-type-animation";
 // import Swiper and modules styles
 
@@ -21,12 +21,13 @@ export default function HomePageSlider() {
     <div className="max-w-full ">
 <Swiper
     slidesPerView={1}
+    autoplay={{delay:7000}}
     loop={true}
     pagination={{
       clickable: true
     }}
     navigation={true}
-    modules={[ Navigation,Pagination]}
+    modules={[ Navigation,Pagination,Autoplay]}
     className={styles.swiper}
     >
       <SwiperSlide className='relative'>
