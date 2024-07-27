@@ -67,7 +67,9 @@ const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
   ]
   return (
     <div className='bg-slate-50 dark:bg-slate-600 dark:text-white'>
+      <div className=' flex justify-center h-full sticky top-0 z-50'>
       <Header />
+      </div>
 
       <div>
         <div className='md:container mx-auto '>

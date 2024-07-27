@@ -10,7 +10,7 @@ const Footer = dynamic(() => import("@/components/footer/Footer"), {
 export default function page() {
   return (
     <div  className='bg-slate-50 dark:bg-slate-600 dark:text-white'>
-      <div className="flex justify-center w-full ">
+      <div className=' flex justify-center h-full sticky top-0 z-50'>
       <Header/>
 
       </div>
