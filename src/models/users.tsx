@@ -41,8 +41,16 @@ const schema = new mongoose.Schema({
     userName:{
         type:String,
         required:true,
-    }  
+    } ,
+    role:{
+        type:String,
+        required:true,
+        default:"STUDENT"
+    } ,
+    refreshToken:{
+        type:String,
+    }
 })
 
-const userModel =  mongoose.model('User',schema) || mongoose.models.User
+const userModel =    mongoose.models.User || mongoose.model('User',schema) 
 export default userModel;

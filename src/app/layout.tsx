@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import AOSInit from "@/utils/AOSInit";
 import store from "./../../Redux/Store";
 import ScrollToTop from "@/utils/scrollToTop";
+require('dotenv').config()
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ export default function RootLayout({
           <AOSInit />
           {children}
         </ThemeProvider>
-        <div className="fixed bottom-4 left-4 rounded-full w-12 h-12 flex justify-center items-center p-2 z-50 shadow-2xl hover:cursor-pointer shadow-black dark:shadow-white'">
+        <div className="fixed bottom-4 left-4  ">
           <ScrollToTop />
         </div>
         {/* </Provider> */}
