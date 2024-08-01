@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from './../../../../Redux/Store'
+import ListUsers from '@/components/AdminContentBox/GetUsers/ListUsers'
 
 export default function AdminBox() {
 
@@ -13,7 +14,7 @@ console.log("action : ", action)
 {/* user menu */}
       {action === "LIST_USER" && (
           <div>
-            list user
+            <ListUsers/>
           </div>
       )}
       {action === "ADD_USER" && (
