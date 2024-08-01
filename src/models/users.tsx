@@ -3,11 +3,11 @@ import mongoose from 'mongoose'
 const schema = new mongoose.Schema({
     firstName:{
         type:String,
-        minlength:4
+        minlength:3,
     },
     lastName:{
         type:String,
-        minlength:4
+        minlength:3,
     },
     userCode:{
         type:String,
@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
     },
     fathersName:{
         type:String,
-        minlength:4,
+        minlength:3,
     },
     school:{
         type:String,

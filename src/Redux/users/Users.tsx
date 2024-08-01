@@ -1,4 +1,4 @@
-import { AsyncThunk , createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export const getUsersFromServer = createAsyncThunk(
     "users/getUsersFromServer",
@@ -11,21 +11,19 @@ export const getUsersFromServer = createAsyncThunk(
 const slice = createSlice({
     name:'users',
     initialState:[], 
-    reducers:{
-
-    },
+    reducers:{},
 
     extraReducers: builder=>{
         builder.addCase(getUsersFromServer.fulfilled, (state,action)=>{
             console.log(state)
             console.log(action)
+            
         })
     }
 })
 
 
-export default slice;
-
+export default slice.reducer;
 // interface User {
 //     firstName: "",
 //     lastName: "",

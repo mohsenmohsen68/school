@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Provider } from "react-redux";
+import { Providers } from "@/Redux/Providers";
 import { ThemeProvider } from "next-themes";
 import AOSInit from "@/utils/AOSInit";
-import store from "./../../Redux/Store";
 import ScrollToTop from "@/utils/scrollToTop";
 require('dotenv').config()
 
@@ -22,9 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+        <Providers>
     <html lang='en' dir='rtl'>
       <body className={`${inter.className} relative`}>
-        {/* <Provider store={store}> */}
         <ThemeProvider attribute='class'>
           <AOSInit />
           {children}
@@ -32,8 +31,8 @@ export default function RootLayout({
         <div className="fixed bottom-4 left-4  ">
           <ScrollToTop />
         </div>
-        {/* </Provider> */}
       </body>
     </html>
+        </Providers>
   );
 }
