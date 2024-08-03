@@ -3,36 +3,47 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Formik } from "formik";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/Redux/Store";
+import { createANewUser } from "@/Redux/users/Users";
 
 interface userData {
   firstName: string;
   lastName: string;
-  userName: string;
   userCode: string;
-  fathersName: string;
   school: string;
-  age: string;
+  fathersName: string;
   grade: string;
+  age: string;
+  userName: string;
   password: string;
   password2: string;
-  img: string;
   phoneNumber: string;
+  img: string;
+  // role:string;
 }
 
 export default function Page() {
+
+const dispatch = useDispatch<AppDispatch>()
+
   const clickHandler =( values:userData) => {
     const userBody = {
-      name: values.firstName,
-      lastname: values.lastName,
-      codemelli: values.userCode,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      userCode: values.userCode,
       school: values.school,
-      paye: values.grade,
+      fathersName: values.fathersName,
+      grade: values.grade,
       age: values.age,
-      username: values.userName,
+      userName: values.userName,
       password: values.password,
-      phoneNumber: values.phoneNumber
+      phoneNumber: values.phoneNumber,
+      img:"",
+      role:"student"
     };
     console.log(userBody);  
+    dispatch(createANewUser("/api/user",userBody))
   };
   return (
     <div className='w-full h-dvh flex justify-center items-center flex-col font-moraba'>
@@ -158,12 +169,24 @@ export default function Page() {
              return errors;
            }
           }}
-          onSubmit={(values, {setSubmitting} ) => {
-            setTimeout(()=>{
-              alert(JSON.stringify(values,null,2))
-              setSubmitting(false)
-            },4000)
-            console.log('hi');
+          onSubmit={async(values, {setSubmitting} ) => {
+            const userBody = {
+              firstName: values.firstName,
+              lastName: values.lastName,
+              userCode: values.userCode,
+              school: values.school,
+              fathersName: values.fathersName,
+              grade: values.grade,
+              age: values.age,
+              userName: values.userName,
+              password: values.password,
+              phoneNumber: values.phoneNumber,
+              img:"",
+              role:"student"
+            };
+            // console.log(userBody);  
+            const a =await dispatch(createANewUser(userBody)).unwrap()
+            console.log("resultttt : ", a)
            }}
         >
           {({

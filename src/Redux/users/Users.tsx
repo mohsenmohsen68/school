@@ -1,9 +1,9 @@
+import { POST } from "@/app/api/user/route"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
+
 interface people {
-    __v: number,
-_id: string,
-age: number,
+age: string,
 fathersName: string,
 firstName: string,
 grade:string,
@@ -14,15 +14,27 @@ phoneNumber:string,
 role: string,
 school: string,
 userCode: string,
-userName: string,
+userName: string,    
 }
 
 export const getUsersFromServer = createAsyncThunk(
     "users/getUsersFromServer",
     async (url:string)=>{
-    console.log("url : ",url)
     return fetch(url).then(res=>res.json()).then(data=>data)
 })
+
+export const createANewUser = createAsyncThunk(
+    "users/createANewUser", 
+    async (userBody)=>{
+        console.log("nnnn : ", userBody)
+       return fetch("/api/user",{
+        method : "POST",
+        body: JSON.stringify(userBody),
+        headers: {
+            "Content_Type": "application/json"
+        }
+       }).then(res => res.json()).then(data=>data)
+    })
 
 const slice = createSlice({
     name:'users',
@@ -35,6 +47,11 @@ const slice = createSlice({
             // console.log("actions : ",action.payload.data)
             state.push(...action.payload.data) 
         })
+        builder.addCase(createANewUser.fulfilled, (state,action)=>{
+          console.log("state : ",state)
+          console.log("action : ",action)  
+        })
+        
     }
 })
 
