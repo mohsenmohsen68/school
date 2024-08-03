@@ -6,6 +6,9 @@ import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/Redux/Store";
 import { createANewUser } from "@/Redux/users/Users";
+import Swal from "sweetalert2"
+import { useRouter } from "next/navigation";
+import style from './signup.module.css'
 
 interface userData {
   firstName: string;
@@ -24,7 +27,7 @@ interface userData {
 }
 
 export default function Page() {
-
+const routes = useRouter()
 const dispatch = useDispatch<AppDispatch>()
 
   const clickHandler =( values:userData) => {
@@ -185,8 +188,56 @@ const dispatch = useDispatch<AppDispatch>()
               role:"student"
             };
             // console.log(userBody);  
-            const a =await dispatch(createANewUser(userBody)).unwrap()
-            console.log("resultttt : ", a)
+            const result =await dispatch(createANewUser(userBody)).unwrap()
+            console.log("resultttt : ", result)
+            if(result.status === 200){
+               Swal.fire({
+                 toast: true,
+                 customClass:{
+                  title: "font-moraba",
+                  htmlContainer: "bg-slate-200 dark:bg-slate-700",
+                  actions: style.action,
+                  confirmButton: "font-moraba",
+                  cancelButton: "font-moraba",
+                 },
+                 position: "bottom-end",
+                 title:' شما با موفقیت ثبت نام کردید ...',
+                 icon:'success',
+                 showConfirmButton:true,
+                 confirmButtonText:'ورود',
+                 confirmButtonColor:'green',
+               }).then(result => {
+                  if(result.isConfirmed === true){
+                    routes.push('/login')
+                  }
+                  console.log(result)
+               })
+            }else if(result.status === 409){
+              Swal.fire({
+                 toast: true,
+                 customClass:{
+                  title: "font-moraba",
+                  // actions: style.action,
+                  confirmButton: "font-moraba",
+                  cancelButton: "font-moraba",
+                 },
+                 position: "bottom-end",
+                 title:' کاربری با این مشخصات قبلا ثبت نام کرده است ...',
+                 icon:'error',
+                 showConfirmButton:true,
+                 confirmButtonText:'ورود',
+                 confirmButtonColor: 'green',
+                 showCancelButton:true,
+                 cancelButtonText:"تلاش مجدد",
+                 cancelButtonColor: 'red'
+
+               }).then(result => {
+                  if(result.isConfirmed === true){
+                    routes.push('/login')
+                  }
+                  // if(result.isDismissed ) 
+               })
+            }
            }}
         >
           {({
