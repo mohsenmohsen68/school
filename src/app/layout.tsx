@@ -5,7 +5,7 @@ import { Providers } from "@/Redux/Providers";
 import { ThemeProvider } from "next-themes";
 import AOSInit from "@/utils/AOSInit";
 import ScrollToTop from "@/utils/scrollToTop";
-require('dotenv').config()
+require("dotenv").config();
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,18 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-        <Providers>
-    <html lang='en' dir='rtl'>
-      <body className={`${inter.className} relative`}>
-        <ThemeProvider attribute='class'>
-          <AOSInit />
-          {children}
-        </ThemeProvider>
-        <div className="fixed bottom-4 left-4  ">
-          <ScrollToTop />
-        </div>
-      </body>
-    </html>
-        </Providers>
+    <Providers>
+      <html lang='en' dir='rtl'>
+        <body className={`${inter.className} relative`}>
+          <ThemeProvider attribute='class'>
+            <AOSInit />
+            {children}
+          </ThemeProvider>
+          <div className='fixed bottom-4 left-4  '>
+            <ScrollToTop />
+          </div>
+        </body>
+      </html>
+    </Providers>
   );
 }

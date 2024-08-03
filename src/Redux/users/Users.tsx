@@ -1,11 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
+interface people {
+    __v: number,
+_id: string,
+age: number,
+fathersName: string,
+firstName: string,
+grade:string,
+img: string,
+lastName:string,
+password: string,
+phoneNumber:string,
+role: string,
+school: string,
+userCode: string,
+userName: string,
+}
+
 export const getUsersFromServer = createAsyncThunk(
     "users/getUsersFromServer",
     async (url:string)=>{
-    console.log(url)
-    return fetch(url).then(res=>res.json)
-    .then(data=>data)
+    console.log("url : ",url)
+    return fetch(url).then(res=>res.json()).then(data=>data)
 })
 
 const slice = createSlice({
@@ -14,10 +30,10 @@ const slice = createSlice({
     reducers:{},
 
     extraReducers: builder=>{
-        builder.addCase(getUsersFromServer.fulfilled, (state,action)=>{
-            console.log(state)
-            console.log(action)
-            
+        builder.addCase(getUsersFromServer.fulfilled, (state:people[],action)=>{
+            // console.log("state : ",state)
+            // console.log("actions : ",action.payload.data)
+            state.push(...action.payload.data) 
         })
     }
 })
