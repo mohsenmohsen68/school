@@ -43,9 +43,9 @@ const slice = createSlice({
 
     extraReducers: builder=>{
         builder.addCase(getUsersFromServer.fulfilled, (state:people[],action)=>{
-            // console.log("state : ",state)
-            // console.log("actions : ",action.payload.data)
-            state.push(...action.payload.data) 
+            console.log('action data : ',action.payload.data)
+            return action.payload.data
+            // state.concat(...action.payload.data); 
         })
         builder.addCase(createANewUser.fulfilled, (state,action)=>{
           console.log("state : ",state)
