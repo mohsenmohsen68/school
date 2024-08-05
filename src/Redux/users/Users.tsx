@@ -2,7 +2,7 @@ import { POST } from "@/app/api/user/route"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 
-interface people {
+export interface people {
 age: string,
 fathersName: string,
 firstName: string,

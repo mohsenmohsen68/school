@@ -16,6 +16,22 @@ export async function GET(){
     }
     
 }
+
+export async function DELETE(req:Request){
+    connectToDB()
+    const myUrl = new URL(req.url)
+    const userID = myUrl.searchParams.get('id')
+    // console.log("request, userCode : ", prm)
+    const isUserExist = await userModel.findOne({userCode:userID})
+    if(!isUserExist){
+       return Response.json({message: "چنین کاربری وجود ندارد ...", status:404})
+    }else{
+      await userModel.findOneAndDelete({userCode:userID})
+      return Response.json({message:'کاربر مورد نظر حذف گردید ...',status:200})
+    }
+    // return Response.json({message : "delete done"});
+}
+
 export async function POST(req:Request){
     connectToDB()
     // const data = req.body
