@@ -48,13 +48,13 @@ export default function CMS() {
         </div>
       </div>
 
-      <div className='w-full flex '>
-        <div className="w-1/12  h-[calc(100vh-80px)] flex justify-center py-2 ">
+      <div className='w-full flex p-1'>
+        <div className="w-1/12  h-[calc(100vh-94px)] flex justify-center items-center">
           {/* <CmsSidebar cmsType={"teacher"}  /> */}
           <CmsSidebar cmsType={'admin'} /> 
           {/* <CmsSidebar cmsType={'student'} />  */}
         </div>
-        <div className='w-11/12  h-[calc(100vh-80px)]'>
+        <div className='w-11/12  h-[calc(100vh-94px)] flex justify-center items-center '>
           <ContentBox cmsType={"admin"} />
         </div>
       </div>

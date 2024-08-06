@@ -64,8 +64,6 @@ export default function ListUsers() {
               icon: "success",
               customClass:{
                 title: "font-moraba",
-                confirmButton: "font-moraba",
-                cancelButton: "font-moraba",
                },
               title: "کاربر با موفقیت حذف شد ..."
             });
@@ -77,8 +75,6 @@ export default function ListUsers() {
               icon: "error",
               customClass:{
                 title: "font-moraba",
-                confirmButton: "font-moraba",
-                cancelButton: "font-moraba",
                },
               title: "کاربری با این کد وجود ندارد ..."
             });
@@ -172,9 +168,19 @@ export default function ListUsers() {
       width: 120
     },
     {
+      field: "role",
+      headerName: "نوع کاربر",
+      headerClassName:
+        "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
+      cellClassName:
+        "font-dana justify-center item-center text-center dark:text-white",
+      headerAlign: "center",
+      width: 90
+    },
+    {
       field: "actions",
       headerName: "عملیات",
-      width: 564,
+      width: 474,
       headerClassName:
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
@@ -221,7 +227,7 @@ export default function ListUsers() {
   }, []);
   // console.log("user data: ", usersData)
   return (
-    <div className='p-2 '>
+    <div className=' '>
       <Box
         className=''
         sx={{
