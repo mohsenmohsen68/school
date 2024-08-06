@@ -5,15 +5,29 @@ import { hashSync } from "bcryptjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { role } from "@/utils/Constants";
 
-export async function GET(){
+export async function GET(req:Request){
     connectToDB()
-    const userData =await userModel.find({})
-    console.log(userData)
-    if(userData){
-       return Response.json({message:"all the users retrived ..", data:userData}, {status:200})
-    }else{
-        return Response.json({message:"no users available .."})
-    }
+    const myUrl = new URL(req.url)
+    const userID = myUrl.searchParams.get('id')
+    console.log('userID...', userID)
+     if(!userID){
+         const userData =await userModel.find({})
+         console.log(userData)
+         if(userData){
+            return Response.json({message:"all the users retrived ..", data:userData}, {status:200})
+         }else{
+             return Response.json({message:"no users available .."})
+         }
+     }else{
+        const isUserExist = await userModel.findOne({
+            $or:[{userName:userID},{ phoneNumber:userID}, {userCode:userID}]
+        })
+        if(isUserExist){
+            return Response.json({message:'کاربر با این نام کاربری با شماره همراه وجود دارد ...',status:200,data:isUserExist})
+        }else{
+            return Response.json({message:'چنین کاربری وجود ندارد ...',status:404})
+        }
+     }
     
 }
 
