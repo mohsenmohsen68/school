@@ -86,3 +86,38 @@ console.log("hashed",myHashedPassword,"accesstoken", accessToken)
         "Set-Cookie" : `token=${accessToken}; path=/; httpOnly=true` 
     } })
 }
+export async function PUT(req:Request){
+    connectToDB()
+    // const data = req.body
+    const {
+        firstName,
+        lastName,
+        userCode,
+        fathersName,
+        school,
+        age,
+        grade,
+        phoneNumber,
+        password,
+        img,
+        userName,
+        role
+    } =  await req.json()
+    
+    //validations....
+ 
+    
+    const isUserExist = await userModel.findOne({userCode})
+    if(!isUserExist){
+        return Response.json({message:'کاربر با این نام کاربری یا شماره همراه ثبت نام نکرده است ...',status:409})
+    }
+    
+//     const myHashedPassword = await hashedPassword(password)
+//     const accessToken = generateAccessToken({userName})
+ 
+// console.log("hashed",myHashedPassword,"accesstoken", accessToken)
+
+    const user =await userModel.findOneAndUpdate({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, img, userName, role})
+    
+    return Response.json({message:'کاربر با موفقیت یه روز رسانی شد ...',status:200 })
+}

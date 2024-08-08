@@ -36,6 +36,20 @@ export const createANewUser = createAsyncThunk(
        }).then(res => res.json()).then(data=>data)
     })
 
+    export const updateUser = createAsyncThunk(
+        'users/updateUser',
+        async(userBody)=>{
+            console.log("nnnn : ", userBody)
+            return fetch('api/user',{
+                method:"PUT",
+                body:JSON.stringify(userBody),
+                headers: {
+                    "Content_Type": "application/json"
+                }
+            }).then(res=>res.json())
+            .then(data=>data)
+        })
+
 const slice = createSlice({
     name:'users',
     initialState:[], 
@@ -48,6 +62,10 @@ const slice = createSlice({
             // state.concat(...action.payload.data); 
         })
         builder.addCase(createANewUser.fulfilled, (state,action)=>{
+          console.log("state : ",state)
+          console.log("action : ",action)  
+        })
+        builder.addCase(updateUser.fulfilled, (state,action)=>{
           console.log("state : ",state)
           console.log("action : ",action)  
         })

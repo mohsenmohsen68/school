@@ -4,6 +4,7 @@ import type { RootState } from './../../../../Redux/Store'
 import ListUsers from '@/components/AdminContentBox/GetUsers/ListUsers'
 import AddUser from '@/components/AdminContentBox/AddUser/AddUser'
 import RemoveUser from '@/components/AdminContentBox/RemoveUser/RemoveUser'
+import EditUser from '@/components/AdminContentBox/EditUser/EditUser'
 
 export default function AdminBox() {
 
@@ -31,7 +32,7 @@ console.log("action : ", action)
       )}
       {action === "EDIT_USER" && (
           <div>
-            edit user
+            <EditUser/>
           </div>
       )}
 

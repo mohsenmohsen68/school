@@ -1,85 +1,173 @@
-"use client";
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Formik } from "formik";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/Redux/Store";
-import { createANewUser } from "@/Redux/users/Users";
-import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
-import style from "./signup.module.css";
+import SignUpModule from '@/components/SignUp/SignUpModule';
+import { Formik } from 'formik';
+import React, { useState } from 'react'
+import { CiSearch } from "react-icons/ci";
+import Swal from 'sweetalert2';
+import { userData } from '@/components/SignUp/SignUpModule';
+import { UseDispatch, useDispatch } from 'react-redux';
+import { updateUser } from '@/Redux/users/Users';
+import { AppDispatch } from '@/Redux/Store';
 
-export interface userData {
-  firstName: string;
-  lastName: string;
-  userCode: string;
-  school: string;
-  fathersName: string;
-  grade: string;
-  age: string;
-  userName: string;
-  password: string;
-  password2: string;
-  phoneNumber: string;
-  img: string;
-  role: string;
-}
-type Prop = {
-  addedByAdmin: boolean;
-};
+export default function EditUser() {
+    const dispatch = useDispatch<AppDispatch>()
+    const [showEditUserInfo, setShowDeleteUserInfo] = useState<boolean>(false);
+    const [userIdentity, setUserIdentity] = useState<string>("");
 
-const Toast = Swal.mixin({
-  toast: true,
-  position: "bottom-end",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
-  }
-});
-export default function SignUpModule(props: Prop): JSX.Element {
-  const routes = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+    const [user, setUser] = useState({
+        firstName: "",
+        lastName: "",
+        userName: "",
+        userCode: "",
+        fathersName: "",
+        school: "",
+        age: "",
+        grade: "",
+        phoneNumber: "",
+        password: "",
+        img: "",
+        role: ""
+      });
+    
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+    
+      const EditHandler = async () => {
+        const userToEdit = await fetch(`/api/user?id=${userIdentity}`)
+          .then((res) => res.json())
+          .then((data) => data);
+        if (userToEdit.status === 200) {
+          setUser(userToEdit.data);
+          console.log("user to user to edit.", userToEdit.data);
+          setShowDeleteUserInfo(true);
+        } else {
+          Swal.fire({
+            toast: true,
+            customClass: {
+              title: "font-moraba",
+              confirmButton: "font-moraba",
+              cancelButton: "font-moraba"
+            },
+            position: "bottom-end",
+            title: " کاربری با این مشخصات وجود ندارد ...",
+            icon: "error",
+            showConfirmButton: true,
+            confirmButtonText: "انصراف",
+            confirmButtonColor: "green",
+            showCancelButton: true,
+            cancelButtonText: "تلاش مجدد",
+            cancelButtonColor: "red"
+          }).then((result) => {
+            if (result.isConfirmed === true) {
+            }
+            if (result.isDismissed === true) {
+            }
+          });
+        }
+      };
+    
+      const EditSelectedUser = async() => {
+     
+        //console.log('result',result)
+        // if(result.status === 200){
+        //     Toast.fire({
+        //         toast: true,
+        //         customClass: {
+        //           title: "font-moraba",
+        //           htmlContainer: "bg-slate-200 dark:bg-slate-700"
+        //         },
+        //         position: "bottom-end",
+        //         title: " کاربر با موفقیت حذف گردید ...",
+        //         icon: "success"
+        //       });
+        //       setShowDeleteUserInfo(false);
+        //       setUserIdentity('')
+    
+        // }else{
+        //     Swal.fire({
+        //         toast: true,
+        //         customClass: {
+        //           title: "font-moraba",
+        //           confirmButton: "font-moraba",
+        //           cancelButton: "font-moraba"
+        //         },
+        //         position: "bottom-end",
+        //         title: " مشکلی به وجود آمده است، دوباره تلاش کنید ...",
+        //         icon: "error",
+        //         showConfirmButton: true,
+        //         confirmButtonText: "انصراف",
+        //         confirmButtonColor: "green",
+        //         showCancelButton: true,
+        //         cancelButtonText: "تلاش مجدد",
+        //         cancelButtonColor: "red"
+        //       }).then((result) => {
+        //         if (result.isConfirmed === true) {
+                  
+        //         }
+        //          if(result.isDismissed ){
+    
+        //          }
+        //       });
+        // }
+      };
 
-  const clickHandler = (values: userData) => {
-    const userBody = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      userCode: values.userCode,
-      school: values.school,
-      fathersName: values.fathersName,
-      grade: values.grade,
-      age: values.age,
-      userName: values.userName,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-      img: "",
-      role: props.addedByAdmin ? values.role : "student"
-    };
-    console.log(userBody);
-    dispatch(createANewUser("/api/user", userBody));
-  };
+
   return (
-    <div className='w-full h-full flex justify-center items-center flex-col font-moraba'>
+    <div>
+      
+      {!showEditUserInfo && (
+      <div className='flex flex-col justify-center items-center gap-y-4-4'>
+          <div className='font-dana'>
+            <b>نام کاربری</b>، <b>کد ملی</b> یا <b>شماره تلفن</b> کاربری که می
+            خواهید ویرایش کنید را وارد کنید .
+          </div>
+          <div className='flex mt-7 w-96 bg-slate-200 dark:bg-slate-700 overflow-hidden border border-black dark:border-white  rounded-2xl'>
+            <div className='w-11/12  h-9  px-7 '>
+              <input
+                type='text'
+                className='outline-none font-dana w-full h-full bg-slate-200 dark:bg-slate-700'
+                name=''
+                id=''
+                placeholder='جست و جوی کاربر...'
+                onChange={(e) => setUserIdentity(e.target.value)}
+                value={userIdentity}
+              />
+            </div>
+            <div className='w-1/12 bg-slate-200 dark:bg-slate-700 flex justify-center items-center '>
+              <CiSearch className='text-2xl' onClick={() => EditHandler()} />
+            </div>
+          </div>
+
+        </div>
+      )}
+
+
+        {showEditUserInfo && (
+        <div className='w-full h-fit font-dana border p-7 flex flex-col justify-center items-center gap-y-2'>
+          
+          <div className='w-full h-full flex justify-center items-center flex-col font-moraba'>
       <div className='border-2 p-4'>
         <Formik
           initialValues={{
-            firstName: "",
-            lastName: "",
-            userName: "",
-            userCode: "",
-            fathersName: "",
-            school: "",
-            age: "",
-            grade: "",
-            phoneNumber: "",
-            password: "",
-            password2: "",
-            img: "",
-            role: ""
+            firstName: user.firstName,
+            lastName: user.lastName,
+            userName: user.userName,
+            userCode: user.userCode,
+            fathersName: user.fathersName,
+            school: user.school,
+            age: user.age,
+            grade: user.grade,
+            phoneNumber: user.phoneNumber,
+            img: user.img,
+            role: user.role
           }}
           validate={(values) => {
             const errors: userData = {
@@ -144,7 +232,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.grade = "انتخاب پایه الزامی است.";
             }
             //role validation
-            if (props.addedByAdmin && values.role == '') {
+            if ( values.role == '') {
               errors.role = "انتخاب نقش الزامی است.";
             }
             //phone number validation
@@ -154,20 +242,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.phoneNumber = " شماره همراه یازده رقمی است.";
             }
             //password validation
-            if (!values.password) {
-              errors.password = "وارد کردن رمز عبور الزامی است.";
-            } else if (
-              !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/g.test(
-                values.password
-              )
-            ) {
-              errors.password = "رمز عبور امن نیست.";
-            }
-
-            //password2 validation
-            if (values.password2 !== values.password) {
-              errors.password2 = "تکرار رمز عبور اشتباه است.";
-            }
+            
             if (
               errors.firstName === "" &&
               errors.lastName === "" &&
@@ -179,8 +254,6 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.grade === "" &&
               errors.role === "" &&
               errors.phoneNumber === "" &&
-              errors.password === "" &&
-              errors.password2 === "" &&
               errors.img === ""
             ) {
               return {};
@@ -198,86 +271,85 @@ export default function SignUpModule(props: Prop): JSX.Element {
               grade: values.grade,
               age: values.age,
               userName: values.userName,
-              password: values.password,
               phoneNumber: values.phoneNumber,
               img: "",
-              role: props.addedByAdmin ? values.role : "دانش آموز"
+              role: values.role 
             };
-            // console.log(userBody);
-            const result = await dispatch(createANewUser(userBody)).unwrap();
+            console.log(userBody);
+            const result = await dispatch(updateUser(userBody));
             console.log("resultttt : ", result);
-            if (result.status === 200) {
-              if (props.addedByAdmin) {
-                Toast.fire({
-                  toast: true,
-                  customClass: {
-                    title: "font-moraba",
-                    htmlContainer: "bg-slate-200 dark:bg-slate-700"
-                  },
-                  position: "bottom-end",
-                  title: " کاربر با موفقیت ثبت نام گردید ...",
-                  icon: "success"
-                });
-              } else {
-                Swal.fire({
-                  toast: true,
-                  customClass: {
-                    title: "font-moraba",
-                    htmlContainer: "bg-slate-200 dark:bg-slate-700",
-                    actions: style.action,
-                    confirmButton: "font-moraba",
-                    cancelButton: "font-moraba"
-                  },
-                  position: "bottom-end",
-                  title: " شما با موفقیت ثبت نام کردید ...",
-                  icon: "success",
-                  showConfirmButton: true,
-                  confirmButtonText: "ورود",
-                  confirmButtonColor: "green"
-                }).then((result) => {
-                  if (result.isConfirmed === true) {
-                    routes.push("/login");
-                  }
-                  console.log(result);
-                });
-              }
-            } else if (result.status === 409) {
-              if (props.addedByAdmin) {
-                Toast.fire({
-                  toast: true,
-                  customClass: {
-                    title: "font-moraba"
-                  },
-                  position: "bottom-end",
-                  title: " کاربری با این مشخصات قبلا ثبت نام کرده است ...",
-                  icon: "error"
-                });
-              } else {
-                Swal.fire({
-                  toast: true,
-                  customClass: {
-                    title: "font-moraba",
-                    confirmButton: "font-moraba",
-                    cancelButton: "font-moraba"
-                  },
-                  position: "bottom-end",
-                  title: " کاربری با این مشخصات قبلا ثبت نام کرده است ...",
-                  icon: "error",
-                  showConfirmButton: true,
-                  confirmButtonText: "ورود",
-                  confirmButtonColor: "green",
-                  showCancelButton: true,
-                  cancelButtonText: "تلاش مجدد",
-                  cancelButtonColor: "red"
-                }).then((result) => {
-                  if (result.isConfirmed === true) {
-                    routes.push("/login");
-                  }
-                  // if(result.isDismissed )
-                });
-              }
+            // if (result.status === 200) {
+            //   if (props.addedByAdmin) {
+            //     Toast.fire({
+            //       toast: true,
+            //       customClass: {
+            //         title: "font-moraba",
+            //         htmlContainer: "bg-slate-200 dark:bg-slate-700"
+            //       },
+            //       position: "bottom-end",
+            //       title: " کاربر با موفقیت ثبت نام گردید ...",
+            //       icon: "success"
+            //     });
+            //   } else {
+            //     Swal.fire({
+            //       toast: true,
+            //       customClass: {
+            //         title: "font-moraba",
+            //         htmlContainer: "bg-slate-200 dark:bg-slate-700",
+            //         actions: style.action,
+            //         confirmButton: "font-moraba",
+            //         cancelButton: "font-moraba"
+            //       },
+            //       position: "bottom-end",
+            //       title: " شما با موفقیت ثبت نام کردید ...",
+            //       icon: "success",
+            //       showConfirmButton: true,
+            //       confirmButtonText: "ورود",
+            //       confirmButtonColor: "green"
+            //     }).then((result) => {
+            //       if (result.isConfirmed === true) {
+                    
+            //       }
+            //       console.log(result);
+            //     });
+            //   }
+            // } else if (result.status === 409) {
+            //   if (props.addedByAdmin) {
+            //     Toast.fire({
+            //       toast: true,
+            //       customClass: {
+            //         title: "font-moraba"
+            //       },
+            //       position: "bottom-end",
+            //       title: " کاربری با این مشخصات قبلا ثبت نام کرده است ...",
+            //       icon: "error"
+            //     });
+            //   } else {
+            //     Swal.fire({
+            //       toast: true,
+            //       customClass: {
+            //         title: "font-moraba",
+            //         confirmButton: "font-moraba",
+            //         cancelButton: "font-moraba"
+            //       },
+            //       position: "bottom-end",
+            //       title: " کاربری با این مشخصات قبلا ثبت نام کرده است ...",
+            //       icon: "error",
+            //       showConfirmButton: true,
+            //       confirmButtonText: "ورود",
+            //       confirmButtonColor: "green",
+            //       showCancelButton: true,
+            //       cancelButtonText: "تلاش مجدد",
+            //       cancelButtonColor: "red"
+            //     }).then((result) => {
+            //       if (result.isConfirmed === true) {
+            //         routes.push("/login");
+            //       }
+            //       // if(result.isDismissed )
+            //     });
+            //   }
              
-            }
+            // }
           }}
         >
           {({
@@ -294,17 +366,10 @@ export default function SignUpModule(props: Prop): JSX.Element {
               className='grid grid-cols-1 xs:grid-cols-2 gap-2 text-slate-800'
             >
               <div className='col-start-1 col-span-2 flex justify-center'>
-                {!props.addedByAdmin && (
+               
+               
                   <div>
-                    ثبت نام کرده اید؟{" "}
-                    <span className='text-green-600 font-moraba-medium'>
-                      <Link href={"/login"}>وارد شوید ...</Link>
-                    </span>
-                  </div>
-                )}
-                {props.addedByAdmin && (
-                  <div>
-                    ثبت نام کاربر جدید ...
+                    ویرایش کاربر  ...
                     <div>
                       <select
                         name='role'
@@ -324,7 +389,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
                       </div>
                     </div>
                   </div>
-                )}
+            
               </div>
               <div className='flex flex-col '>
                 <input
@@ -498,50 +563,37 @@ export default function SignUpModule(props: Prop): JSX.Element {
                 </div>
               </div>
 
-              <div className='flex flex-col'>
-                <input
-                  type='password'
-                  name='password'
-                  placeholder='رمز عبور ...'
-                  className={`bg-slate-200 p-2  outline-none `}
-                  onChange={handleChange}
-                  value={values.password}
-                  onBlur={handleBlur}
-                />
-                <div className='text-xs text-red-500'>
-                  {errors.password && touched.password && errors.password}
-                </div>
-              </div>
-
-              <div className='flex flex-col'>
-                <input
-                  type='password'
-                  name='password2'
-                  placeholder=' رمز عبور تکرار ...'
-                  className={`bg-slate-200 p-2  outline-none `}
-                  onChange={handleChange}
-                  value={values.password2}
-                  onBlur={handleBlur}
-                />
-                <div className='text-xs text-red-500'>
-                  {errors.password2 && touched.password2 && errors.password2}
-                </div>
-              </div>
-              <div>
-                <input type='checkbox' name='' id='' className='mx-2' />
-                مرا به خاطر بسپار
-              </div>
               <button
                 type='submit'
                 disabled={isSubmitting}
                 className='rounded-md bg-green-600 hover:bg-green-400 p-2 text-xl'
               >
-                ثبت نام
+                ویرایش
               </button>
             </form>
           )}
         </Formik>
       </div>
+          </div>
+
+
+          <div className=' flex justify-end font-dana'>
+            <button
+              className='bg-orange-500 mx-4 p-2'
+              onClick={() => EditSelectedUser()}
+            >
+              ویرایش شود
+            </button>
+            <button
+              className='bg-sky-500 p-2 '
+              onClick={() => setShowDeleteUserInfo(false)}
+            >
+              انصراف
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
-  );
+  )
 }
