@@ -98,7 +98,6 @@ export async function PUT(req:Request){
         age,
         grade,
         phoneNumber,
-        password,
         img,
         userName,
         role
@@ -111,13 +110,6 @@ export async function PUT(req:Request){
     if(!isUserExist){
         return Response.json({message:'کاربر با این نام کاربری یا شماره همراه ثبت نام نکرده است ...',status:409})
     }
-    
-//     const myHashedPassword = await hashedPassword(password)
-//     const accessToken = generateAccessToken({userName})
- 
-// console.log("hashed",myHashedPassword,"accesstoken", accessToken)
-
-    const user =await userModel.findOneAndUpdate({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, img, userName, role})
-    
+    const user =await userModel.findOneAndUpdate({userCode} ,{firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, img, userName, role})
     return Response.json({message:'کاربر با موفقیت یه روز رسانی شد ...',status:200 })
 }

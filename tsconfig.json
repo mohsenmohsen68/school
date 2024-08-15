@@ -24,6 +24,6 @@
   "ts-node": {
     "files": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/utils/auth.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/utils/auth.jsx", "src/components/TextEditor/TextEditor.js"],
   "exclude": ["node_modules"]
 }

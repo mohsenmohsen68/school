@@ -49,12 +49,12 @@ export default function CMS() {
       </div>
 
       <div className='w-full flex p-1'>
-        <div className="w-1/12  h-[calc(100vh-94px)] flex justify-center items-center">
+        <div className="w-1/12  h-[calc(100vh-94px)] ">
           {/* <CmsSidebar cmsType={"teacher"}  /> */}
           <CmsSidebar cmsType={'admin'} /> 
           {/* <CmsSidebar cmsType={'student'} />  */}
         </div>
-        <div className='w-11/12  h-[calc(100vh-94px)] flex justify-center items-center '>
+        <div className='w-11/12  h-[calc(100vh-94px)] '>
           <ContentBox cmsType={"admin"} />
         </div>
       </div>
