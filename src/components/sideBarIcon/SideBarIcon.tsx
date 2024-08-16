@@ -24,6 +24,7 @@ import { selectOption } from "@/Redux/CMS/CMSRoutes";
 import { useDispatch } from "react-redux";
 import { ImProfile } from "react-icons/im";
 import { VscAccount } from "react-icons/vsc";
+import { PiListPlus } from "react-icons/pi";
 
 
 
@@ -89,9 +90,8 @@ const dispatch = useDispatch()
         </div>}
 
       {props.showSubMenu && props.title === 'articles' && <div className="flex flex-col justify-center items-center my-1">
-        <TbArticle className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_ARTICLE"))}/>
-        <TbArticleOff className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_ARTICLE"))}/>
-        <EditNoteIcon className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_ARTICLE"))}/>
+        <TbArticle className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_ARTICLE"))}/>
+        <PiListPlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_ARTICLE"))}/>
         </div>}
 
       {props.showSubMenu && props.title === 'courses' && <div className="flex flex-col justify-center items-center my-1">

@@ -1,78 +1,83 @@
-import { POST } from "@/app/api/user/route"
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-
+import { POST } from "@/app/api/user/route";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface people {
-age: string,
-fathersName: string,
-firstName: string,
-grade:string,
-img: string,
-lastName:string,
-password: string,
-phoneNumber:string,
-role: string,
-school: string,
-userCode: string,
-userName: string,    
+  age: string;
+  fathersName: string;
+  firstName: string;
+  grade: string;
+  img: string;
+  lastName: string;
+  password: string;
+  phoneNumber: string;
+  role: string;
+  school: string;
+  userCode: string;
+  userName: string;
 }
 
 export const getUsersFromServer = createAsyncThunk(
-    "users/getUsersFromServer",
-    async (url:string)=>{
-    return fetch(url).then(res=>res.json()).then(data=>data)
-})
+  "users/getUsersFromServer",
+  async (url: string) => {
+    return fetch(url)
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
 
 export const createANewUser = createAsyncThunk(
-    "users/createANewUser", 
-    async (userBody)=>{
-        console.log("nnnn : ", userBody)
-       return fetch("/api/user",{
-        method : "POST",
-        body: JSON.stringify(userBody),
-        headers: {
-            "Content_Type": "application/json"
-        }
-       }).then(res => res.json()).then(data=>data)
+  "users/createANewUser",
+  async (userBody) => {
+    console.log("nnnn : ", userBody);
+    return fetch("/api/user", {
+      method: "POST",
+      body: JSON.stringify(userBody),
+      headers: {
+        Content_Type: "application/json"
+      }
     })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
 
-    export const updateUser = createAsyncThunk(
-        'users/updateUser',
-        async(userBody)=>{
-            console.log("nnnn : ", userBody)
-            return fetch('api/user',{
-                method:"PUT",
-                body:JSON.stringify(userBody),
-                headers: {
-                    "Content_Type": "application/json"
-                }
-            }).then(res=>res.json())
-            .then(data=>data)
-        })
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async (userBody) => {
+    console.log("nnnn : ", userBody);
+    return fetch("api/user", {
+      method: "PUT",
+      body: JSON.stringify(userBody),
+      headers: {
+        Content_Type: "application/json"
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
 
 const slice = createSlice({
-    name:'users',
-    initialState:[], 
-    reducers:{},
+  name: "users",
+  initialState: [],
+  reducers: {},
 
-    extraReducers: builder=>{
-        builder.addCase(getUsersFromServer.fulfilled, (state:people[],action)=>{
-            console.log('action data : ',action.payload.data)
-            return action.payload.data
-            // state.concat(...action.payload.data); 
-        })
-        builder.addCase(createANewUser.fulfilled, (state,action)=>{
-          console.log("state : ",state)
-          console.log("action : ",action)  
-        })
-        builder.addCase(updateUser.fulfilled, (state,action)=>{
-          console.log("state : ",state)
-          console.log("action : ",action)  
-        })
-        
-    }
-})
-
+  extraReducers: (builder) => {
+    builder.addCase(getUsersFromServer.fulfilled, (state: people[], action) => {
+      console.log("action data : ", action.payload.data);
+      return action.payload.data;
+      // state.concat(...action.payload.data);
+    });
+    builder.addCase(createANewUser.fulfilled, (state, action) => {
+      console.log("state : ", state);
+      console.log("action : ", action);
+    });
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      console.log("state : ", state);
+      console.log("action : ", action);
+    });
+  }
+});
 
 export default slice.reducer;
 // interface User {
@@ -117,7 +122,7 @@ export default slice.reducer;
 // const UserReducer=(state:User[], action:Actions)=>{
 //     switch(action.type){
 //         case "DELETE_USER":{
-            
+
 //         }
 //         case "ADD_USER":{
 
@@ -132,4 +137,3 @@ export default slice.reducer;
 
 // }
 // export default UserReducer;
-

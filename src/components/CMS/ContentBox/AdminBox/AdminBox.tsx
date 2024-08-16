@@ -6,6 +6,7 @@ import AddUser from "@/components/AdminContentBox/AddUser/AddUser";
 import RemoveUser from "@/components/AdminContentBox/RemoveUser/RemoveUser";
 import EditUser from "@/components/AdminContentBox/EditUser/EditUser";
 import AddArticle from "@/components/AdminContentBox/AddArticle/AddArticle";
+import ListArticle from "@/components/AdminContentBox/ListArticle/ListArticle";
 
 export default function AdminBox() {
   const useAppSelector = useSelector.withTypes<RootState>();
@@ -42,8 +43,12 @@ export default function AdminBox() {
           <AddArticle />
         </div>
       )}
-      {action === "REMOVE_ARTICLE" && <div>remove article</div>}
-      {action === "EDIT_ARTICLE" && <div>edit article</div>}
+      {action === "LIST_ARTICLE" && (
+        <div>
+          <ListArticle />
+        </div>
+      )}
+
       {/* comment menu */}
       {action === "LIST_COMMENT" && <div>list comment</div>}
       {action === "VALIDATE_COMMENT" && <div>validate comment</div>}

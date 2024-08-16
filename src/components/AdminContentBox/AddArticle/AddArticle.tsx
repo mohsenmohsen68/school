@@ -1,13 +1,39 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { Formik } from "formik";
+import { UseDispatch, useDispatch } from "react-redux";
+import { createANewArticle } from "@/Redux/articles/Articles";
+import { Mds } from "mds.persian.datetime";
+import PersianDateTime = Mds.PersianDateTime;
+import { randomUUID } from "crypto";
+const { uuid } = require('uuidv4');
 
 const ArticleEditor = dynamic(
   () => import("./../../../components/ArticleEditor/ArticleEditor"),
   { ssr: false }
 );
 
+// interface articleBody {
+
+//     articleID: string,
+//     title: string,
+//     category: string,
+//     keyWords: string,
+//     author: string,
+//     publishedDate: String,
+//     img:string,
+//     articleBody:string
+// }
+
 export default function AddArticle() {
+  const dispatch = useDispatch()
+  const [articleData, setArticleData] = useState("");
+
+  const handleAddArticle = (data: string) => {
+    setArticleData(data);
+  };
+
   return (
     <div className='p-7'>
       <Formik
@@ -20,7 +46,7 @@ export default function AddArticle() {
           const errors = {
             title: "",
             category: "",
-            keyWords: "",
+            keyWords: ""
           };
           //firstname validation
           if (!values.title) {
@@ -35,22 +61,43 @@ export default function AddArticle() {
             errors.keyWords = "کلمات کلیدی باید حداقل سه حرف داشته باشد .";
           }
           //username validation
-         
+
           //grade validation
           if (values.category == "") {
             errors.category = "انتخاب دسته بندی الزامی است.";
           }
           //role validation
-        
-          if ( errors.category === "" && errors.keyWords === "" && errors.title === "" ) {
+
+          if (
+            errors.category === "" &&
+            errors.keyWords === "" &&
+            errors.title === ""
+          ) {
             return {};
           } else {
             return errors;
           }
         }}
-        onSubmit={async (values,{setSubmitting}) => {
-           console.log(values)
-        }}
+        onSubmit={async (values, { setSubmitting }) => {
+          console.log("mmmmm", articleData);
+          const author = "mohsen";
+          const publishedDate = PersianDateTime.now.dateTime;
+          const articleID = uuid()
+          const body = {
+            articleID,
+            title: values.title,
+            category: values.category,
+            keyWords: values.keyWords,
+            author,
+            publishedDate,
+            img:'mkmkmk',
+            articleBody:articleData
+          };
+           console.log(body)
+          dispatch(createANewArticle(body))
+
+        }
+      }
       >
         {({
           values,
@@ -62,7 +109,6 @@ export default function AddArticle() {
           isSubmitting
         }) => (
           <form onSubmit={handleSubmit} className='text-slate-800'>
-
             <div className='flex flex-col mt-2 '>
               <input
                 type='text'
@@ -94,8 +140,7 @@ export default function AddArticle() {
             </div>
 
             <div className=' grid grid-cols-1 md:grid-cols-2'>
-
-            <div className='flex flex-col mt-2'>
+              <div className='flex flex-col mt-2'>
                 <select
                   name='category'
                   id='category'
@@ -143,12 +188,10 @@ export default function AddArticle() {
                   onBlur={handleBlur}
                 />
               </div>
-
-             
             </div>
 
             <div className='w-full'>
-              <ArticleEditor />
+              <ArticleEditor onHandleAddArticle={handleAddArticle} />
             </div>
 
             <div className='w-full'>

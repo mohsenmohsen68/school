@@ -18,18 +18,24 @@ const schema = new mongoose.Schema({
         type:String,
         isrequire : true,
     },
-    publishDate : {
+    publishedDate : {
         type : String,
         require : true,
     },
     author : {
         type : String,
         require : true,
+    },
+    articleBody:{
+        type: String,
+    },
+    articleID:{
+        type : String,
     }
 
 })
 
 
-const articleModel = mongoose.models.Articles|| mongoose.model('Article', schema)
+const articleModel = mongoose.models.Article|| mongoose.model('Article', schema)
 
 export default articleModel

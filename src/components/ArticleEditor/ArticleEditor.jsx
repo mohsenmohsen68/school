@@ -73,10 +73,17 @@ import {
 
 import "ckeditor5/ckeditor5.css";
 
-export default function App() {
+
+
+export default function ArticleEditor({onHandleAddArticle}) {
+  const [data,setData] = useState('')
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
+
+  const handleChange = () =>{
+    onHandleAddArticle(data)
+  }
 
   useEffect(() => {
     setIsLayoutReady(true);
@@ -84,10 +91,8 @@ export default function App() {
   }, []);
 
   function uploadAdapter(loader){  
-	// console.log('loaderrrrrrr',loader)
 	return {
 		upload : ()=>{
-			// console.log('loaderrrrrrr',loader)
 			return new Promise((resolve,reject)=>{
 				const body = new FormData();
 				loader.file.then((file)=>{
@@ -435,7 +440,8 @@ export default function App() {
                   editor={ClassicEditor}
                   config={editorConfig}
                   onChange={(event, ClassicEditor) => {
-                    console.log("my data : ", ClassicEditor.getData());
+                    setData( ClassicEditor.getData())
+                    handleChange()
                   }}
                 />
               )}
