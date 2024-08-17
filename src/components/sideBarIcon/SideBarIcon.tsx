@@ -66,9 +66,8 @@ const dispatch = useDispatch()
         </div>}
 
       {props.showSubMenu && props.title === 'posts' && <div className="flex flex-col justify-center items-center my-1">
+        <CgPlayListRemove  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_POST"))}/>
         <MdOutlinePlaylistAdd className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_POST"))}/>
-        <CgPlayListRemove  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_POST"))}/>
-        <EditNoteIcon className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_POST"))}/>
          </div>}
 
       {props.showSubMenu && props.title === 'comments' && <div className="flex flex-col justify-center items-center my-1">
@@ -101,9 +100,8 @@ const dispatch = useDispatch()
         </div>}
 
       {props.showSubMenu && props.title === 'posts' && <div className="flex flex-col justify-center items-center my-1">
-        <MdOutlinePlaylistAdd className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_POST"))}/>
-        <CgPlayListRemove  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_POST"))}/>
-        <EditNoteIcon className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_POST"))}/>
+        <TbArticle  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_POST"))}/>
+        <PiListPlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_POST"))}/>
          </div>}
 
       {props.showSubMenu && props.title === 'comments' && <div className="flex flex-col justify-center items-center my-1">

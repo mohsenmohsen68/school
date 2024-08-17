@@ -7,6 +7,8 @@ import RemoveUser from "@/components/AdminContentBox/RemoveUser/RemoveUser";
 import EditUser from "@/components/AdminContentBox/EditUser/EditUser";
 import AddArticle from "@/components/AdminContentBox/AddArticle/AddArticle";
 import ListArticle from "@/components/AdminContentBox/ListArticle/ListArticle";
+import AddPost from "@/components/AdminContentBox/AddPost/AddPost";
+import ListPost from "./../../../AdminContentBox/ListPost/ListPost";
 
 export default function AdminBox() {
   const useAppSelector = useSelector.withTypes<RootState>();
@@ -54,9 +56,16 @@ export default function AdminBox() {
       {action === "VALIDATE_COMMENT" && <div>validate comment</div>}
 
       {/* post menu */}
-      {action === "ADD_POST" && <div>Add post</div>}
-      {action === "REMOVE_POST" && <div>remove post</div>}
-      {action === "EDIT_POST" && <div>edit post</div>}
+      {action === "LIST_POST" && (
+        <div>
+          <ListPost />
+        </div>
+      )}
+      {action === "ADD_POST" && (
+        <div>
+          <AddPost />
+        </div>
+      )}
       {/* course menu */}
       {action === "ADD_COURSE" && <div>Add course</div>}
       {action === "REMOVE_COURSE" && <div>remove course</div>}

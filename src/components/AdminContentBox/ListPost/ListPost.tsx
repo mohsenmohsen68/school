@@ -8,10 +8,11 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { faIR } from "@mui/x-data-grid/locales";
 import Swal from "sweetalert2";
+import { getPostsFromServer } from "@/Redux/posts/Posts";
 
 export default function ListArticles() {
   const dispatch = useDispatch<AppDispatch>();
-  const articles = useSelector<RootState>((state) => state.articles);
+  const posts = useSelector<RootState>((state) => state.posts);
   
   // console.log("users : ",users)
 
@@ -28,8 +29,7 @@ export default function ListArticles() {
   });
 
   const removeHandler = (params) => {
-    console.log('userCode ::: ',params.row.userCode)
-
+    
     Swal.fire({
       toast: true,
       customClass:{
@@ -39,7 +39,7 @@ export default function ListArticles() {
        cancelButton: "font-moraba",
       },
       position: "bottom-end",
-      title:' آیا از حذف کاربر اطمینان دارید ؟ ',
+      title:' آیا از حذف پست اطمینان دارید ؟ ',
       icon:'warning',
       showConfirmButton:true,
       confirmButtonText:'بلی',
@@ -51,7 +51,7 @@ export default function ListArticles() {
     }).then(result => {
       // the user confirms to remove the selected user ...
        if(result.isConfirmed === true){
-         const Response= fetch(`/api/user?id=${params.row.userCode}`,{
+         const Response= fetch(`/api/post?id=${params.row.postID}`,{
           method:'DELETE',
 
          }).then(res=>res.json())
@@ -64,9 +64,9 @@ export default function ListArticles() {
               customClass:{
                 title: "font-moraba",
                },
-              title: "کاربر با موفقیت حذف شد ..."
+              title: "پست با موفقیت حذف شد ..."
             });
-            dispatch(getUsersFromServer("/api/user"));
+            dispatch(getPostsFromServer("/api/post"));
             
 
           }else if(data.status === 404){
@@ -75,7 +75,7 @@ export default function ListArticles() {
               customClass:{
                 title: "font-moraba",
                },
-              title: "کاربری با این کد وجود ندارد ..."
+              title: "پستی با این کد وجود ندارد ..."
             });
           }
          })
@@ -96,7 +96,7 @@ export default function ListArticles() {
   const columns: GridColDef[] = [
     {
       field: "title",
-      headerName: "عنوان مقاله",
+      headerName: "عنوان پست",
       headerClassName:
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
@@ -124,16 +124,7 @@ export default function ListArticles() {
       headerAlign: "center",
       width: 100
     },
-    {
-      field: "category",
-      headerName: "دسته بندی",
-      headerClassName:
-        "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
-      cellClassName:
-        "font-dana justify-center item-center text-center dark:text-white",
-      headerAlign: "center",
-      width: 90
-    },
+    
     {
       field: "actions",
       headerName: "عملیات",
@@ -176,11 +167,11 @@ export default function ListArticles() {
     }
   ];
 
-  const rows = [...articles];
+  const rows = [...posts];
   // console.log('rows' , rows)
   // const usersData;
   useEffect(() => {
-    dispatch(getArticlesFromServer("/api/articles"));
+    dispatch(getPostsFromServer());
   }, []);
   // console.log("user data: ", usersData)
   return (

@@ -6,7 +6,7 @@ import { UseDispatch, useDispatch } from "react-redux";
 import { createANewArticle } from "@/Redux/articles/Articles";
 import { Mds } from "mds.persian.datetime";
 import PersianDateTime = Mds.PersianDateTime;
-import { randomUUID } from "crypto";
+import moment from 'jalali-moment'
 const { uuid } = require('uuidv4');
 
 const ArticleEditor = dynamic(
@@ -81,7 +81,12 @@ export default function AddArticle() {
         onSubmit={async (values, { setSubmitting }) => {
           console.log("mmmmm", articleData);
           const author = "mohsen";
-          const publishedDate = PersianDateTime.now.dateTime;
+          const d = new Date()
+          let year = d.getFullYear();
+          let month = d.getMonth();
+          let day = d.getDay();
+          const pdate = new Date(year,month,day)
+          const publishedDate = new Intl.DateTimeFormat('fa-IR').format(pdate);
           const articleID = uuid()
           const body = {
             articleID,

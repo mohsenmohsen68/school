@@ -1,4 +1,3 @@
-import { POST } from "@/app/api/user/route";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface people {
