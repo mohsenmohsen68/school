@@ -32,6 +32,10 @@ const schema = new mongoose.Schema({
         type: String,
         require : true,
     },
+    publishedDate:{
+        type: String,
+        require : true,
+    },
     preRequisite:{
         type : String,
         require: true

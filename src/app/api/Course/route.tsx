@@ -5,9 +5,9 @@ export async function GET(){
     connectToDB()
     try{
        const courses = await courseModel.find({})
-       console.log('courses', courses)
+       return Response.json({message:'لیست دوره ها برایتان ارسال گردید.', status:200, data:courses})
     }catch(err){
-
+        return Response.json({message:'مشکلی بوجود آمده است...', status:500})
     }
 }
 export async function POST(req : Request){
@@ -28,6 +28,7 @@ export async function POST(req : Request){
         img,
         courseBody,
         teacher,
+        publishedDate
     } = await req.json() 
     console.log('courseBody : ' , courseBody)
 
@@ -45,6 +46,7 @@ export async function POST(req : Request){
             courseType,
             studentNo,
             stisfiction,
+            publishedDate,
             img,
             courseBody,
             teacher})

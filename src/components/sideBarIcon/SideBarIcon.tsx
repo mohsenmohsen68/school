@@ -22,9 +22,10 @@ import { TbChalkboardOff } from "react-icons/tb";
 import { LuClipboardEdit } from "react-icons/lu";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
 import { useDispatch } from "react-redux";
-import { ImProfile } from "react-icons/im";
+import { CiCirclePlus } from "react-icons/ci";
 import { VscAccount } from "react-icons/vsc";
 import { PiListPlus } from "react-icons/pi";
+import { FaRegSquarePlus } from "react-icons/fa6";
 
 
 
@@ -94,9 +95,8 @@ const dispatch = useDispatch()
         </div>}
 
       {props.showSubMenu && props.title === 'courses' && <div className="flex flex-col justify-center items-center my-1">
-        <SiGoogleclassroom className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_COURSE"))}/>
-        <RiDeleteBin2Line className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_COURSE"))}/>
-        <GrUpdate className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_COURSE"))}/>
+        <SiGoogleclassroom className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_COURSE"))}/>
+        <FaRegSquarePlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_COURSE"))}/>
         </div>}
 
       {props.showSubMenu && props.title === 'posts' && <div className="flex flex-col justify-center items-center my-1">

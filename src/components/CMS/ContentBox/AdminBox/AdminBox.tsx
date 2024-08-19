@@ -9,6 +9,8 @@ import AddArticle from "@/components/AdminContentBox/AddArticle/AddArticle";
 import ListArticle from "@/components/AdminContentBox/ListArticle/ListArticle";
 import AddPost from "@/components/AdminContentBox/AddPost/AddPost";
 import ListPost from "./../../../AdminContentBox/ListPost/ListPost";
+import ListCourse from "@/components/AdminContentBox/ListCourse/ListCourse";
+import AddCourse from "@/components/AdminContentBox/AddCourse/AddCourse";
 
 export default function AdminBox() {
   const useAppSelector = useSelector.withTypes<RootState>();
@@ -67,9 +69,9 @@ export default function AdminBox() {
         </div>
       )}
       {/* course menu */}
-      {action === "ADD_COURSE" && <div>Add course</div>}
-      {action === "REMOVE_COURSE" && <div>remove course</div>}
-      {action === "EDIT_COURSE" && <div>edit course</div>}
+      {action === "LIST_COURSE" && <div><ListCourse/></div>}
+      {action === "ADD_COURSE" && <div><AddCourse/></div>}
+      
     </div>
   );
 }

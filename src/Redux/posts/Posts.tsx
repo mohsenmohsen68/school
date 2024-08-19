@@ -7,6 +7,7 @@ export const getPostsFromServer = createAsyncThunk('posts/getPostsFromServer', a
 })
 
 export const createANewPost = createAsyncThunk('posts/createANewPost', async(postBody) => {
+   console.log("nnnn : ", postBody);
    return fetch('api/post',{
       method: 'POST',
       body:JSON.stringify(postBody),

@@ -2,11 +2,8 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { Formik } from "formik";
-import { UseDispatch, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createANewArticle } from "@/Redux/articles/Articles";
-import { Mds } from "mds.persian.datetime";
-import PersianDateTime = Mds.PersianDateTime;
-import moment from 'jalali-moment'
 const { uuid } = require('uuidv4');
 
 const ArticleEditor = dynamic(
@@ -14,17 +11,6 @@ const ArticleEditor = dynamic(
   { ssr: false }
 );
 
-// interface articleBody {
-
-//     articleID: string,
-//     title: string,
-//     category: string,
-//     keyWords: string,
-//     author: string,
-//     publishedDate: String,
-//     img:string,
-//     articleBody:string
-// }
 
 export default function AddArticle() {
   const dispatch = useDispatch()
@@ -196,7 +182,7 @@ export default function AddArticle() {
             </div>
 
             <div className='w-full'>
-              <ArticleEditor onHandleAddArticle={handleAddArticle} />
+              <ArticleEditor onHandleAddArticle={handleAddArticle} imgPath={'/api/articles/image'} />
             </div>
 
             <div className='w-full'>

@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { createANewPost } from "@/Redux/posts/Posts";
-import PostEditor from "@/components/PostEditor/PostEditor";
 const { uuid } = require('uuidv4');
 
 const ArticleEditor = dynamic(
@@ -99,7 +98,7 @@ export default function AddPost() {
             
 
             <div className='w-full'>
-              <PostEditor onHandleAddPost={handleAddPost} />
+              < ArticleEditor onHandleAddArticle={handleAddPost} imgPath={'/api/post/image'} />
             </div>
 
             <div className='w-full'>

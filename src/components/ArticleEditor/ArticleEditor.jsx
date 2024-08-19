@@ -75,7 +75,7 @@ import "ckeditor5/ckeditor5.css";
 
 
 
-export default function ArticleEditor({onHandleAddArticle}) {
+export default function ArticleEditor({onHandleAddArticle,imgPath}) {
   const [data,setData] = useState('')
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
@@ -97,12 +97,11 @@ export default function ArticleEditor({onHandleAddArticle}) {
 				const body = new FormData();
 				loader.file.then((file)=>{
 					body.append('uploadImg', file);
-					fetch('/api/articles/image',{
+					fetch(imgPath,{
 						method: "POST",
 						body : body
 					}).then(res => res.json())
 					.then(res => {
-						// console.log('ressssssss : ', res)
 						resolve({default : res.url})
 					})
 					.catch(err => {
