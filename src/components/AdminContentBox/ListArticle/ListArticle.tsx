@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getArticlesFromServer } from "@/Redux/articles/Articles";
+import { deleteArticle, getArticlesFromServer } from "@/Redux/articles/Articles";
 import { AppDispatch, RootState } from "@/Redux/Store";
 import Box from "@mui/material/Box";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
@@ -27,8 +27,8 @@ export default function ListArticles() {
     }
   });
 
-  const removeHandler = (params) => {
-    console.log('userCode ::: ',params.row.userCode)
+  const removeHandler =async (params) => {
+    console.log('articleID ::: ',params.row.articleID)
 
     Swal.fire({
       toast: true,
@@ -39,7 +39,7 @@ export default function ListArticles() {
        cancelButton: "font-moraba",
       },
       position: "bottom-end",
-      title:' آیا از حذف کاربر اطمینان دارید ؟ ',
+      title:' آیا از حذف مقاله اطمینان دارید ؟ ',
       icon:'warning',
       showConfirmButton:true,
       confirmButtonText:'بلی',
@@ -49,38 +49,31 @@ export default function ListArticles() {
       cancelButtonColor: 'blue'
 
     }).then(result => {
-      // the user confirms to remove the selected user ...
+      // the user confirms to remove the selected article ...
        if(result.isConfirmed === true){
-         const Response= fetch(`/api/user?id=${params.row.userCode}`,{
-          method:'DELETE',
-
-         }).then(res=>res.json())
-         .then(data=>{
-
-          if(data.status === 200){
-            
-            Toast.fire({
-              icon: "success",
-              customClass:{
-                title: "font-moraba",
-               },
-              title: "کاربر با موفقیت حذف شد ..."
-            });
-            dispatch(getUsersFromServer("/api/user"));
-            
-
-          }else if(data.status === 404){
-            Toast.fire({
-              icon: "error",
-              customClass:{
-                title: "font-moraba",
-               },
-              title: "کاربری با این کد وجود ندارد ..."
-            });
-          }
-         })
-
-         
+          dispatch(deleteArticle(params.row.articleID)).then(result => {
+            console.log('remove article result : ',result)
+            if(result.payload.status === 200){
+              Toast.fire({
+                icon: "success",
+                customClass:{
+                  title: "font-moraba",
+                 },
+                title: "مقاله با موفقیت حذف شد ..."
+              });
+              dispatch(getArticlesFromServer("/api/articles"));
+              
+  
+            }else if(result.payload.status === 404){
+              Toast.fire({
+                icon: "error",
+                customClass:{
+                  title: "font-moraba",
+                 },
+                title: "مقاله ای با این کد وجود ندارد ..."
+              });
+            }
+           })         
        }
        else{
         console.log("cancel shod ...")
@@ -90,7 +83,9 @@ export default function ListArticles() {
     })
     // fetch('/api/user')
   };
-  const editHandler = () => {};
+  const editHandler = async( params ) => {
+    
+  };
   const infoHandler = () => {};
 
   const columns: GridColDef[] = [

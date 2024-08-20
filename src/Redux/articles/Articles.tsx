@@ -40,6 +40,17 @@ export const getArticlesFromServer = createAsyncThunk(
        .then((data) => data);
    }
  );
+ export const deleteArticle = createAsyncThunk(
+   "article/deleteArticle",
+   async (articleID:string) => {
+     console.log("nnnn : ", articleID);
+     return fetch(`api/articles?articleID=${articleID}`, {
+       method: "DELETE",
+     })
+       .then((res) => res.json())
+       .then((data) => data);
+   }
+ );
 
 
 const slice = createSlice({
@@ -61,6 +72,10 @@ const slice = createSlice({
        builder.addCase(updateArticle.fulfilled, (state, action) => {
          console.log("state : ", state);
          console.log("action : ", action);
+       });
+       builder.addCase(deleteArticle.fulfilled, (state, action) => {
+         console.log("delete state : ", state);
+         console.log("delete action : ", action);
        });
    }
    

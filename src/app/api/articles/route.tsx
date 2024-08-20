@@ -59,3 +59,17 @@ export async function POST(req: Request) {
     });
   }
 }
+
+export async function DELETE(req:Request){
+  connectToDB()
+  const myUrl = new URL(req.url)
+  const articleID = myUrl.searchParams.get('articleID')
+  // console.log("request, userCode : ", prm)
+  const isUserExist = await articleModel.findOne({articleID})
+  if(!isUserExist){
+     return Response.json({message: "چنین مقاله ای وجود ندارد ...", status:404})
+  }else{
+    await articleModel.findOneAndDelete({articleID})
+    return Response.json({message:'مقاله مورد نظر حذف گردید ...',status:200})
+  }
+}
