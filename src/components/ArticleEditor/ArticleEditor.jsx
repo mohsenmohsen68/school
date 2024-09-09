@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import './ArticleEditor.css'
+import './../../app/globals.css'
+import MathType from '@wiris/mathtype-ckeditor5/dist/index.js';
 
 import {
   ClassicEditor,
@@ -25,23 +28,24 @@ import {
   FullPage,
   GeneralHtmlSupport,
   Heading,
+  HeadingButtonsUI,
+  ParagraphButtonUI,
   Highlight,
   HorizontalLine,
   HtmlComment,
   HtmlEmbed,
   ImageBlock,
-  ImageCaption,
-  ImageInsertViaUrl,
-  ImageResize,
-  ImageStyle,
-  ImageTextAlternative,
-  ImageToolbar,
-  ImageUpload,
+  ImageInline,
+	ImageCaption,
+	ImageInsertViaUrl,
+	ImageResize,
+	ImageStyle,
+	ImageTextAlternative,
+	ImageToolbar,
+	ImageUpload,
   Indent,
   IndentBlock,
   Italic,
-  Link,
-  LinkImage,
   List,
   ListProperties,
   Paragraph,
@@ -68,59 +72,64 @@ import {
   TableToolbar,
   Title,
   Underline,
-  Undo
+  Undo,
 } from "ckeditor5";
 
 import "ckeditor5/ckeditor5.css";
 
-
-
-export default function ArticleEditor({onHandleAddArticle,imgPath}) {
-  const [data,setData] = useState('')
+export default function ArticleEditor({
+  onHandleAddArticle,
+  imgPath,
+  initData
+}) {
+  const [data, setData] = useState("");
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
-  const handleChange = () =>{
-    onHandleAddArticle(data)
-  }
+  const handleChange = () => {
+    onHandleAddArticle(data);
+  };
 
   useEffect(() => {
     setIsLayoutReady(true);
     return () => setIsLayoutReady(false);
   }, []);
 
-  function uploadAdapter(loader){  
-	return {
-		upload : ()=>{
-			return new Promise((resolve,reject)=>{
-				const body = new FormData();
-				loader.file.then((file)=>{
-					body.append('uploadImg', file);
-					fetch(imgPath,{
-						method: "POST",
-						body : body
-					}).then(res => res.json())
-					.then(res => {
-						resolve({default : res.url})
-					})
-					.catch(err => {
-						reject(err);
-					})
-				}) 
-			})
-		}
-	} 
+  function uploadAdapter(loader) {
+    return {
+      upload: () => {
+        return new Promise((resolve, reject) => {
+          const body = new FormData();
+          loader.file.then((file) => {
+            body.append("uploadImg", file);
+            fetch(imgPath, {
+              method: "POST",
+              body: body
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                resolve({ default: res.url });
+              })
+              .catch((err) => {
+                reject(err);
+              });
+          });
+        });
+      }
+    };
   }
 
-  function uploadPlugin(editor){
-     editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
-		return uploadAdapter(loader)
-	 }
+  function uploadPlugin(editor) {
+    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+      return uploadAdapter(loader);
+    };
   }
 
   const editorConfig = {
-	extraPlugins : [uploadPlugin],
+    // config.contentsLangDirection = 'rtl',
+    extraPlugins: [uploadPlugin],
+    
     toolbar: {
       items: [
         "undo",
@@ -131,8 +140,13 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
         "findAndReplace",
         "selectAll",
         "|",
-        "heading",
-        "style",
+        "paragraph",
+        "heading1",
+        "heading2",
+        "heading3",
+        "heading4",
+        "heading5",
+        "heading6",
         "|",
         "fontSize",
         "fontFamily",
@@ -159,17 +173,25 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
         "htmlEmbed",
         "|",
         "alignment",
+        "direction:ltr",
+        "direction:rtl",
         "|",
         "bulletedList",
         "numberedList",
         "outdent",
         "indent",
         "|",
-        "accessibilityHelp"
+        "accessibilityHelp",
+        "|",
+        "MathType",
+        "ChemType"
+        //"insertImage"
       ],
       shouldNotGroupWhenFull: true
     },
     plugins: [
+      MathType,
+      // 
       AccessibilityHelp,
       Alignment,
       AutoImage,
@@ -191,23 +213,24 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
       FullPage,
       GeneralHtmlSupport,
       Heading,
+      HeadingButtonsUI,
+      ParagraphButtonUI,
       Highlight,
       HorizontalLine,
       HtmlComment,
       HtmlEmbed,
       ImageBlock,
-      ImageCaption,
-      ImageInsertViaUrl,
-      ImageResize,
-      ImageStyle,
-      ImageTextAlternative,
-      ImageToolbar,
-      ImageUpload,
+	    ImageCaption,
+	    ImageInsertViaUrl,
+      ImageInline,
+	    ImageResize,
+	    ImageStyle,
+	    ImageTextAlternative,
+	    ImageToolbar,
+	    ImageUpload,
       Indent,
       IndentBlock,
       Italic,
-      Link,
-      LinkImage,
       List,
       ListProperties,
       Paragraph,
@@ -234,8 +257,11 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
       TableToolbar,
       Title,
       Underline,
-      Undo
+      Undo,
     ],
+    alignment: {
+      options: ["left", "right", "center", "justify"]
+    },
     balloonToolbar: [
       "bold",
       "italic",
@@ -309,6 +335,7 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
           title: "Heading 6",
           class: "ck-heading_heading6"
         }
+       
       ]
     },
     htmlSupport: {
@@ -323,22 +350,28 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
     },
     image: {
       toolbar: [
+        "imageStyle:block",
+        "|",
+         "imageStyle:alignLeft",
+         "imageStyle:alignRight",
+         "|",
+         "imageStyle:alignCenter",
+         "imageStyle:alignBlockLeft",
+         "imageStyle:alignBlockRight",
+        "|",
         "toggleImageCaption",
         "imageTextAlternative",
-        "|",
-        "imageStyle:alignBlockLeft",
-        "imageStyle:block",
-        "imageStyle:alignBlockRight",
-        "|",
-        "resizeImage"
+        
       ],
-      styles: {
-        options: ["alignBlockLeft", "block", "alignBlockRight"]
+      insert: {
+        // If this setting is omitted, the editor defaults to 'block'.
+        // See explanation below.
+        type: "auto"
       }
     },
-    initialData:'<p>خوش آمدید ...</p>',
-     
-	link: {
+    initialData: initData,
+
+    link: {
       addTargetToExternalLinks: true,
       defaultProtocol: "https://",
       decorators: {
@@ -361,7 +394,6 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
     menuBar: {
       isVisible: true
     },
-    placeholder: "Type or paste your content here!",
     style: {
       definitions: [
         {
@@ -419,28 +451,29 @@ export default function ArticleEditor({onHandleAddArticle,imgPath}) {
         "tableProperties",
         "tableCellProperties"
       ]
+    },
+    autoParagraph: false,
+    enterMode: "div",
+    ShiftEnterMode: "br",
+    language: {
+      ui: 'en',
+      content: 'fa'
     }
   };
 
-
-
-
   return (
-    <div >
-      <div className="pt-4">
-        <div
-           ref={editorContainerRef}
-        >
+    <div>
+      <div className='pt-4'>
+        <div ref={editorContainerRef}>
           <div>
             <div ref={editorRef}>
               {isLayoutReady && (
                 <CKEditor
-				  
                   editor={ClassicEditor}
                   config={editorConfig}
                   onChange={(event, ClassicEditor) => {
-                    setData( ClassicEditor.getData())
-                    handleChange()
+                    setData(ClassicEditor.getData());
+                    handleChange();
                   }}
                 />
               )}

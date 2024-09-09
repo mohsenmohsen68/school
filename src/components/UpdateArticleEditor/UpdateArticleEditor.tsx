@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Formik } from "formik";
+import { Formik, FormikErrors } from "formik";
 import { useDispatch } from "react-redux";
-import { createANewArticle } from "@/Redux/articles/Articles";
-const { uuid } = require('uuidv4');
+import { getArticlesFromServer, updateArticle } from "@/Redux/articles/Articles";
+import { AppDispatch } from "@/Redux/Store";
 import Swal from 'sweetalert2'
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
 
 const ArticleEditor = dynamic(
-  () => import("./../../../components/ArticleEditor/ArticleEditor"),
+  () => import("./../../components/ArticleEditor/ArticleEditor"),
   { ssr: false }
 );
 
@@ -25,24 +25,26 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function AddArticle() {
-  const dispatch = useDispatch()
-  const [articleData, setArticleData] = useState("");
+export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
+  console.log('rrrrr', rowData)
+  const dispatch = useDispatch<AppDispatch>()
+  const [articleData, setArticleData] = useState(rowData.articleData);
 
   const handleAddArticle = (data: string) => {
     setArticleData(data);
+    console.log('my updated article body ... : ',data)
   };
 
   return (
     <div className='p-7'>
       <Formik
         initialValues={{
-          title: "",
-          category: "",
-          keyWords: ""
+          title: rowData.title,
+          category: rowData.categoty,
+          keyWords: rowData.keyWords
         }}
         validate={(values) => {
-          const errors = {
+          const errors= {
             title: "",
             category: "",
             keyWords: ""
@@ -86,9 +88,9 @@ export default function AddArticle() {
           let day = d.getDay();
           const pdate = new Date(year,month,day)
           const publishedDate = new Intl.DateTimeFormat('fa-IR').format(pdate);
-          const articleID = uuid()
+          
           const body = {
-            articleID,
+            articleID:rowData.articleID,
             title: values.title,
             category: values.category,
             keyWords: values.keyWords,
@@ -97,10 +99,10 @@ export default function AddArticle() {
             img:'mkmkmk',
             articleBody:articleData
           };
-           console.log(body)
-          const result = await dispatch(createANewArticle(body))
-          console.log('result of adding article :',result.payload.status)
-          if(result.payload.status === 201){
+           console.log('updated body : ',body)
+          const result =await dispatch(updateArticle(body))
+          console.log("resulttttt:",result)
+          if(result.payload.status){
             Toast.fire({
               toast: true,
               customClass: {
@@ -108,10 +110,11 @@ export default function AddArticle() {
                 htmlContainer: "bg-slate-200 dark:bg-slate-700"
               },
               position: "bottom-end",
-              title: " مقاله با موفقیت ثبت گردید ...",
+              title: " مقاله با موفقیت بروز گردید ...",
               icon: "success"
             });
-            dispatch( selectOption("") ) 
+            dispatch(getArticlesFromServer("/api/articles"));
+            dispatch(selectOption(""))
           }else{
             Toast.fire({
               toast: true,
@@ -123,7 +126,11 @@ export default function AddArticle() {
               icon: "error"
             });
           }
-
+         
+          
+          
+          //to show the articles list we call onUpdate Prop
+          onUpdate()
         }
       }
       >
@@ -219,7 +226,7 @@ export default function AddArticle() {
             </div>
 
             <div className='w-full'>
-              <ArticleEditor onHandleAddArticle={handleAddArticle} imgPath={'/api/articles/image'} initData={'<p>  من ویرایشگر مقاله های شما هستم ... </p>'}/>
+              <ArticleEditor onHandleAddArticle={handleAddArticle} imgPath={'/api/articles/image'} initData={rowData.articleBody}/>
             </div>
 
             <div className='w-full'>
@@ -228,7 +235,7 @@ export default function AddArticle() {
                 disabled={isSubmitting}
                 className='rounded-md bg-green-600 hover:bg-green-400 p-2 mt-2 text-xl font-moraba w-full '
               >
-                ثبت مقاله
+                بروز رسانی مقاله
               </button>
             </div>
           </form>
@@ -237,3 +244,4 @@ export default function AddArticle() {
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteArticle, getArticlesFromServer } from "@/Redux/articles/Articles";
 import { AppDispatch, RootState } from "@/Redux/Store";
@@ -8,10 +8,15 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { faIR } from "@mui/x-data-grid/locales";
 import Swal from "sweetalert2";
+import UpdateArticleEditor from './../../UpdateArticleEditor/UpdateArticleEditor'
+import ArticlePreviewHandler from "@/components/ArticlePreviewHandler/ArticlePreviewHandler";
 
 export default function ListArticles() {
   const dispatch = useDispatch<AppDispatch>();
   const articles = useSelector<RootState>((state) => state.articles);
+  const [showUpdateArticle,setShowUpdateArticle] = useState(false)
+  const [showPreviewArticle,setShowPreviewArticle] = useState(false)
+  const [rowData,setRowData] = useState({})
   
   // console.log("users : ",users)
 
@@ -83,10 +88,23 @@ export default function ListArticles() {
     })
     // fetch('/api/user')
   };
+
+  const updateDone = ()=>{
+    setShowUpdateArticle(false);
+  }
   const editHandler = async( params ) => {
-    
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowUpdateArticle(true);
+    setShowPreviewArticle(false) 
+
   };
-  const infoHandler = () => {};
+  const infoHandler = async( params ) => {
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowPreviewArticle(true)
+    setShowUpdateArticle(false);  
+  };
 
   const columns: GridColDef[] = [
     {
@@ -138,6 +156,7 @@ export default function ListArticles() {
       cellClassName:
         "font-moraba flex justify-center items-center text-center dark:text-white",
       renderCell: (params) => {
+        
         return (
           <>
             <button
@@ -151,7 +170,7 @@ export default function ListArticles() {
             </button>
             <button
               onClick={(e) => {
-                editHandler();
+                editHandler(params);
               }}
               className='bg-yellow-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -159,7 +178,7 @@ export default function ListArticles() {
             </button>
             <button
               onClick={(e) => {
-                infoHandler();
+                infoHandler(params);
               }}
               className='bg-sky-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -180,7 +199,8 @@ export default function ListArticles() {
   // console.log("user data: ", usersData)
   return (
     <div className=' '>
-      <Box
+      
+      { !showUpdateArticle && !showPreviewArticle && (<Box
         className=''
         sx={{
           height: "85vh",
@@ -196,7 +216,12 @@ export default function ListArticles() {
           className='bg-slate-200 dark:bg-slate-700'
           localeText={faIR.components.MuiDataGrid.defaultProps.localeText}
         />
-      </Box>
+      </Box>)}
+
+
+     {showUpdateArticle && !showPreviewArticle && <UpdateArticleEditor rowData={rowData} onUpdate={updateDone} />}
+
+     {showPreviewArticle && !showUpdateArticle && <ArticlePreviewHandler data={rowData} />}
     </div>
   );
 }

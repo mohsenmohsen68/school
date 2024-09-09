@@ -98,7 +98,7 @@ export default function AddPost() {
             
 
             <div className='w-full'>
-              < ArticleEditor onHandleAddArticle={handleAddPost} imgPath={'/api/post/image'} />
+              < ArticleEditor onHandleAddArticle={handleAddPost} imgPath={'/api/post/image'} initData={'<p>  من ویرایشگر پست های شما هستم ... </p>'} />
             </div>
 
             <div className='w-full'>

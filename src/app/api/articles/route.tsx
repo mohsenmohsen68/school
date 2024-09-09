@@ -73,3 +73,24 @@ export async function DELETE(req:Request){
     return Response.json({message:'مقاله مورد نظر حذف گردید ...',status:200})
   }
 }
+
+export async function PUT(req:Request){
+  connectToDB()
+  const body = await req.json()
+  try{
+     await articleModel.findOneAndUpdate({articleID:body.articleID},{
+      articleID: body.articleID,
+      keyWords: body.keyWords,
+      title : body.title,
+      category : body.category,
+      author : body.author,
+      publishedDate : body.publishedDate,
+      img : body.img,
+      articleBody : body.articleBody
+     })
+
+     return Response.json({message:'the article updated successfully', status:200})
+  }catch(err){
+    return Response.json({message:'Oops, something went wrong ...', status:500})
+  }
+}

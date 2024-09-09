@@ -387,7 +387,7 @@ export default function AddCourse() {
            
 
             <div className='w-full'>
-              <ArticleEditor onHandleAddArticle={handleAddCourse} imgPath={'/api/course/image'}  />
+              <ArticleEditor onHandleAddArticle={handleAddCourse} imgPath={'/api/course/image'} initData={'<p>  من ویرایشگر دوره های شما هستم ... </p>'}  />
             </div>
 
             <div className='w-full'>

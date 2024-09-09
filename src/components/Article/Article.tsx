@@ -3,7 +3,6 @@ import Image from "next/image";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { PiStudentLight } from "react-icons/pi";
 import Rating from "@mui/material/Rating";
-import { FaArrowDown } from "react-icons/fa";
 
 type prop = {
   title: string;
