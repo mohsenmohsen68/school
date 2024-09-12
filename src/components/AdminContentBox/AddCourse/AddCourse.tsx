@@ -4,6 +4,9 @@ import dynamic from "next/dynamic";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { createANewCourse } from "@/Redux/courses/Courses";
+import Image from "next/image";
+import Swal from 'sweetalert2'
+import { selectOption } from "@/Redux/CMS/CMSRoutes";
 const { uuid } = require("uuidv4");
 
 const ArticleEditor = dynamic(
@@ -11,12 +14,51 @@ const ArticleEditor = dynamic(
   { ssr: false }
 );
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
 export default function AddCourse() {
   const dispatch = useDispatch();
   const [courseData, setCourseData] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedFile, setSelectedFile] = useState("");
 
   const handleAddCourse = (data: string) => {
     setCourseData(data);
+  };
+
+  const handleImageUploadButton = async ():boolean => {
+    // setUploading(true);
+    try {
+      if (!selectedFile) return false;
+       console.log("the file is selected ...")
+      let data = new FormData();
+      data.append("image", selectedFile);
+      fetch("http://localhost:3002/api/course/titleImage", {
+        method: "POST",
+        body: data
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          // setImageFileName(d.filename);
+          console.log("ggg", d.filename);
+          console.log("ggg2", selectedImage);
+          console.log("ggg4", selectedFile);
+          return true;
+        });
+    } catch (err) {
+      console.log('errrr',err);
+    }
+    // setUploading(false);
   };
 
   return (
@@ -75,19 +117,18 @@ export default function AddCourse() {
           //course price validation
           if (!values.price) {
             errors.price = "وارد کردن قیمت دوره الزامی است.";
-          }else{
-              if (isNaN(+values.price)) {
-                errors.price = "ورودی قیمت باید یک عدد باشد ...";
-              } 
-
+          } else {
+            if (isNaN(+values.price)) {
+              errors.price = "ورودی قیمت باید یک عدد باشد ...";
+            }
           }
           //course status validation
           if (!values.status) {
             errors.status = "وارد کردن وضعیت دوره الزامی است.";
           }
           //course session validation
-          if(!values.sessionNo){
-            errors.sessionNo = "ورد کردن تعداد جلسات الزامی است ..."
+          if (!values.sessionNo) {
+            errors.sessionNo = "ورد کردن تعداد جلسات الزامی است ...";
           }
           if (isNaN(+values.sessionNo)) {
             errors.sessionNo = "تعداد جلسات دوره باید یک عدد باشد ...";
@@ -105,7 +146,7 @@ export default function AddCourse() {
           //course courseType validation
           if (!values.courseType) {
             errors.courseType = "وارد کردن نوع دوره الزامی است.";
-          } 
+          }
           //course teacher validation
           if (!values.teacher) {
             errors.teacher = "وارد کردن مدرس دوره الزامی است.";
@@ -114,17 +155,16 @@ export default function AddCourse() {
           }
 
           //course studentNo validation
-          if(!values.studentNo){
-            errors.studentNo = 'تعداد دانش آموزان دوره نباید خالی باشد ...'
-          }else{
-              if (isNaN(+values.studentNo)) {
-                errors.studentNo = "تعداد دانش آموزان دوره باید یک عدد باشد ...";
-              } else if (+values.studentNo < 0) {
-                errors.studentNo = " تعداد دانش آموزان باید عددی مثبت باشد ...";
-              }
-
+          if (!values.studentNo) {
+            errors.studentNo = "تعداد دانش آموزان دوره نباید خالی باشد ...";
+          } else {
+            if (isNaN(+values.studentNo)) {
+              errors.studentNo = "تعداد دانش آموزان دوره باید یک عدد باشد ...";
+            } else if (+values.studentNo < 0) {
+              errors.studentNo = " تعداد دانش آموزان باید عددی مثبت باشد ...";
+            }
           }
-          console.log('err: ',errors)
+          console.log("err: ", errors);
           if (
             errors.title === "" &&
             errors.description === "" &&
@@ -144,33 +184,74 @@ export default function AddCourse() {
         }}
         onSubmit={async (values, { setSubmitting }) => {
           console.log("mmmmm", courseData);
-          const d = new Date();
-          let year = d.getFullYear();
-          let month = d.getMonth();
-          let day = d.getDay();
-          const pdate = new Date(year, month, day);
-          const publishedDate = new Intl.DateTimeFormat("fa-IR").format(pdate);
-          const courseID = uuid();
-          const body = {
-            courseID,
-            title: values.title,
-            description: values.description,
-            discount: values.discount,
-            price: values.price,
-            status: values.status,
-            sessionNo: values.sessionNo,
-            publishedDate: publishedDate,
-            lastUpdate: publishedDate,
-            preRequisite: values.preRequisite,
-            courseType: values.courseType,
-            studentNo: 0,
-            stisfiction: 5,
-            img: "/......................./",
-            courseBody: courseData,
-            teacher: values.teacher
-          };
-          console.log(' ----  bodddddddddy ---',body);
-         dispatch(createANewCourse(body));
+
+          const imageHandled = handleImageUploadButton();
+          console.log('cccc',imageHandled)
+          if (imageHandled) {
+            const d = new Date();
+            let year = d.getFullYear();
+            let month = d.getMonth();
+            let day = d.getDay();
+            const pdate = new Date(year, month, day);
+            const publishedDate = new Intl.DateTimeFormat("fa-IR").format(
+              pdate
+            );
+            const courseID = uuid();
+            const body = {
+              courseID,
+              title: values.title,
+              description: values.description,
+              discount: values.discount,
+              price: values.price,
+              status: values.status,
+              sessionNo: values.sessionNo,
+              publishedDate: publishedDate,
+              lastUpdate: publishedDate,
+              preRequisite: values.preRequisite,
+              courseType: values.courseType,
+              studentNo: 0,
+              stisfiction: 5,
+              img: "/......................./",
+              courseBody: courseData,
+              teacher: values.teacher
+            };
+            console.log(" ----  bodddddddddy ---", body);
+            const result = await dispatch(createANewCourse(body));
+            console.log('result of adding article :',result.payload.status)
+            if(result.payload.status === 201){
+              Toast.fire({
+                toast: true,
+                customClass: {
+                  title: "font-moraba",
+                  htmlContainer: "bg-slate-200 dark:bg-slate-700"
+                },
+                position: "bottom-end",
+                title: " دوره با موفقیت ثبت گردید ...",
+                icon: "success"
+              });
+              dispatch( selectOption("") ) 
+            }else{
+              Toast.fire({
+                toast: true,
+                customClass: {
+                  title: "font-moraba"
+                },
+                position: "bottom-end",
+                title: " مشکلی در سمت سرور رخ داده است ...",
+                icon: "error"
+              });
+            }
+          } else {
+            Toast.fire({
+              toast: true,
+              customClass: {
+                title: "font-moraba"
+              },
+              position: "bottom-end",
+              title: " مشکلی در سمت سرور رخ داده است ...",
+              icon: "error"
+            });
+          }
         }}
       >
         {({
@@ -250,8 +331,7 @@ export default function AddCourse() {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2'>
-               
-            <div className='flex flex-col mt-2 ml-1'>
+              <div className='flex flex-col mt-2 ml-1'>
                 <input
                   type='text'
                   name='studentNo'
@@ -267,24 +347,38 @@ export default function AddCourse() {
               </div>
 
               <div className='flex justify-center items-center mt-2'>
-                <label
-                  htmlFor='file'
-                  className='bg-sky-500 mt-2 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
-                >
-                  بارگذاری تصویر
+                <label>
+                  <input
+                    type='file'
+                    hidden
+                    onChange={({ target }) => {
+                      if (target.files) {
+                        const file = target.files[0];
+                        setSelectedImage(URL.createObjectURL(file));
+                        setSelectedFile(file);
+                        console.log("file : ", file);
+                        console.log("Image : ", selectedImage);
+                      }
+                    }}
+                  />
+                  <div>
+                    {selectedImage ? (
+                      <Image
+                        src={selectedImage}
+                        width={70}
+                        height={70}
+                        alt='selected image'
+                      />
+                    ) : (
+                      <div className='p-1 bg-green-500 border-dashed '>
+                        انتخاب تصویر دوره
+                      </div>
+                    )}
+                  </div>
                 </label>
-                <input
-                  type='file'
-                  name='img'
-                  id='file'
-                  placeholder='انتخاب عکس  ...'
-                  className='bg-slate-200 p-2'
-                  accept='image/*'
-                  hidden
-                  onChange={handleChange}
-                  value={values.img}
-                  onBlur={handleBlur}
-                />
+                {/* <button disabled={uploading} onClick={handleImageUploadButton}>
+                  {uploading ? "در حال بارگزاری ..." : "بارگزاری"}
+                </button> */}
               </div>
             </div>
 
@@ -323,8 +417,7 @@ export default function AddCourse() {
             </div>
 
             <div className=' grid grid-cols-1 md:grid-cols-2'>
-
-            <div className='flex flex-col mt-2 ml-1'>
+              <div className='flex flex-col mt-2 ml-1'>
                 <select
                   name='status'
                   id='status'
@@ -341,7 +434,6 @@ export default function AddCourse() {
                   {errors.status && touched.status && errors.status}
                 </div>
               </div>
-             
 
               <div className='flex flex-col mt-2'>
                 <select
@@ -364,8 +456,6 @@ export default function AddCourse() {
             </div>
 
             <div className=' grid grid-cols-1 md:grid-cols-2'>
-             
-
               <div className='flex flex-col mt-2 font-moraba'>
                 <input
                   type='text'
@@ -377,17 +467,17 @@ export default function AddCourse() {
                   onBlur={handleBlur}
                 />
                 <div className='text-xs text-red-500'>
-                  {errors.teacher &&
-                    touched.teacher &&
-                    errors.teacher}
+                  {errors.teacher && touched.teacher && errors.teacher}
                 </div>
               </div>
             </div>
-            
-           
 
             <div className='w-full'>
-              <ArticleEditor onHandleAddArticle={handleAddCourse} imgPath={'/api/course/image'} initData={'<p>  من ویرایشگر دوره های شما هستم ... </p>'}  />
+              <ArticleEditor
+                onHandleAddArticle={handleAddCourse}
+                imgPath={"/api/course/image"}
+                initData={"<p>  من ویرایشگر دوره های شما هستم ... </p>"}
+              />
             </div>
 
             <div className='w-full'>
