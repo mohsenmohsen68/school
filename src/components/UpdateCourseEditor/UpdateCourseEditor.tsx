@@ -34,7 +34,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
   const [courseData, setCourseData] = useState(rowData.courseData);
   const [selectedImage, setSelectedImage] = useState(rowData.img);
   const [selectedFile, setSelectedFile] = useState()
-  const [fileName,setFileName] = useState('')
+  const [fileName,setFileName] = useState(rowData.img.split('/')[3])
 
 
   const handleAddCourse = (data: string) => {
@@ -42,25 +42,28 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
     console.log('my updated article body ... : ',data)
   };
 
-  const handleImageUploadButton = async () => {
+  const handleImageUploadButton = async (selectedF:File) => {
     // setUploading(true);
-    try {
-        console.log("the file is selected ...")
-       let data = new FormData();
-       data.append("image", selectedFile);
-       fetch("http://localhost:3002/api/course/titleImage", {
-         method: "POST",
-         body: data
-       })
-         .then((res) => res.json())
-         .then((d) => {
-           setFileName(d.filename)
-           console.log("ggg", d.filename);
-           console.log("ggg2", selectedImage);
-         });
-    } catch (err) {
-      console.log('errrr',err);
-    }
+    
+      try {
+        console.log('fff',selectedF)
+         let data = new FormData();
+         data.append("image", selectedF);
+         fetch("http://localhost:3002/api/course/titleImage", {
+           method: "POST",
+           body: data
+         })
+           .then((res) => res.json())
+           .then((d) => {
+             setFileName(d.filename)
+             console.log("ggg", d.filename);
+             console.log("ggg2", selectedImage);
+             console.log("ggg4", selectedFile);
+             console.log("gggff", d);
+           });
+      } catch (err) {
+        console.log('errrr',err);
+      }
     // setUploading(false);
   };
 
@@ -186,9 +189,9 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
         }
       }}
       onSubmit={async (values, { setSubmitting }) => {
-        console.log("mmmmm", courseData);
-
-        await handleImageUploadButton();
+          
+        console.log('fileName : ',fileName)
+        
           const d = new Date();
           let year = d.getFullYear();
           let month = d.getMonth();
@@ -197,9 +200,8 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
           const publishedDate = new Intl.DateTimeFormat("fa-IR").format(
             pdate
           );
-          const courseID = uuid();
           const body = {
-            courseID,
+            courseID:rowData.courseID,
             title: values.title,
             description: values.description,
             discount: values.discount,
@@ -210,16 +212,16 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
             lastUpdate: publishedDate,
             preRequisite: values.preRequisite,
             courseType: values.courseType,
-            studentNo: 0,
+            studentNo: values.studentNo,
             stisfiction: 5,
-            img: `/public/img/coursesTitleImage/${fileName} `,
+            img: `/img/coursesTitleImage/${fileName} `,
             courseBody: courseData,
             teacher: values.teacher
           };
           console.log(" ----  bodddddddddy ---", body);
           const result = await dispatch(updateCourse(body));
-          console.log('result of updating course :',result.payload.status)
-          if(result.payload.status === 201){
+          console.log('result of adding article :',result.payload)
+          if(result.payload.status === 200){
             Toast.fire({
               toast: true,
               customClass: {
@@ -227,7 +229,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
                 htmlContainer: "bg-slate-200 dark:bg-slate-700"
               },
               position: "bottom-end",
-              title: " دوره با موفقیت ویرایش گردید ...",
+              title: " دوره با موفقیت بروز گردید ...",
               icon: "success"
             });
             dispatch( selectOption("") ) 
@@ -242,7 +244,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
               icon: "error"
             });
           }
-      }}
+        }}
     >
       {({
         values,
@@ -281,9 +283,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
                 onBlur={handleBlur}
               />
               <div className='text-xs text-red-500'>
-                {errors.description &&
-                  touched.description &&
-                  errors.description}
+                {errors.description && touched.description && errors.description}
               </div>
             </div>
           </div>
@@ -348,6 +348,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
                       setSelectedFile(file);
                       console.log("file : ", file);
                       console.log("Image : ", selectedImage);
+                      handleImageUploadButton(file)
                     }
                   }}
                 />
@@ -463,7 +464,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
             <ArticleEditor
               onHandleAddArticle={handleAddCourse}
               imgPath={"/api/course/image"}
-              initData={"<p>  من ویرایشگر دوره های شما هستم ... </p>"}
+              initData={rowData.courseBody}
             />
           </div>
 
@@ -473,7 +474,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
               disabled={isSubmitting}
               className='rounded-md bg-green-600 hover:bg-green-400 p-2 mt-2 text-xl font-moraba w-full '
             >
-              ثبت مقاله
+              ویرایش دوره
             </button>
           </div>
         </form>

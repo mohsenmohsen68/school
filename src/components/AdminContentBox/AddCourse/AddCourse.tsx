@@ -32,8 +32,7 @@ export default function AddCourse() {
   const [uploaded,setUploaded] = useState(false)
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [fileName,setFileName] = useState('')
-  const [isFileSelected,setIsFileSelected] = useState(false)
+  const [fileName,setFileName] = useState('');
 
   const handleAddCourse = (data: string) => {
     setCourseData(data);
@@ -43,28 +42,7 @@ export default function AddCourse() {
     setUploaded(true);
   },[uploaded])
   
-  // useEffect(()=>{
-  //   setUploaded(true);
-  // },[fileName])
 
-
-  // useEffect(()=>{
-  //   console.log("called..")
-  //   let data = new FormData();
-  //      data.append("image", selectedFile);
-  //       fetch("http://localhost:3002/api/course/titleImage", {
-  //        method: "POST",
-  //        body: data
-  //      })
-  //        .then((res) => res.json())
-  //        .then((d) => {
-  //          setUploaded(true);
-  //          setFileName(d.filename)
-  //          console.log("ggg", d.filename);
-  //         //  console.log("ggg2", selectedImage);
-  //          console.log("ggg4", selectedFile);
-  //        });
-  // },[selectedFile])
 
   const handleImageUploadButton = async (selectedF:File) => {
     // setUploading(true);
@@ -238,7 +216,7 @@ export default function AddCourse() {
               lastUpdate: publishedDate,
               preRequisite: values.preRequisite,
               courseType: values.courseType,
-              studentNo: 0,
+              studentNo: values.studentNo,
               stisfiction: 5,
               img: `/img/coursesTitleImage/${fileName} `,
               courseBody: courseData,
@@ -387,10 +365,8 @@ export default function AddCourse() {
                         setSelectedFile(file);
                         console.log("file : ", selectedFile);
                         console.log("Image : ", selectedImage);
-                        setIsFileSelected(true)
                         handleImageUploadButton(file)
                       }else{
-                        setIsFileSelected(false)
                       }
                     }}
                   />
@@ -519,7 +495,7 @@ export default function AddCourse() {
                 disabled={isSubmitting}
                 className='rounded-md bg-green-600 hover:bg-green-400 p-2 mt-2 text-xl font-moraba w-full '
               >
-                ثبت مقاله
+                ثبت دوره
               </button>
             </div>
           </form>

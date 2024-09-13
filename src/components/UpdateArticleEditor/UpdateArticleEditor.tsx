@@ -102,7 +102,7 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
            console.log('updated body : ',body)
           const result =await dispatch(updateArticle(body))
           console.log("resulttttt:",result)
-          if(result.payload.status){
+          if(result.payload.status === 200){
             Toast.fire({
               toast: true,
               customClass: {
