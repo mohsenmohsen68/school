@@ -56,9 +56,45 @@ export async function POST(req : Request){
     }
    
 }
-export async function PUT(){
+export async function PUT(req : Request){
+    connectToDB()
+  const body = await req.json()
+  try{
+     await courseModel.findOneAndUpdate({courseID:body.courseID},{
+        courseID : body.courseID,
+        title : body.title,
+        description : body.description,
+        discount : body.discount,
+        price : body.price,
+        status : body.status,
+        sessionNo : body.sessionNo,
+        preRequisite : body.preRequisite,
+        lastUpdate : body.lastUpdate,
+        courseType : body.courseType,
+        studentNo : body.studentNo,
+        stisfiction : body.stisfiction,
+        img : body.img,
+        courseBody : body.courseBody,
+        teacher : body.teacher,
+     })
 
+     return Response.json({message:'the article updated successfully', status:200})
+  }catch(err){
+    return Response.json({message:'Oops, something went wrong ...', status:500})
+  }
 }
-export async function DELETE(){
 
+
+export async function DELETE(req:Request){
+    connectToDB()
+    const myUrl = new URL(req.url)
+    const courseID = myUrl.searchParams.get('courseID')
+    // console.log("request, userCode : ", prm)
+    const isCourseExist = await courseModel.findOne({courseID})
+    if(!isCourseExist){
+       return Response.json({message: "چنین دوره ای وجود ندارد ...", status:404})
+    }else{
+      await courseModel.findOneAndDelete({courseID})
+      return Response.json({message:'دوره مورد نظر حذف گردید ...',status:200})
+    }
 }

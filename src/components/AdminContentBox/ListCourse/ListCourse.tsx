@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getArticlesFromServer } from "@/Redux/articles/Articles";
 import { AppDispatch, RootState } from "@/Redux/Store";
@@ -8,11 +8,16 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { faIR } from "@mui/x-data-grid/locales";
 import Swal from "sweetalert2";
-import { getCoursesFromServer } from "@/Redux/courses/Courses";
+import { deleteCourse, getCoursesFromServer } from "@/Redux/courses/Courses";
+import CoursePreviewHandler from '@/components/CoursePreviewHandler/CoursePreviewHandler'
+import UpdateCourseEditor from "@/components/UpdateCourseEditor/UpdateCourseEditor";
 
 export default function ListCourses() {
   const dispatch = useDispatch<AppDispatch>();
   const courses = useSelector<RootState>((state) => state.courses);
+  const [showUpdateCourse,setShowUpdateCourse] = useState(false)
+  const [showPreviewCourse,setShowPreviewCourse] = useState(false)
+  const [rowData,setRowData] = useState({})
   
   // console.log("users : ",users)
 
@@ -28,71 +33,78 @@ export default function ListCourses() {
     }
   });
 
-  // const removeHandler = (params) => {
-  //   console.log('userCode ::: ',params.row.courseID)
+  const removeHandler = (params) => {
+    console.log('userCode ::: ',params.row.courseID)
 
-  //   Swal.fire({
-  //     toast: true,
-  //     customClass:{
-  //      title: "font-moraba",
-  //      // actions: style.action,
-  //      confirmButton: "font-moraba",
-  //      cancelButton: "font-moraba",
-  //     },
-  //     position: "bottom-end",
-  //     title:' آیا از حذف کاربر اطمینان دارید ؟ ',
-  //     icon:'warning',
-  //     showConfirmButton:true,
-  //     confirmButtonText:'بلی',
-  //     confirmButtonColor: 'orange',
-  //     showCancelButton:true,
-  //     cancelButtonText:"خیر",
-  //     cancelButtonColor: 'blue'
+    Swal.fire({
+      toast: true,
+      customClass:{
+       title: "font-moraba",
+       // actions: style.action,
+       confirmButton: "font-moraba",
+       cancelButton: "font-moraba",
+      },
+      position: "bottom-end",
+      title:' آیا از حذف کاربر اطمینان دارید ؟ ',
+      icon:'warning',
+      showConfirmButton:true,
+      confirmButtonText:'بلی',
+      confirmButtonColor: 'orange',
+      showCancelButton:true,
+      cancelButtonText:"خیر",
+      cancelButtonColor: 'blue'
 
-  //   }).then(result => {
-  //     // the user confirms to remove the selected user ...
-  //      if(result.isConfirmed === true){
-  //        const Response= fetch(`/api/user?id=${params.row.userCode}`,{
-  //         method:'DELETE',
-
-  //        }).then(res=>res.json())
-  //        .then(data=>{
-
-  //         if(data.status === 200){
-            
-  //           Toast.fire({
-  //             icon: "success",
-  //             customClass:{
-  //               title: "font-moraba",
-  //              },
-  //             title: "کاربر با موفقیت حذف شد ..."
-  //           });
-  //           dispatch(getUsersFromServer("/api/user"));
+    }).then(result => {
+      // the user confirms to remove the selected user ...
+      if(result.isConfirmed === true){
+        dispatch(deleteCourse(params.row.courseID)).then(result => {
+          console.log('remove course result : ',result)
+          if(result.payload.status === 200){
+            Toast.fire({
+              icon: "success",
+              customClass:{
+                title: "font-moraba",
+               },
+              title: "دوره با موفقیت حذف شد ..."
+            });
+            dispatch(getCoursesFromServer());
             
 
-  //         }else if(data.status === 404){
-  //           Toast.fire({
-  //             icon: "error",
-  //             customClass:{
-  //               title: "font-moraba",
-  //              },
-  //             title: "کاربری با این کد وجود ندارد ..."
-  //           });
-  //         }
-  //        })
+          }else if(result.payload.status === 404){
+            Toast.fire({
+              icon: "error",
+              customClass:{
+                title: "font-moraba",
+               },
+              title: "دوره ای با این کد وجود ندارد ..."
+            });
+          }
+         })         
+     }
+     else{
+      console.log("cancel shod ...")
+     }
+    })
+  };
 
-         
-  //      }
-  //      else{
-  //       console.log("cancel shod ...")
-  //      }
 
-  //      // if(result.isDismissed ) 
-  //   })
-  //   // fetch('/api/user')
-  // };
-  const editHandler = () => {};
-  const infoHandler = () => {};
+  const updateDone = ()=>{
+    setShowUpdateCourse(false);
+  }
+  const editHandler = async( params ) => {
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowUpdateCourse(true);
+    setShowPreviewCourse(false) 
+
+  };
+  const infoHandler = async( params ) => {
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowPreviewCourse(true)
+    setShowUpdateCourse(false);  
+  };
+
 
   const columns: GridColDef[] = [
     {
@@ -158,7 +170,7 @@ export default function ListCourses() {
           <>
             <button
               onClick={(e) => {
-               // removeHandler(params);
+               removeHandler(params);
 
               }}
               className='bg-red-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
@@ -167,7 +179,7 @@ export default function ListCourses() {
             </button>
             <button
               onClick={(e) => {
-                editHandler();
+                editHandler(params);
               }}
               className='bg-yellow-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -175,7 +187,7 @@ export default function ListCourses() {
             </button>
             <button
               onClick={(e) => {
-                infoHandler();
+                infoHandler(params);
               }}
               className='bg-sky-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -196,7 +208,7 @@ export default function ListCourses() {
   // console.log("user data: ", usersData)
   return (
     <div className=' '>
-      <Box
+      { !showUpdateCourse && !showPreviewCourse && (<Box
         className=''
         sx={{
           height: "85vh",
@@ -212,7 +224,12 @@ export default function ListCourses() {
           className='bg-slate-200 dark:bg-slate-700'
           localeText={faIR.components.MuiDataGrid.defaultProps.localeText}
         />
-      </Box>
+      </Box>)}
+
+      {showUpdateCourse && !showPreviewCourse && <UpdateCourseEditor rowData={rowData} onUpdate={updateDone} />}
+
+     {showPreviewCourse && !showUpdateCourse && <CoursePreviewHandler data={rowData} />}
+   
     </div>
   );
 }

@@ -42,6 +42,18 @@ export const getCoursesFromServer = createAsyncThunk(
    }
  );
 
+ export const deleteCourse = createAsyncThunk(
+  "course/deleteCourse",
+  async (courseID:string) => {
+    console.log("nnnn : ", courseID);
+    return fetch(`api/course?courseID=${courseID}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
+
 
 const slice = createSlice({
    name:'course',
@@ -60,6 +72,10 @@ const slice = createSlice({
          console.log("action : ", action);
        });
        builder.addCase(updateCourse.fulfilled, (state, action) => {
+         console.log("state : ", state);
+         console.log("action : ", action);
+       });
+       builder.addCase(deleteCourse.fulfilled, (state, action) => {
          console.log("state : ", state);
          console.log("action : ", action);
        });

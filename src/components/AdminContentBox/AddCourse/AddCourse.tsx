@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
@@ -29,35 +29,66 @@ const Toast = Swal.mixin({
 export default function AddCourse() {
   const dispatch = useDispatch();
   const [courseData, setCourseData] = useState("");
+  const [uploaded,setUploaded] = useState(false)
   const [selectedImage, setSelectedImage] = useState("");
-  const [selectedFile, setSelectedFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [fileName,setFileName] = useState('')
+  const [isFileSelected,setIsFileSelected] = useState(false)
 
   const handleAddCourse = (data: string) => {
     setCourseData(data);
   };
 
-  const handleImageUploadButton = async ():boolean => {
+  useEffect(()=>{
+    setUploaded(true);
+  },[uploaded])
+  
+  // useEffect(()=>{
+  //   setUploaded(true);
+  // },[fileName])
+
+
+  // useEffect(()=>{
+  //   console.log("called..")
+  //   let data = new FormData();
+  //      data.append("image", selectedFile);
+  //       fetch("http://localhost:3002/api/course/titleImage", {
+  //        method: "POST",
+  //        body: data
+  //      })
+  //        .then((res) => res.json())
+  //        .then((d) => {
+  //          setUploaded(true);
+  //          setFileName(d.filename)
+  //          console.log("ggg", d.filename);
+  //         //  console.log("ggg2", selectedImage);
+  //          console.log("ggg4", selectedFile);
+  //        });
+  // },[selectedFile])
+
+  const handleImageUploadButton = async (selectedF:File) => {
     // setUploading(true);
-    try {
-      if (!selectedFile) return false;
-       console.log("the file is selected ...")
-      let data = new FormData();
-      data.append("image", selectedFile);
-      fetch("http://localhost:3002/api/course/titleImage", {
-        method: "POST",
-        body: data
-      })
-        .then((res) => res.json())
-        .then((d) => {
-          // setImageFileName(d.filename);
-          console.log("ggg", d.filename);
-          console.log("ggg2", selectedImage);
-          console.log("ggg4", selectedFile);
-          return true;
-        });
-    } catch (err) {
-      console.log('errrr',err);
-    }
+    
+      try {
+        console.log('fff',selectedF)
+         let data = new FormData();
+         data.append("image", selectedF);
+         fetch("http://localhost:3002/api/course/titleImage", {
+           method: "POST",
+           body: data
+         })
+           .then((res) => res.json())
+           .then((d) => {
+             setUploaded(true);
+             setFileName(d.filename)
+             console.log("ggg", d.filename);
+             console.log("ggg2", selectedImage);
+             console.log("ggg4", selectedFile);
+             console.log("gggff", d);
+           });
+      } catch (err) {
+        console.log('errrr',err);
+      }
     // setUploading(false);
   };
 
@@ -164,7 +195,7 @@ export default function AddCourse() {
               errors.studentNo = " تعداد دانش آموزان باید عددی مثبت باشد ...";
             }
           }
-          console.log("err: ", errors);
+         // console.log("err: ", errors);
           if (
             errors.title === "" &&
             errors.description === "" &&
@@ -183,11 +214,9 @@ export default function AddCourse() {
           }
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log("mmmmm", courseData);
-
-          const imageHandled = handleImageUploadButton();
-          console.log('cccc',imageHandled)
-          if (imageHandled) {
+          
+          console.log('fileName : ',fileName)
+          if (selectedFile && uploaded) {
             const d = new Date();
             let year = d.getFullYear();
             let month = d.getMonth();
@@ -211,7 +240,7 @@ export default function AddCourse() {
               courseType: values.courseType,
               studentNo: 0,
               stisfiction: 5,
-              img: "/......................./",
+              img: `/img/coursesTitleImage/${fileName} `,
               courseBody: courseData,
               teacher: values.teacher
             };
@@ -248,7 +277,7 @@ export default function AddCourse() {
                 title: "font-moraba"
               },
               position: "bottom-end",
-              title: " مشکلی در سمت سرور رخ داده است ...",
+              title: " یک عکس برای دوره انتخاب کنید ...",
               icon: "error"
             });
           }
@@ -356,8 +385,12 @@ export default function AddCourse() {
                         const file = target.files[0];
                         setSelectedImage(URL.createObjectURL(file));
                         setSelectedFile(file);
-                        console.log("file : ", file);
+                        console.log("file : ", selectedFile);
                         console.log("Image : ", selectedImage);
+                        setIsFileSelected(true)
+                        handleImageUploadButton(file)
+                      }else{
+                        setIsFileSelected(false)
                       }
                     }}
                   />
