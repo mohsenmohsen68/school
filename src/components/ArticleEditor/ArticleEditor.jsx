@@ -468,7 +468,7 @@ export default function ArticleEditor({
           <div>
             <div ref={editorRef}>
               {isLayoutReady && (
-                <CKEditor
+                <CKEditor className="p-9"
                   editor={ClassicEditor}
                   config={editorConfig}
                   onChange={(event, ClassicEditor) => {
