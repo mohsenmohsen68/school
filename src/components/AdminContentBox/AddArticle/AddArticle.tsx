@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import { createANewArticle } from "@/Redux/articles/Articles";
 const { uuid } = require('uuidv4');
 import Swal from 'sweetalert2'
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
+import Image from "next/image";
 
 const ArticleEditor = dynamic(
   () => import("./../../../components/ArticleEditor/ArticleEditor"),
@@ -28,9 +29,42 @@ const Toast = Swal.mixin({
 export default function AddArticle() {
   const dispatch = useDispatch()
   const [articleData, setArticleData] = useState("");
+  const [uploaded,setUploaded] = useState(false)
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [fileName,setFileName] = useState('');
 
   const handleAddArticle = (data: string) => {
     setArticleData(data);
+  };
+
+  useEffect(()=>{
+    setUploaded(true);
+  },[uploaded])
+  
+
+
+  const handleImageUploadButton = async (selectedF:File) => {
+      try {
+        console.log('fff',selectedF)
+         let data = new FormData();
+         data.append("image", selectedF);
+         fetch("http://localhost:3002/api/articles/titleImage", {
+           method: "POST",
+           body: data
+         })
+           .then((res) => res.json())
+           .then((d) => {
+             setUploaded(true);
+             setFileName(d.filename)
+             console.log("ggg", d.filename);
+             console.log("ggg2", selectedImage);
+             console.log("ggg4", selectedFile);
+             console.log("gggff", d);
+           });
+      } catch (err) {
+        console.log('errrr',err);
+      }
   };
 
   return (
@@ -196,26 +230,40 @@ export default function AddArticle() {
                 </div>
               </div>
 
-              <div className='flex justify-center items-center mt-2'>
-                <label
-                  htmlFor='file'
-                  className='bg-sky-500 mt-2 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
-                >
-                  بارگذاری تصویر
+              <div className='flex justify-center items-center mt-2 '>
+                <label>
+                  <input
+                    type='file'
+                    hidden
+                    onChange={({ target }) => {
+                      if (target.files) {
+                        const file = target.files[0];
+                        setSelectedImage(URL.createObjectURL(file));
+                        setSelectedFile(file);
+                        console.log("file : ", selectedFile);
+                        console.log("Image : ", selectedImage);
+                        handleImageUploadButton(file)
+                      }else{
+                      }
+                    }}
+                  />
+                  <div>
+                    {selectedImage ? (
+                      <Image
+                        src={selectedImage}
+                        width={70}
+                        height={70}
+                        alt='selected image'
+                      />
+                    ) : (
+                      <div className='p-1 bg-green-500 border-dashed font-moraba border-2 border-gray-200'>
+                        انتخاب تصویر دوره
+                      </div>
+                    )}
+                  </div>
                 </label>
-                <input
-                  type='file'
-                  name='img'
-                  id='file'
-                  placeholder='انتخاب عکس  ...'
-                  className='bg-slate-200 p-2'
-                  accept='image/*'
-                  hidden
-                  onChange={handleChange}
-                  value={values.img}
-                  onBlur={handleBlur}
-                />
               </div>
+
             </div>
 
             <div className='w-full'>

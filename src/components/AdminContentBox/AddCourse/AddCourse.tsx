@@ -45,13 +45,12 @@ export default function AddCourse() {
 
 
   const handleImageUploadButton = async (selectedF:File) => {
-    // setUploading(true);
-    
+   
       try {
         console.log('fff',selectedF)
          let data = new FormData();
          data.append("image", selectedF);
-         fetch("http://localhost:3002/api/course/titleImage", {
+         fetch("http://localhost:3003/api/course/titleImage", {
            method: "POST",
            body: data
          })
@@ -385,9 +384,6 @@ export default function AddCourse() {
                     )}
                   </div>
                 </label>
-                {/* <button disabled={uploading} onClick={handleImageUploadButton}>
-                  {uploading ? "در حال بارگزاری ..." : "بارگزاری"}
-                </button> */}
               </div>
             </div>
 

@@ -45,7 +45,6 @@ export const getCoursesFromServer = createAsyncThunk(
  export const deleteCourse = createAsyncThunk(
   "course/deleteCourse",
   async (courseID:string) => {
-    console.log("nnnn : ", courseID);
     return fetch(`api/course?courseID=${courseID}`, {
       method: "DELETE",
     })

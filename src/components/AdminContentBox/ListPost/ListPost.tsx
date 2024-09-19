@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getArticlesFromServer } from "@/Redux/articles/Articles";
 import { AppDispatch, RootState } from "@/Redux/Store";
@@ -8,12 +8,16 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from "uuid";
 import { faIR } from "@mui/x-data-grid/locales";
 import Swal from "sweetalert2";
-import { getPostsFromServer } from "@/Redux/posts/Posts";
+import { deletePost, getPostsFromServer } from "@/Redux/posts/Posts";
+import PostPreviewHandler from "@/components/PostPreviewHandler/PostPreviewHandler";
+import UpdatePostEditor from "@/components/UpdatePostEditor/UpdatePostEditor";
 
 export default function ListArticles() {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector<RootState>((state) => state.posts);
-  
+  const [showUpdatePost,setShowUpdatePost] = useState(false)
+  const [showPreviewPost,setShowPreviewPost] = useState(false)
+  const [rowData,setRowData] = useState({})
   // console.log("users : ",users)
 
   const Toast = Swal.mixin({
@@ -51,14 +55,8 @@ export default function ListArticles() {
     }).then(result => {
       // the user confirms to remove the selected user ...
        if(result.isConfirmed === true){
-         const Response= fetch(`/api/post?id=${params.row.postID}`,{
-          method:'DELETE',
-
-         }).then(res=>res.json())
-         .then(data=>{
-
-          if(data.status === 200){
-            
+         dispatch(deletePost(params.row.postID)).then(result => {
+          if(result.payload.status === 200){
             Toast.fire({
               icon: "success",
               customClass:{
@@ -66,10 +64,10 @@ export default function ListArticles() {
                },
               title: "پست با موفقیت حذف شد ..."
             });
-            dispatch(getPostsFromServer("/api/post"));
+            dispatch(getPostsFromServer());
             
 
-          }else if(data.status === 404){
+          }else if(result.payload.status === 404){
             Toast.fire({
               icon: "error",
               customClass:{
@@ -78,9 +76,8 @@ export default function ListArticles() {
               title: "پستی با این کد وجود ندارد ..."
             });
           }
-         })
-
-         
+         })    
+        
        }
        else{
         console.log("cancel shod ...")
@@ -90,8 +87,25 @@ export default function ListArticles() {
     })
     // fetch('/api/user')
   };
-  const editHandler = () => {};
-  const infoHandler = () => {};
+
+  const updateDone = ()=>{
+    setShowUpdatePost(false);
+  }
+
+  const editHandler = (params) => {
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowUpdatePost(true);
+    setShowPreviewPost(false) 
+  };
+
+
+  const infoHandler = (params) => {
+    console.log('params' , params.row)
+    setRowData(params.row)
+    setShowPreviewPost(true)
+    setShowUpdatePost(false); 
+  };
 
   const columns: GridColDef[] = [
     {
@@ -147,7 +161,7 @@ export default function ListArticles() {
             </button>
             <button
               onClick={(e) => {
-                editHandler();
+                editHandler(params);
               }}
               className='bg-yellow-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -155,7 +169,7 @@ export default function ListArticles() {
             </button>
             <button
               onClick={(e) => {
-                infoHandler();
+                infoHandler(params);
               }}
               className='bg-sky-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
             >
@@ -176,7 +190,7 @@ export default function ListArticles() {
   // console.log("user data: ", usersData)
   return (
     <div className=' '>
-      <Box
+     { !showUpdatePost && !showPreviewPost && (<Box
         className=''
         sx={{
           height: "85vh",
@@ -192,7 +206,12 @@ export default function ListArticles() {
           className='bg-slate-200 dark:bg-slate-700'
           localeText={faIR.components.MuiDataGrid.defaultProps.localeText}
         />
-      </Box>
+      </Box>)}
+
+      {showUpdatePost && !showPreviewPost && <UpdatePostEditor rowData={rowData} onUpdate={updateDone} />}
+
+      {showPreviewPost && !showUpdatePost && <PostPreviewHandler data={rowData} />}
+
     </div>
   );
 }
