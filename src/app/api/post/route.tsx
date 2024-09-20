@@ -58,4 +58,21 @@ export async function DELETE(req: Request) {
     });
   }
 }
-export async function PUT() {}
+export async function PUT(req: Request) {
+  connectToDB()
+  const body = await req.json()
+  try{
+     await postModel.findOneAndUpdate({postID:body.postID},{
+      postID: body.postID,
+      title: body.title,
+      author: body.author,
+      publishedDate: body.publishedDate,
+      img: body.img,
+      postBody: body.postBody,
+     })
+
+     return Response.json({message:'the post updated successfully', status:200})
+  }catch(err){
+    return Response.json({message:'Oops, something went wrong ...', status:500})
+  }
+}

@@ -78,7 +78,7 @@ export async function PUT(req : Request){
         teacher : body.teacher,
      })
 
-     return Response.json({message:'the article updated successfully', status:200})
+     return Response.json({message:'the course updated successfully', status:200})
   }catch(err){
     return Response.json({message:'Oops, something went wrong ...', status:500})
   }

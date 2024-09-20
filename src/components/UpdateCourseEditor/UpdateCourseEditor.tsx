@@ -49,7 +49,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
         console.log('fff',selectedF)
          let data = new FormData();
          data.append("image", selectedF);
-         fetch("http://localhost:3002/api/course/titleImage", {
+         fetch("http://localhost:3003/api/course/titleImage", {
            method: "POST",
            body: data
          })
