@@ -1,4 +1,4 @@
-import { List } from 'ckeditor5'
+
 import mongoose from 'mongoose'
 
 
@@ -8,6 +8,10 @@ const schema = new mongoose.Schema({
         require : true,
     },
     commentBody : {
+        type : String,
+        require : true,
+    },
+    commentTitle : {
         type : String,
         require : true,
     },
@@ -24,7 +28,7 @@ const schema = new mongoose.Schema({
         require : true,
     },
     answers : {
-        type : List,
+        type : [String],
     }
 })
 

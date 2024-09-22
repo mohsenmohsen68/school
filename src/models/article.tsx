@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
     },
     category : {
         type:String,
-        isrequire : true,
+        require : true,
     },
     publishedDate : {
         type : String,

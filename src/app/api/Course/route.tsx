@@ -34,7 +34,8 @@ export async function POST(req : Request){
 
 
     try{
-        await courseModel.create({courseID,
+        await courseModel.create({
+            courseID,
             title,
             description,
             discount,
