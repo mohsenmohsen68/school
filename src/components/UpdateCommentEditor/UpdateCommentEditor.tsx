@@ -63,18 +63,13 @@ export default function UpdateCommentEditor({
           }
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          const d = new Date();
-          let year = d.getFullYear();
-          let month = d.getMonth();
-          let day = d.getDay();
-          const pdate = new Date(year, month, day);
-          const publishedDate = new Intl.DateTimeFormat("fa-IR").format(pdate);
+          
           const body = {
             commentID: rowData.commentID,
             commentTitle: values.title,
             commentBody: values.body,
-            commentDate: publishedDate,
-            commentAuthor: rowData.commentID,
+            commentDate: rowData.publishedDate,
+            commentAuthor: rowData.commentAuthor,
             commentToBeShown: rowData.commentToBeShown,
             answers: rowData.answers
           };

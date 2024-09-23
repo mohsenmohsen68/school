@@ -12,13 +12,33 @@ import { deleteComment, getCommentsFromServer, updateComment } from "@/Redux/com
 import UpdateCommentEditor from "@/components/UpdateCommentEditor/UpdateCommentEditor";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
 import { MdOutlineCheck } from "react-icons/md";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function ListComment() {
   const dispatch = useDispatch<AppDispatch>();
   const comments = useSelector<RootState>((state) => state.comments);
   const [showUpdateComment,setShowUpdateComment] = useState(false)
-  const [isValidComment,setIsValidComment] = useState(false)
   const [rowData,setRowData] = useState({})
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [myTitle,setMyTitle]= useState("")
+  const [myBody,setMyBody]= useState("")
+  const  [isValidComment,setIsValidComment] = useState(false)
   
   // console.log("users : ",users)
 
@@ -91,6 +111,15 @@ export default function ListComment() {
   const updateDone = ()=>{
     setShowUpdateComment(false);
   }
+
+const showHandler=(params)=>{
+  setMyBody(params.row.commentBody)
+  setMyTitle(params.row.commentTitle)
+  handleOpen()
+
+
+}
+
   const editHandler = async( params ) => {
     console.log('params' , params.row)
     setRowData(params.row)
@@ -98,13 +127,6 @@ export default function ListComment() {
 
   };
 
-  const renderStatus = ()=>{
-    return (
-      <div>
-
-      </div>
-    );
-  }
 
   const validationHandler = async( params ) => {
    setIsValidComment(prev => !prev)
@@ -185,10 +207,10 @@ export default function ListComment() {
       headerClassName:
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
-        "font-dana flex justify-center items-center text-center dark:text-white",
+        "font-dana flex justify-center items-center dark:text-white",
         renderCell: (params)=>{
            return (
-            <div className={`${params.row.commentToBeShown ? "bg-green-500": "bg-red-500"} w-7 h-7 flex justify-center items-center rounded-full`} >
+            <div className={`${params.row.commentToBeShown ? "bg-green-500": "bg-red-500"} flex justify-center items-center mx-auto w-7 h-7 rounded-full`} >
             {params.row.commentToBeShown ? <MdOutlineCheck/>:<RxCross2/>}
             </div>
            )
@@ -237,6 +259,14 @@ export default function ListComment() {
             </button>
             <button
               onClick={(e) => {
+                showHandler(params);
+              }}
+              className='bg-sky-500 font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1'
+            >
+              نمایش
+            </button>
+            <button
+              onClick={(e) => {
                 validationHandler(params);
               }}
               className = {`${params.row.commentToBeShown && 'bg-orange-500' } ${!params.row.commentToBeShown  && 'bg-green-500' }  font-dana rounded-lg h-9 flex justify-center items-center mr-2 p-1`}
@@ -278,7 +308,21 @@ export default function ListComment() {
       </Box>)}
 
       {showUpdateComment && <UpdateCommentEditor rowData={rowData} onUpdate={updateDone} />}
-
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {myTitle}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {myBody}
+          </Typography>
+        </Box>
+      </Modal>
      
    
     </div>
