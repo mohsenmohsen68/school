@@ -53,7 +53,7 @@ export default function Comment() {
         commentAuthor : "mohsen",
         commentDate : commentDate,
         commentToBeShown : false,
-        answers : "sd", 
+        answers : ["sd","sdf","sdfsvd"], 
       };
 
       const result = await dispatch(AddANewComment(body))

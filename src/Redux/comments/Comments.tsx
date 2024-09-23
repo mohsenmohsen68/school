@@ -23,6 +23,33 @@ export const AddANewComment = createAsyncThunk(
  }
 );
 
+export const deleteComment = createAsyncThunk(
+  "comments/deleteComment",
+  async (commentID:string) => {
+    return fetch(`api/comment?id=${commentID}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
+
+export const updateComment = createAsyncThunk(
+  "comment/updateComment",
+  async (commentBody) => {
+    console.log("nnnn : ", commentBody);
+    return fetch("api/comment", {
+      method: "PUT",
+      body: JSON.stringify(commentBody),
+      headers: {
+        Content_Type: "application/json"
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
+
 const slice = createSlice({
   name: "comments",
   initialState: [],
@@ -33,6 +60,14 @@ const slice = createSlice({
       return action.payload.data;
     });
     builder.addCase(AddANewComment.fulfilled, (state, action) => {
+      console.log("state : ", state);
+      console.log("action : ", action);
+    });
+    builder.addCase(deleteComment.fulfilled, (state, action) => {
+      console.log("state : ", state);
+      console.log("action : ", action);
+    });
+    builder.addCase(updateComment.fulfilled, (state, action) => {
       console.log("state : ", state);
       console.log("action : ", action);
     });

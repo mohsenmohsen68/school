@@ -20,16 +20,16 @@ export async function DELETE(req: Request) {
   const myUrl = new URL(req.url);
   const commentID = myUrl.searchParams.get("id");
   // console.log("request, commentCode : ", prm)
-  const iscommentExist = await commentModel.findOne({ commentCode: commentID });
+  const iscommentExist = await commentModel.findOne({ commentID: commentID });
   if (!iscommentExist) {
     return Response.json({
-      message: "چنین کاربری وجود ندارد ...",
+      message: "چنین پیغامی وجود ندارد ...",
       status: 404
     });
   } else {
-    await commentModel.findOneAndDelete({ commentCode: commentID });
+    await commentModel.findOneAndDelete({ commentID: commentID });
     return Response.json({
-      message: "کاربر مورد نظر حذف گردید ...",
+      message: "پیام مورد نظر حذف گردید ...",
       status: 200
     });
   }
@@ -39,7 +39,7 @@ export async function DELETE(req: Request) {
 export async function POST(req: Request) {
   connectToDB();
   // const data = req.body
-  console.log("req",req)
+  console.log("req", req);
   const {
     commentID,
     commentBody,
@@ -49,83 +49,75 @@ export async function POST(req: Request) {
     commentToBeShown,
     answers
   } = await req.json();
-console.log("hjkjh",
-  commentID,
+  console.log(
+    "hjkjh",
+    commentID,
     commentBody,
     commentTitle,
     commentAuthor,
     commentDate,
     commentToBeShown,
     answers
-)
-  try{
-      const comment = await commentModel.create({
-          commentID,
-          commentBody,
-          commentTitle,
-          commentAuthor,
-          commentDate,
-          commentToBeShown,
-          answers
-        });
-        
-        return Response.json({
-            message: "نظر با موفقیت ثبت شد ...",
-            status: 201,
-        });
-    }
-    catch(err){
-        return Response.json({
-          message: "مشکلی در سمت سرور به وجود آمده است ...",
-          status: 500
-        });
-    }
+  );
+  try {
+    const comment = await commentModel.create({
+      commentID,
+      commentBody,
+      commentTitle,
+      commentAuthor,
+      commentDate,
+      commentToBeShown,
+      answers
+    });
+
+    return Response.json({
+      message: "نظر با موفقیت ثبت شد ...",
+      status: 201
+    });
+  } catch (err) {
+    return Response.json({
+      message: "مشکلی در سمت سرور به وجود آمده است ...",
+      status: 500
+    });
+  }
 }
 
 export async function PUT(req: Request) {
   connectToDB();
   // const data = req.body
   const {
-    firstName,
-    lastName,
-    commentCode,
-    fathersName,
-    school,
-    age,
-    grade,
-    phoneNumber,
-    img,
-    commentName,
-    role
+    commentID,
+    commentBody,
+    commentTitle,
+    commentAuthor,
+    commentDate,
+    commentToBeShown,
+    answers
   } = await req.json();
 
   //validations....
 
-  const iscommentExist = await commentModel.findOne({ commentCode });
+  const iscommentExist = await commentModel.findOne({ commentID });
   if (!iscommentExist) {
     return Response.json({
-      message: "کاربر با این نام کاربری یا شماره همراه ثبت نام نکرده است ...",
+      message: "پیامی با این شماره وجود ندارد ...",
       status: 409
     });
   }
   const comment = await commentModel.findOneAndUpdate(
-    { commentCode },
+    { commentID },
     {
-      firstName,
-      lastName,
-      commentCode,
-      fathersName,
-      school,
-      age,
-      grade,
-      phoneNumber,
-      img,
-      commentName,
-      role
+      commentID,
+      commentBody,
+      commentTitle,
+      commentAuthor,
+      commentDate,
+      commentToBeShown,
+      answers
     }
   );
   return Response.json({
-    message: "کاربر با موفقیت یه روز رسانی شد ...",
+    message: "پیام با موفقیت یه روز رسانی شد ...",
     status: 200
   });
 }

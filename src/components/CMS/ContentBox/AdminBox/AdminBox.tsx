@@ -10,6 +10,7 @@ import ListArticle from "@/components/AdminContentBox/ListArticle/ListArticle";
 import AddPost from "@/components/AdminContentBox/AddPost/AddPost";
 import ListPost from "./../../../AdminContentBox/ListPost/ListPost";
 import ListCourse from "@/components/AdminContentBox/ListCourse/ListCourse";
+import ListComment from "@/components/AdminContentBox/ListComment/ListComment"
 import AddCourse from "@/components/AdminContentBox/AddCourse/AddCourse";
 
 export default function AdminBox() {
@@ -54,8 +55,10 @@ export default function AdminBox() {
       )}
 
       {/* comment menu */}
-      {action === "LIST_COMMENT" && <div>list comment</div>}
-      {action === "VALIDATE_COMMENT" && <div>validate comment</div>}
+      {action === "LIST_COMMENT" && <div>
+        <ListComment/>
+        </div>}
+      {/* {action === "VALIDATE_COMMENT" && <div>validate comment</div>} */}
 
       {/* post menu */}
       {action === "LIST_POST" && (
