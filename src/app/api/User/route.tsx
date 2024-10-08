@@ -72,9 +72,9 @@ export async function POST(req:Request){
     }
     
     const myHashedPassword = await hashedPassword(password)
-    const accessToken = generateAccessToken({userName})
+    // const accessToken = generateAccessToken({userName})
  
-console.log("hashed",myHashedPassword,"accesstoken", accessToken)
+// console.log("hashed",myHashedPassword,"accesstoken", accessToken)
 
     const users = await userModel.findOne({})
     const user =await userModel.create({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, password: myHashedPassword, img, userName, role: users !== null ? role : "ADMIN"})
