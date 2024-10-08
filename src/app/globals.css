@@ -27,8 +27,7 @@
     @apply text-sm;
   }
   h6 {
-    @apply text-xs;
-  }
+    @apply text-xs    }
 
     body {
         @apply dark:bg-slate-600 bg-white

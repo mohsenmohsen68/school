@@ -14,7 +14,7 @@ const comparePasswords = async(password, hashedPassword) =>{
 }
 
 const generateAccessToken = (data)=>{
-   const generatedToken = sign({...data} , process.env.ACCESS_TOKEN_PRIVATE_KEY , {expiresIn:'90s'})
+   const generatedToken = sign({...data} , process.env.ACCESS_TOKEN_PRIVATE_KEY , {expiresIn:'48h'})
    return generatedToken
 }
 

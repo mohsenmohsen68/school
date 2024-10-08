@@ -1,9 +1,6 @@
 import userModel from "@/models/users";
 import { generateAccessToken, hashedPassword } from "@/utils/auth";
 import connectToDB from "@/utils/connectToDB";
-import { hashSync } from "bcryptjs";
-import { NextApiRequest, NextApiResponse } from "next";
-import { role } from "@/utils/Constants";
 
 export async function GET(req:Request){
     connectToDB()
@@ -82,9 +79,13 @@ console.log("hashed",myHashedPassword,"accesstoken", accessToken)
     const users = await userModel.findOne({})
     const user =await userModel.create({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, password: myHashedPassword, img, userName, role: users !== null ? role : "ADMIN"})
     
-    return Response.json({message:'کاربر با موفقیت اضافه شد ...',status:200 , headers: {
-        "Set-Cookie" : `token=${accessToken}; path=/; httpOnly=true` 
-    } })
+    return Response.json({
+        message:'کاربر با موفقیت اضافه شد ...',
+        status:200 , 
+    //     headers: {
+    //     "Set-Cookie" : `token=${accessToken}; path=/; httpOnly=true` 
+    // } 
+})
 }
 export async function PUT(req:Request){
     connectToDB()

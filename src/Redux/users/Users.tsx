@@ -40,6 +40,22 @@ export const createANewUser = createAsyncThunk(
   }
 );
 
+export const signUpUser = createAsyncThunk(
+  "users/signUpUser",
+  async (userBody) => {
+    console.log("nnnn : ", userBody);
+    return fetch("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify(userBody),
+      headers: {
+        Content_Type: "application/json"
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
+
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async (userBody) => {
@@ -68,6 +84,10 @@ const slice = createSlice({
       // state.concat(...action.payload.data);
     });
     builder.addCase(createANewUser.fulfilled, (state, action) => {
+      console.log("state : ", state);
+      console.log("action : ", action);
+    });
+    builder.addCase(signUpUser.fulfilled, (state, action) => {
       console.log("state : ", state);
       console.log("action : ", action);
     });

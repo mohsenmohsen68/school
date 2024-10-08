@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/Redux/Store";
-import { createANewUser } from "@/Redux/users/Users";
+import { createANewUser, signUpUser } from "@/Redux/users/Users";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import style from "./signup.module.css";
@@ -201,10 +201,10 @@ export default function SignUpModule(props: Prop): JSX.Element {
               password: values.password,
               phoneNumber: values.phoneNumber,
               img: "",
-              role: props.addedByAdmin ? values.role : "دانش آموز"
+              role: "دانش آموز"
             };
             // console.log(userBody);
-            const result = await dispatch(createANewUser(userBody)).unwrap();
+            const result = await dispatch(signUpUser(userBody)).unwrap();
             console.log("resultttt : ", result);
             if (result.status === 200) {
               if (props.addedByAdmin) {
