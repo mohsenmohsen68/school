@@ -41,9 +41,7 @@ export default function AddArticle() {
   useEffect(()=>{
     setUploaded(true);
   },[uploaded])
-  
-
-
+    
   const handleImageUploadButton = async (selectedF:File) => {
       try {
         console.log('fff',selectedF)

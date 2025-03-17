@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Formik } from "formik";
@@ -43,25 +43,52 @@ const Toast = Swal.mixin({
 export default function SignUpModule(props: Prop): JSX.Element {
   const routes = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const [showImage, setShowImage] = useState(false)
+  const [img, setImg] = useState([])
+  const [selectedImage, setSelectedImage] = useState("")
+  const [fileName, setFileName] = useState("")
 
-  const clickHandler = (values: userData) => {
-    const userBody = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      userCode: values.userCode,
-      school: values.school,
-      fathersName: values.fathersName,
-      grade: values.grade,
-      age: values.age,
-      userName: values.userName,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-      img: "",
-      role: props.addedByAdmin ? values.role : "student"
-    };
-    console.log(userBody);
-    dispatch(createANewUser("/api/user", userBody));
-  };
+  const uploadIMG = async(e, userCode)=>{
+    e.preventDefault()
+    const formData = new FormData()
+    console.log("img",img)
+      formData.append("img", img)
+      const res = await fetch('/api/user/myimages', {
+        method: 'PUT',
+        body: formData,
+      })
+      const body = await res.json()
+      console.log("res :........ ", res, "body.....", body)
+      if (res.status === 200) {
+        const res = await fetch('/api/user/myimages/uploadimgapi', {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({userCode , img: `http://localhost:3000/uploads/usersImage/${body.data}`}),
+        })
+        console.log("imgUpload res ..", res)
+        Toast.fire({
+          icon: "success",
+          customClass: {
+            title: "font-moraba"
+          },
+          title: "عکس بارگذاری شد ..."
+        });
+        setSelectedImage(`http://localhost:3000/uploads/usersImage/${body.data}`)
+        setShowImage(true)
+        setFileName(body.data);
+      } else {
+        Toast.fire({
+          icon: "error",
+          customClass: {
+            title: "font-moraba"
+          },
+          title: "مشکلی رخ داده است ..."
+        });
+      }
+  }
+
   return (
     <div className='w-full h-full flex justify-center items-center flex-col font-moraba'>
       <div className='border-2 p-4'>
@@ -144,7 +171,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.grade = "انتخاب پایه الزامی است.";
             }
             //role validation
-            if (props.addedByAdmin && values.role == '') {
+            if (props.addedByAdmin && values.role == "") {
               errors.role = "انتخاب نقش الزامی است.";
             }
             //phone number validation
@@ -200,8 +227,8 @@ export default function SignUpModule(props: Prop): JSX.Element {
               userName: values.userName,
               password: values.password,
               phoneNumber: values.phoneNumber,
-              img: "",
-              role: "دانش آموز"
+              img: img ? `/uploads/usersImage/${fileName} ` : '',
+              role: values.role ? values.role : 'دانش آموز' ,
             };
             // console.log(userBody);
             const result = await dispatch(signUpUser(userBody)).unwrap();
@@ -218,6 +245,17 @@ export default function SignUpModule(props: Prop): JSX.Element {
                   title: " کاربر با موفقیت ثبت نام گردید ...",
                   icon: "success"
                 });
+                values.firstName = ""
+                values.lastName = ""
+                values.userCode = ""
+                values.school = ""
+                values.fathersName = ""
+                values.grade = ''
+                values.age = ""
+                values.userName = ""
+                values.password = ""
+                values.password2 = ""
+                values.phoneNumber = ""
               } else {
                 Swal.fire({
                   toast: true,
@@ -276,7 +314,6 @@ export default function SignUpModule(props: Prop): JSX.Element {
                   // if(result.isDismissed )
                 });
               }
-             
             }
           }}
         >
@@ -287,7 +324,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
             handleSubmit,
             handleChange,
             handleBlur,
-            isSubmitting,
+            isSubmitting
           }) => (
             <form
               onSubmit={handleSubmit}
@@ -371,24 +408,31 @@ export default function SignUpModule(props: Prop): JSX.Element {
               </div>
 
               <div className='flex justify-center items-center'>
+                {/* handle img upload */}
                 <label
                   htmlFor='file'
                   className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
                 >
-                  بارگذاری تصویر
+                  انتخاب عکس
                 </label>
                 <input
                   type='file'
                   name='img'
                   id='file'
-                  placeholder='انتخاب عکس  ...'
                   className='bg-slate-200 p-2'
                   accept='image/*'
                   hidden
-                  onChange={handleChange}
-                  value={values.img}
-                  onBlur={handleBlur}
+                  onChange={(e) => setImg(e.target.files[0])}
                 />
+                {showImage && (
+                  <Image src={selectedImage} width={40} height={40} alt='عکس' />
+                )}
+                <button
+                  className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
+                  onClick={(e) => uploadIMG(e,values.userCode)}
+                >
+                  ثبت
+                </button>
               </div>
 
               <div className='flex flex-col'>

@@ -7,12 +7,12 @@ import { userData } from "@/components/SignUp/SignUpModule";
 import { UseDispatch, useDispatch } from "react-redux";
 import { updateUser } from "@/Redux/users/Users";
 import { AppDispatch } from "@/Redux/Store";
+import Image from "next/image";
 
 export default function EditUser() {
   const dispatch = useDispatch<AppDispatch>();
   const [showEditUserInfo, setShowEditUserInfo] = useState<boolean>(false);
   const [userIdentity, setUserIdentity] = useState<string>("");
-
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -27,6 +27,10 @@ export default function EditUser() {
     img: "",
     role: ""
   });
+  const [showImage, setShowImage] = useState(false);
+  const [img, setImg] = useState([]);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [fileName, setFileName] = useState("");
 
   const Toast = Swal.mixin({
     toast: true,
@@ -39,6 +43,50 @@ export default function EditUser() {
       toast.onmouseleave = Swal.resumeTimer;
     }
   });
+
+  const uploadIMG = async (e, userCode) => {
+    e.preventDefault();
+    const formData = new FormData();
+    console.log("img", img);
+    formData.append("img", img);
+    const res = await fetch("/api/user/myimages", {
+      method: "PUT",
+      body: formData
+    });
+    const body = await res.json();
+    console.log("res :........ ", res, "body.....", body);
+    if (res.status === 200) {
+      const res = await fetch("/api/user/myimages/uploadimgapi", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userCode,
+          img: `http://localhost:3000/uploads/usersImage/${body.data}`
+        })
+      });
+      console.log("imgUpload res ..", res);
+      Toast.fire({
+        icon: "success",
+        customClass: {
+          title: "font-moraba"
+        },
+        title: "عکس بارگذاری شد ..."
+      });
+      setSelectedImage(`http://localhost:3000/uploads/usersImage/${body.data}`);
+      setShowImage(true);
+      setFileName(body.data);
+    } else {
+      Toast.fire({
+        icon: "error",
+        customClass: {
+          title: "font-moraba"
+        },
+        title: "مشکلی رخ داده است ..."
+      });
+    }
+  };
 
   const EditHandler = async () => {
     const userToEdit = await fetch(`/api/user?id=${userIdentity}`)
@@ -61,18 +109,17 @@ export default function EditUser() {
         icon: "error",
         showConfirmButton: true,
         confirmButtonText: "تلاش مجدد",
-        confirmButtonColor: "green",
+        confirmButtonColor: "green"
       }).then((result) => {
         if (result.isConfirmed === true) {
-            setUserIdentity("")
+          setUserIdentity("");
         }
       });
     }
   };
 
-
   return (
-    <div>
+    <div className='w-full'>
       {!showEditUserInfo && (
         <div className='flex flex-col justify-center items-center gap-y-4-4'>
           <div className='font-dana'>
@@ -222,7 +269,7 @@ export default function EditUser() {
                     age: values.age,
                     userName: values.userName,
                     phoneNumber: values.phoneNumber,
-                    img: "",
+                    img: img ? `/uploads/usersImage/${fileName} ` : '',
                     role: values.role
                   };
 
@@ -239,8 +286,8 @@ export default function EditUser() {
                       title: " کاربر با موفقیت ویرایش شد ...",
                       icon: "success"
                     });
-                    setShowEditUserInfo(false)
-                    setUserIdentity("")
+                    setShowEditUserInfo(false);
+                    setUserIdentity("");
                   } else if (result.payload.status === 409) {
                     Toast.fire({
                       toast: true,
@@ -251,8 +298,8 @@ export default function EditUser() {
                       title: result.payload.message,
                       icon: "error"
                     });
-                    setShowEditUserInfo(false)
-                    setUserIdentity("")
+                    setShowEditUserInfo(false);
+                    setUserIdentity("");
                   }
                 }}
               >
@@ -343,20 +390,26 @@ export default function EditUser() {
                         htmlFor='file'
                         className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
                       >
-                        بارگذاری تصویر
+                        انتخاب عکس
                       </label>
                       <input
                         type='file'
                         name='img'
                         id='file'
-                        placeholder='انتخاب عکس  ...'
                         className='bg-slate-200 p-2'
                         accept='image/*'
                         hidden
-                        onChange={handleChange}
-                        value={values.img}
-                        onBlur={handleBlur}
+                        onChange={(e) => setImg(e.target.files[0])}
                       />
+                      {showImage && (
+                        <Image src={selectedImage} width={40} height={40} alt='عکس'/>
+                      )}
+                      <button
+                        className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
+                        onClick={(e) => uploadIMG(e, values.userCode)}
+                      >
+                        ثبت
+                      </button>
                     </div>
 
                     <div className='flex flex-col'>
@@ -477,7 +530,7 @@ export default function EditUser() {
 
                     <button
                       className='rounded-md bg-orange-600 hover:bg-orange-400 p-2 text-xl '
-                      onClick={() => setShowDeleteUserInfo(false)}
+                      onClick={() => setShowEditUserInfo(false)}
                     >
                       انصراف
                     </button>

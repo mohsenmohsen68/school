@@ -1,7 +1,5 @@
 'use client'
 import Article from "@/components/Article/Article";
-//import Footer from "@/components/footer/Footer";
-
 import React, { useState } from "react";
 import Header from "@/components/header/header";
 import dynamic from "next/dynamic";
@@ -10,8 +8,7 @@ import Pagination from '@mui/material/Pagination';
 import { v4 as uuidv4  } from 'uuid';
 import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { PaginationItem } from "@mui/material";
-
+import { PaginationItem } from "@mui/material";7
 const Footer = dynamic(() => import("@/components/footer/Footer"), {
   ssr: false
 });
@@ -20,13 +17,13 @@ export default function Page() {
 
 
   
-const [pageNum, setPageNum] = useState<number>(1)
-const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+const [pageNum, setPageNum] = useState(1)
+const handleChange = (event, value) => {
   setPageNum(value);
 };
 
 
-  const elements:React.ReactElement[] = [
+  const elements = [
     <Article title='آینده هوش مصنوعی + چالش ها و مشکلات' img="/img/articles/ai.webp" writerName='هادی ' writerLastName="حسینی" rate={4} views={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." datePublished={new Date()} key={uuidv4()}/>,
     <Article title='آینده هوش مصنوعی + چالش ها و مشکلات' img="/img/articles/ai.webp" writerName='هادی ' writerLastName="حسینی" rate={4} views={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." datePublished={new Date()} key={uuidv4()}/>,
     <Article title='آینده هوش مصنوعی + چالش ها و مشکلات' img="/img/articles/ai.webp" writerName='هادی ' writerLastName="حسینی" rate={4} views={204} desc="وقتی اسم بازی و مسابقه میاد بچه‌ها کنجکاویشون تحریک میشه و سوالات زیادی براشون به وجود میاد که باعث یادگیری بهتر و پرورش کنجکاویشون میشه." datePublished={new Date()} key={uuidv4()}/>,

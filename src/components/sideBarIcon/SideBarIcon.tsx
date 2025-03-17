@@ -82,7 +82,7 @@ const dispatch = useDispatch()
         <PiUserList className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_USER"))}/>
         <TiUserAddOutline className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_USER"))}/>
         <HiOutlineUserRemove  className="font-light text-lg my-1 " onClick={()=>dispatch(selectOption("REMOVE_USER"))}/>
-        < LiaUserEditSolid className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_USER"))}/>
+        <LiaUserEditSolid className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_USER"))}/>
         </div>}
 
       {props.showSubMenu && props.title === 'articles' && <div className="flex flex-col justify-center items-center my-1">

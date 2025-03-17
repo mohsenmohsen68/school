@@ -7,7 +7,7 @@ import { FaSun } from "react-icons/fa";
 
 
 export default function ToggleIcon() {
-  const { theme, setTheme } = useTheme("");
+  const { theme, setTheme } = useTheme();
   console.log('theme ...',theme)
 
  

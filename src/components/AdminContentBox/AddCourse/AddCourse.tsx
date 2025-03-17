@@ -5,8 +5,9 @@ import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { createANewCourse } from "@/Redux/courses/Courses";
 import Image from "next/image";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 const { uuid } = require("uuidv4");
 
 const ArticleEditor = dynamic(
@@ -29,44 +30,62 @@ const Toast = Swal.mixin({
 export default function AddCourse() {
   const dispatch = useDispatch();
   const [courseData, setCourseData] = useState("");
-  const [uploaded,setUploaded] = useState(false)
   const [selectedImage, setSelectedImage] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File>();
-  const [fileName,setFileName] = useState('');
+  const [showImage, setShowImage] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [img, setImg] = useState([]);
 
   const handleAddCourse = (data: string) => {
     setCourseData(data);
   };
 
-  useEffect(()=>{
-    setUploaded(true);
-  },[uploaded])
-  
-
-
-  const handleImageUploadButton = async (selectedF:File) => {
-   
-      try {
-        console.log('fff',selectedF)
-         let data = new FormData();
-         data.append("image", selectedF);
-         fetch("http://localhost:3003/api/course/titleImage", {
-           method: "POST",
-           body: data
-         })
-           .then((res) => res.json())
-           .then((d) => {
-             setUploaded(true);
-             setFileName(d.filename)
-             console.log("ggg", d.filename);
-             console.log("ggg2", selectedImage);
-             console.log("ggg4", selectedFile);
-             console.log("gggff", d);
-           });
-      } catch (err) {
-        console.log('errrr',err);
-      }
-    // setUploading(false);
+  const uploadIMG = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    const formData = new FormData();
+    console.log("img ...", img);
+    formData.append("img", img);
+    const res = await fetch("/api/course/titleImage", {
+      method: "PUT",
+      body: formData
+    });
+    const body = await res.json();
+    console.log("res :........ ", res, "body.....", body);
+    if (res.status === 200) {
+      // const res = await fetch('/api/course/titleImage/uploadimgapi', {
+      //   method: 'PUT',
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify({courseID:id , img: `http://localhost:3000/uploads/usersImage/${body.data}`}),
+      // })
+      // console.log("imgUpload res ..", res)
+      setSelectedImage(`http://localhost:3000/uploads/coursesImg/${body.data}`)
+      setShowImage(true)
+      setFileName(body.data);
+      Toast.fire({
+        toast: true,
+        customClass: {
+          title: "font-moraba",
+          htmlContainer: "bg-slate-200 dark:bg-slate-700"
+        },
+        position: "bottom-end",
+        title: " عکس با موفقیت اضافه گردید ...",
+        icon: "success"
+      });
+    } else {
+      Toast.fire({
+        toast: true,
+        customClass: {
+          title: "font-moraba",
+          htmlContainer: "bg-slate-200 dark:bg-slate-700"
+        },
+        position: "bottom-end",
+        title: " مشکلی رخ داده است ...",
+        icon: "error"
+      });
+    }
   };
 
   return (
@@ -172,7 +191,7 @@ export default function AddCourse() {
               errors.studentNo = " تعداد دانش آموزان باید عددی مثبت باشد ...";
             }
           }
-         // console.log("err: ", errors);
+          // console.log("err: ", errors);
           if (
             errors.title === "" &&
             errors.description === "" &&
@@ -191,9 +210,9 @@ export default function AddCourse() {
           }
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          
-          console.log('fileName : ',fileName)
-          if (selectedFile && uploaded) {
+          console.log("fileName : ", fileName);
+          console.log("img : ", img)
+          if (img) {
             const d = new Date();
             let year = d.getFullYear();
             let month = d.getMonth();
@@ -217,14 +236,14 @@ export default function AddCourse() {
               courseType: values.courseType,
               studentNo: values.studentNo,
               stisfiction: 5,
-              img: `/img/coursesTitleImage/${fileName} `,
+              img: `/uploads/coursesImg/${fileName} `,
               courseBody: courseData,
               teacher: values.teacher
             };
             console.log(" ----  bodddddddddy ---", body);
             const result = await dispatch(createANewCourse(body));
-            console.log('result of adding article :',result.payload.status)
-            if(result.payload.status === 201){
+            console.log("result of adding article :", result.payload.status);
+            if (result.payload.status === 201) {
               Toast.fire({
                 toast: true,
                 customClass: {
@@ -235,8 +254,8 @@ export default function AddCourse() {
                 title: " دوره با موفقیت ثبت گردید ...",
                 icon: "success"
               });
-              dispatch( selectOption("") ) 
-            }else{
+              dispatch(selectOption(""));
+            } else {
               Toast.fire({
                 toast: true,
                 customClass: {
@@ -352,38 +371,31 @@ export default function AddCourse() {
                 </div>
               </div>
 
-              <div className='flex justify-center items-center mt-2'>
-                <label>
-                  <input
-                    type='file'
-                    hidden
-                    onChange={({ target }) => {
-                      if (target.files) {
-                        const file = target.files[0];
-                        setSelectedImage(URL.createObjectURL(file));
-                        setSelectedFile(file);
-                        console.log("file : ", selectedFile);
-                        console.log("Image : ", selectedImage);
-                        handleImageUploadButton(file)
-                      }else{
-                      }
-                    }}
-                  />
-                  <div>
-                    {selectedImage ? (
-                      <Image
-                        src={selectedImage}
-                        width={70}
-                        height={70}
-                        alt='selected image'
-                      />
-                    ) : (
-                      <div className='p-1 bg-green-500 border-dashed '>
-                        انتخاب تصویر دوره
-                      </div>
-                    )}
-                  </div>
+              <div className='flex justify-center items-center w-full mb-2'>
+                <label
+                  htmlFor='myfile'
+                  className={`px-4 py-2 mt-2 border-green-700 border-2 bg-green-500 hover:bg-green-400 hover:text-white mx-4`}
+                >
+                   {showImage ? "تغییر عکس" :" انتخاب عکس" } 
                 </label>
+                 <input
+                  type='file'
+                  id='myfile'
+                  accept='image/png, image/jpeg'
+                  className='hidden'
+                  onChange={(e) => setImg(e?.target?.files?.[0])}
+                />
+                {showImage && (
+                  <Image width={80} height={60} src={selectedImage} className="mt-2 ml-2" alt="عکس انتخاب شده ..."/>
+                )}
+                <input
+                  type='file'
+                  id='myfile'
+                  accept='image/png, image/jpeg'
+                  className='hidden'
+                  onChange={(e) => setImg(e?.target?.files?.[0])}
+                />
+                <button onClick={uploadIMG}>بارگذاری تصویر</button>
               </div>
             </div>
 

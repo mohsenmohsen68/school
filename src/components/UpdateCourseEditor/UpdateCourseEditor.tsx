@@ -28,13 +28,15 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
+export default function UpdateCourseEditor( {rowData} ):JSX.Element {
   console.log('rrrrr', rowData)
   const dispatch = useDispatch<AppDispatch>()
   const [courseData, setCourseData] = useState(rowData.courseData);
   const [selectedImage, setSelectedImage] = useState(rowData.img);
   const [selectedFile, setSelectedFile] = useState()
   const [fileName,setFileName] = useState(rowData.img.split('/')[3])
+  const [showImage, setShowImage] = useState(true);
+  const [img, setImg] = useState([]);
 
 
   const handleAddCourse = (data: string) => {
@@ -42,29 +44,53 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
     console.log('my updated article body ... : ',data)
   };
 
-  const handleImageUploadButton = async (selectedF:File) => {
-    // setUploading(true);
-    
-      try {
-        console.log('fff',selectedF)
-         let data = new FormData();
-         data.append("image", selectedF);
-         fetch("http://localhost:3003/api/course/titleImage", {
-           method: "POST",
-           body: data
-         })
-           .then((res) => res.json())
-           .then((d) => {
-             setFileName(d.filename)
-             console.log("ggg", d.filename);
-             console.log("ggg2", selectedImage);
-             console.log("ggg4", selectedFile);
-             console.log("gggff", d);
-           });
-      } catch (err) {
-        console.log('errrr',err);
-      }
-    // setUploading(false);
+  const uploadIMG = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    const formData = new FormData();
+    console.log("img ...", img);
+    formData.append("img", img);
+    const res = await fetch("/api/course/titleImage", {
+      method: "PUT",
+      body: formData
+    });
+    const body = await res.json();
+    console.log("res :........ ", res, "body.....", body);
+    if (res.status === 200) {
+      // const res = await fetch('/api/course/titleImage/uploadimgapi', {
+      //   method: 'PUT',
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify({courseID:id , img: `http://localhost:3000/uploads/usersImage/${body.data}`}),
+      // })
+      // console.log("imgUpload res ..", res)
+      setSelectedImage(`http://localhost:3000/uploads/coursesImg/${body.data}`)
+      setShowImage(true)
+      setFileName(body.data);
+      Toast.fire({
+        toast: true,
+        customClass: {
+          title: "font-moraba",
+          htmlContainer: "bg-slate-200 dark:bg-slate-700"
+        },
+        position: "bottom-end",
+        title: " عکس با موفقیت اضافه گردید ...",
+        icon: "success"
+      });
+    } else {
+      Toast.fire({
+        toast: true,
+        customClass: {
+          title: "font-moraba",
+          htmlContainer: "bg-slate-200 dark:bg-slate-700"
+        },
+        position: "bottom-end",
+        title: " مشکلی رخ داده است ...",
+        icon: "error"
+      });
+    }
   };
 
   return (
@@ -214,7 +240,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
             courseType: values.courseType,
             studentNo: values.studentNo,
             stisfiction: 5,
-            img: `/img/coursesTitleImage/${fileName} `,
+            img: `/uploads/coursesImg/${fileName} `,
             courseBody: courseData,
             teacher: values.teacher
           };
@@ -336,38 +362,32 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
               </div>
             </div>
 
-            <div className='flex justify-center items-center mt-2'>
-              <label>
+            <div className='flex justify-center items-center w-full mb-2'>
+                <label
+                  htmlFor='myfile'
+                  className={`px-4 py-2 mt-2 border-green-700 border-2 bg-green-500 hover:bg-green-400 hover:text-white mx-4`}
+                >
+                   {showImage ? "تغییر عکس" :" انتخاب عکس" } 
+                </label>
+                 <input
+                  type='file'
+                  id='myfile'
+                  accept='image/png, image/jpeg'
+                  className='hidden'
+                  onChange={(e) => setImg(e?.target?.files?.[0])}
+                />
+                {showImage && (
+                  <Image width={80} height={60} src={selectedImage} className="mt-2 ml-2" alt="عکس انتخاب شده ..."/>
+                )}
                 <input
                   type='file'
-                  hidden
-                  onChange={({ target }) => {
-                    if (target.files) {
-                      const file = target.files[0];
-                      setSelectedImage(URL.createObjectURL(file));
-                      setSelectedFile(file);
-                      console.log("file : ", file);
-                      console.log("Image : ", selectedImage);
-                      handleImageUploadButton(file)
-                    }
-                  }}
+                  id='myfile'
+                  accept='image/png, image/jpeg'
+                  className='hidden'
+                  onChange={(e) => setImg(e?.target?.files?.[0])}
                 />
-                <div>
-                  {selectedImage.length > 0 ? (
-                    <Image
-                      src={selectedImage}
-                      width={70}
-                      height={70}
-                      alt='selected image'
-                    />
-                  ) : (
-                    <div className='p-1 bg-green-500 border-dashed '>
-                      انتخاب تصویر دوره
-                    </div>
-                  )}
-                </div>
-              </label>
-            </div>
+                <button onClick={uploadIMG}>بارگذاری تصویر</button>
+              </div>
           </div>
 
           <div className=' grid grid-cols-1 md:grid-cols-2'>
@@ -397,9 +417,7 @@ export default function UpdateCourseEditor( {rowData, onUpdate} ):JSX.Element {
                 onBlur={handleBlur}
               />
               <div className='text-xs text-red-500'>
-                {errors.preRequisite &&
-                  touched.preRequisite &&
-                  errors.preRequisite}
+                {errors.preRequisite && touched.preRequisite && errors.preRequisite}
               </div>
             </div>
           </div>
