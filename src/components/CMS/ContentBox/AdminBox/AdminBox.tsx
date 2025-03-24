@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "./../../../../Redux/Store";
@@ -12,14 +13,23 @@ import ListPost from "./../../../AdminContentBox/ListPost/ListPost";
 import ListCourse from "@/components/AdminContentBox/ListCourse/ListCourse";
 import ListComment from "@/components/AdminContentBox/ListComment/ListComment"
 import AddCourse from "@/components/AdminContentBox/AddCourse/AddCourse";
+import ManageClusters from "@/components/ManageClusters/ManageClusters"
+import AdminSetting from "@/components/AdminSetting/AdminSetting"
 
-export default function AdminBox() {
+export default function AdminBox({user}) {
   const useAppSelector = useSelector.withTypes<RootState>();
-
   const action = useAppSelector((state) => state.menuOptions);
-  console.log("action : ", action);
+  
+
+
   return (
     <div>
+      {/* manage clusters */}
+      {action === "MANAGE_CLUSTERS" && (
+        <div>
+          <ManageClusters />
+        </div>
+      )}
       {/* user menu */}
       {action === "LIST_USER" && (
         <div>
@@ -45,7 +55,7 @@ export default function AdminBox() {
       {/* article menu */}
       {action === "ADD_ARTICLE" && (
         <div>
-          <AddArticle />
+          <AddArticle user={JSON.parse(JSON.stringify(user))}/>
         </div>
       )}
       {action === "LIST_ARTICLE" && (
@@ -74,6 +84,9 @@ export default function AdminBox() {
       {/* course menu */}
       {action === "LIST_COURSE" && <div><ListCourse/></div>}
       {action === "ADD_COURSE" && <div><AddCourse/></div>}
+
+      {/* setting menu */}
+      {action === "ADMIN_SETTING" && <div><AdminSetting/></div>}
       
     </div>
   );

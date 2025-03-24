@@ -31,6 +31,10 @@ const schema = new mongoose.Schema({
         type:String,
         length:11,
     },
+    cluster:{
+        type:String,
+        default:"",
+    },
     password:{
         type:String,
         required:true,

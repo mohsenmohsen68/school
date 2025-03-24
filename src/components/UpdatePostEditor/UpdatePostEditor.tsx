@@ -32,34 +32,56 @@ export default function UpdatePostEditor({ rowData, onUpdate }): JSX.Element {
   const [selectedImage, setSelectedImage] = useState(rowData.img);
   const [selectedFile, setSelectedFile] = useState();
   const [fileName, setFileName] = useState(rowData.img.split("/")[3]);
+  const [showImage, setShowImage] = useState(false);
+  const [img, setImg] = useState([]);
 
   const handleAddPost = (data: string) => {
     setPostData(data);
   };
 
-  const handleImageUploadButton = async (selectedF: File) => {
-    // setUploading(true);
-
-    try {
-      console.log("fff", selectedF);
-      let data = new FormData();
-      data.append("image", selectedF);
-      fetch("http://localhost:3004/api/post/titleImage", {
-        method: "POST",
-        body: data
-      })
-        .then((res) => res.json())
-        .then((d) => {
-          setFileName(d.filename);
-          console.log("ggg", d.filename);
-          console.log("ggg2", selectedImage);
-          console.log("ggg4", selectedFile);
-          console.log("gggff", d);
-        });
-    } catch (err) {
-      console.log("errrr", err);
+  
+  const uploadIMG = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    console.log("img", img);
+    formData.append("img", img);
+    const res = await fetch("/api/post/myimages", {
+      method: "PUT",
+      body: formData
+    });
+    const body = await res.json();
+    console.log("res :........ ", res, "body.....", body);
+    if (res.status === 200) {
+      const res = await fetch("/api/post/myimages/uploadimgapi", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          postID:rowData.postID,
+          img: `http://localhost:3000/uploads/postsImage/${body.data}`
+        })
+      });
+      console.log("imgUpload res ..", res);
+      Toast.fire({
+        icon: "success",
+        customClass: {
+          title: "font-moraba"
+        },
+        title: "عکس بارگذاری شد ..."
+      });
+      setSelectedImage(`http://localhost:3000/uploads/postsImage/${body.data}`);
+      setShowImage(true);
+      setFileName(body.data);
+    } else {
+      Toast.fire({
+        icon: "error",
+        customClass: {
+          title: "font-moraba"
+        },
+        title: "مشکلی رخ داده است ..."
+      });
     }
-    // setUploading(false);
   };
 
   return (
@@ -103,7 +125,7 @@ export default function UpdatePostEditor({ rowData, onUpdate }): JSX.Element {
             title: values.title,
             author,
             publishedDate,
-            img: `/img/postsTitleImage/${fileName} `,
+            img:  img ? `/uploads/postsImage/${fileName} ` : '',
             postBody: postData
           };
           console.log(" ----  bodddddddddy ---", body);
@@ -160,36 +182,31 @@ export default function UpdatePostEditor({ rowData, onUpdate }): JSX.Element {
             </div>
 
             <div className='flex justify-center items-center mt-2'>
-              <label>
-                <input
-                  type='file'
-                  hidden
-                  onChange={({ target }) => {
-                    if (target.files) {
-                      const file = target.files[0];
-                      setSelectedImage(URL.createObjectURL(file));
-                      setSelectedFile(file);
-                      console.log("file : ", file);
-                      console.log("Image : ", selectedImage);
-                      handleImageUploadButton(file);
-                    }
-                  }}
-                />
-                <div>
-                  {selectedImage.length > 0 ? (
-                    <Image
-                      src={selectedImage}
-                      width={70}
-                      height={70}
-                      alt='selected image'
-                    />
-                  ) : (
-                    <div className='p-1 bg-green-500 border-dashed '>
-                      انتخاب تصویر دوره
-                    </div>
-                  )}
-                </div>
-              </label>
+              {/* post image upload ... */}
+              <label
+                        htmlFor='file'
+                        className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
+                      >
+                        انتخاب عکس
+                      </label>
+                      <input
+                        type='file'
+                        name='img'
+                        id='file'
+                        className='bg-slate-200 p-2'
+                        accept='image/*'
+                        hidden
+                        onChange={(e) => setImg(e.target.files[0])}
+                      />
+                      {showImage && (
+                        <Image src={selectedImage} width={40} height={40} alt='عکس'/>
+                      )}
+                      <button
+                        className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
+                        onClick={(e) => uploadIMG(e)}
+                      >
+                        ثبت
+                      </button>
             </div>
 
             <div className='w-full'>

@@ -7,7 +7,8 @@ type propsType = {
   cmsType: string;
 };
 
-export default function ContentBox(props: propsType) {
+export default async function ContentBox(props: propsType) {
+
   return (
     <div>
       {props.cmsType === "teacher" && (
@@ -22,7 +23,7 @@ export default function ContentBox(props: propsType) {
       )}
       {props.cmsType === "admin" && (
         <div className='w-full h-full '>
-          <AdminBox />
+          <AdminBox user={JSON.parse(JSON.stringify(props.user))} />
         </div>
       )}
     </div>

@@ -17,7 +17,7 @@ export async function GET(req:Request){
          }
      }else{
         const isUserExist = await userModel.findOne({
-            $or:[{userName:userID},{ phoneNumber:userID}, {userCode:userID}]
+            $or:[{userName:userID},{ phoneNumber:userID}, {userCode:userID}, {_id:userID}]
         })
         if(isUserExist){
             return Response.json({message:'کاربر با این نام کاربری با شماره همراه وجود دارد ...',status:200,data:isUserExist})
@@ -58,7 +58,8 @@ export async function POST(req:Request){
         password,
         img,
         userName,
-        role
+        role,
+        cluster
     } =  await req.json()
     
     //validations....
@@ -77,7 +78,7 @@ export async function POST(req:Request){
 // console.log("hashed",myHashedPassword,"accesstoken", accessToken)
 
     const users = await userModel.findOne({})
-    const user =await userModel.create({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, password: myHashedPassword, img, userName, role: users !== null ? role : "ADMIN"})
+    const user =await userModel.create({firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, password: myHashedPassword, img, userName, role: users !== null ? role : "ADMIN",cluster})
     
     return Response.json({
         message:'کاربر با موفقیت اضافه شد ...',
@@ -99,9 +100,7 @@ export async function PUT(req:Request){
         age,
         grade,
         phoneNumber,
-        img,
         userName,
-        role
     } =  await req.json()
     
     //validations....
@@ -111,6 +110,6 @@ export async function PUT(req:Request){
     if(!isUserExist){
         return Response.json({message:'کاربر با این نام کاربری یا شماره همراه ثبت نام نکرده است ...',status:409})
     }
-    const user =await userModel.findOneAndUpdate({userCode} ,{firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, img, userName, role})
+    const user =await userModel.findOneAndUpdate({userCode} ,{firstName,lastName, userCode, fathersName, school, age, grade, phoneNumber, userName})
     return Response.json({message:'کاربر با موفقیت یه روز رسانی شد ...',status:200 })
 }

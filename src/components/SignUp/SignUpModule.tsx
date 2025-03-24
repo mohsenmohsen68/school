@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Formik } from "formik";
@@ -9,6 +9,7 @@ import { createANewUser, signUpUser } from "@/Redux/users/Users";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import style from "./signup.module.css";
+import { getClustersFromServer } from "@/Redux/clusters/Clusters";
 
 export interface userData {
   firstName: string;
@@ -24,6 +25,7 @@ export interface userData {
   phoneNumber: string;
   img: string;
   role: string;
+  cluster: string;
 }
 type Prop = {
   addedByAdmin: boolean;
@@ -47,6 +49,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
   const [img, setImg] = useState([])
   const [selectedImage, setSelectedImage] = useState("")
   const [fileName, setFileName] = useState("")
+  const [clusters, setClusters] = useState([])
 
   const uploadIMG = async(e, userCode)=>{
     e.preventDefault()
@@ -88,6 +91,14 @@ export default function SignUpModule(props: Prop): JSX.Element {
         });
       }
   }
+   const getClusters = async()=>{
+      const res = await dispatch(getClustersFromServer())
+      console.log("res",res.payload.data)
+      setClusters(res.payload.data)
+   }
+  useEffect(()=>{
+     getClusters()
+  },[])
 
   return (
     <div className='w-full h-full flex justify-center items-center flex-col font-moraba'>
@@ -106,7 +117,8 @@ export default function SignUpModule(props: Prop): JSX.Element {
             password: "",
             password2: "",
             img: "",
-            role: ""
+            role: "",
+            cluster:""
           }}
           validate={(values) => {
             const errors: userData = {
@@ -122,7 +134,8 @@ export default function SignUpModule(props: Prop): JSX.Element {
               password: "",
               password2: "",
               img: "",
-              role: ""
+              role: "",
+              cluster:""
             };
             //firstname validation
             if (!values.firstName) {
@@ -171,8 +184,11 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.grade = "انتخاب پایه الزامی است.";
             }
             //role validation
-            if (props.addedByAdmin && values.role == "") {
+            if (props.addedByAdmin && values.role === "") {
               errors.role = "انتخاب نقش الزامی است.";
+            }
+            if (props.addedByAdmin && values.role === "معلم" && (values.cluster === "" || values.cluster === "-1")) {
+              errors.cluster = "انتخاب خوشه الزامی است.";
             }
             //phone number validation
             if (!values.phoneNumber) {
@@ -205,6 +221,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
               errors.age === "" &&
               errors.grade === "" &&
               errors.role === "" &&
+              errors.cluster === "" &&
               errors.phoneNumber === "" &&
               errors.password === "" &&
               errors.password2 === "" &&
@@ -229,9 +246,15 @@ export default function SignUpModule(props: Prop): JSX.Element {
               phoneNumber: values.phoneNumber,
               img: img ? `/uploads/usersImage/${fileName} ` : '',
               role: values.role ? values.role : 'دانش آموز' ,
+              cluster: values.cluster ? values.cluster : '' ,
             };
             // console.log(userBody);
-            const result = await dispatch(signUpUser(userBody)).unwrap();
+            let result;
+            if(props.addedByAdmin){
+              result = await dispatch(createANewUser(userBody)).unwrap();
+            }else{
+              result = await dispatch(signUpUser(userBody)).unwrap();
+            }
             console.log("resultttt : ", result);
             if (result.status === 200) {
               if (props.addedByAdmin) {
@@ -256,6 +279,8 @@ export default function SignUpModule(props: Prop): JSX.Element {
                 values.password = ""
                 values.password2 = ""
                 values.phoneNumber = ""
+                values.role = ""
+                values.cluster = ""
               } else {
                 Swal.fire({
                   toast: true,
@@ -276,7 +301,6 @@ export default function SignUpModule(props: Prop): JSX.Element {
                   if (result.isConfirmed === true) {
                     routes.push("/login");
                   }
-                  console.log(result);
                 });
               }
             } else if (result.status === 409) {
@@ -342,7 +366,7 @@ export default function SignUpModule(props: Prop): JSX.Element {
                 {props.addedByAdmin && (
                   <div>
                     ثبت نام کاربر جدید ...
-                    <div>
+                    <div className="mb-2">
                       <select
                         name='role'
                         id='role'
@@ -356,10 +380,30 @@ export default function SignUpModule(props: Prop): JSX.Element {
                         <option value='معلم'>معلم</option>
                         <option value='دانش آموز'>دانش آموز</option>
                       </select>
+                      
                       <div className='text-xs text-red-500'>
                         {errors.role && touched.role && errors.role}
                       </div>
                     </div>
+
+                    
+                     { values.role === "معلم" ? (<>
+                      <select
+                        name='cluster'
+                        id='cluster'
+                        className={`bg-slate-200 p-2 font-moraba  outline-none `}
+                        onChange={handleChange}
+                        value={values.cluster}
+                        onBlur={handleBlur}
+                      >
+                        <option value='-1'>خوشه معلم؟</option>
+                        {clusters.map(item=><option key={item._id} value={item.title}>{item.title}</option>)}
+                      </select>
+                      <div className='text-xs text-red-500'>
+                        {errors.cluster && touched.cluster && errors.cluster}
+                      </div>
+                      </>): (<></>)} 
+                      
                   </div>
                 )}
               </div>

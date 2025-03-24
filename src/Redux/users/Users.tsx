@@ -17,8 +17,8 @@ export interface people {
 
 export const getUsersFromServer = createAsyncThunk(
   "users/getUsersFromServer",
-  async (url: string) => {
-    return fetch(url)
+  async () => {
+    return fetch('/api/user')
       .then((res) => res.json())
       .then((data) => data);
   }
@@ -76,6 +76,21 @@ export const updateUser = createAsyncThunk(
   async (userBody) => {
     console.log("nnnn : ", userBody);
     return fetch("api/user", {
+      method: "PUT",
+      body: JSON.stringify(userBody),
+      headers: {
+        Content_Type: "application/json"
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+  }
+);
+
+export const updatePassword = createAsyncThunk(
+  "users/updatePassword",
+  async (userBody) => {
+    return fetch("/api/auth/signup/password", {
       method: "PUT",
       body: JSON.stringify(userBody),
       headers: {

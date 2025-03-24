@@ -18,7 +18,7 @@ import Image from "next/image";
 
 export default function HomePageSlider() {
   return (
-    <div className="max-w-full ">
+    <div className="max-w-full  ">
 <Swiper
     slidesPerView={1}
     autoplay={{delay:7000}}

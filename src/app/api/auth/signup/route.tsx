@@ -20,7 +20,8 @@ export async function POST(req: Request,) {
     password,
     img,
     userName,
-    role
+    role,
+    cluster
   } = await req.json();
 
   //validations....
@@ -53,7 +54,8 @@ export async function POST(req: Request,) {
     password: myHashedPassword,
     img,
     userName,
-    role: users !== null ? role : "ADMIN"
+    role: users !== null ? role : "ADMIN",
+    cluster: cluster? cluster : ""
   });
   const response = NextResponse.json({message:'کاربر با موفقیت اضافه شد ...',status:200 });
   response.cookies.set({

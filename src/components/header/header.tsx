@@ -11,11 +11,11 @@ const UserStatusIcon = dynamic(() => import("../UserStatusIcon/UserStatusIcon"),
   ssr: false
 });
 
-export default function header() {
+export default function header({user}) {
   return (
-    <div className="flex flex-col w-screen ">
+    <div className="flex flex-col w-full ">
 
-    <div className='w-screen justify-self-center dark:bg-slate-600 bg-slate-200 flex columns-2 md:columns-3 h-20 justify-between items-center '>
+    <div className='w-full justify-self-center   dark:bg-slate-600 bg-slate-200 flex columns-2 md:columns-3 h-20 justify-between items-center '>
       <div className=' dark:bg-slate-700 bg-slate-200 hidden md:flex md:w-[10%] justify-center items-center h-full'>
         <Image src='/img/logo.webp' width={90} height={90} alt='logo img' />
       </div>

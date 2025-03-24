@@ -5,6 +5,7 @@ import ArticleReducer from './articles/Articles'
 import PostReducer from './posts/Posts'
 import CommentsReducer from './comments/Comments'
 import CourseReducer from './courses/Courses'
+import ClusterReducer from "./clusters/Clusters"
 
 
 const store = configureStore({
@@ -15,6 +16,8 @@ const store = configureStore({
         comments: CommentsReducer,
         courses: CourseReducer,
         menuOptions : menuOptions,
+        clusters: ClusterReducer,
+
     }
 })
 

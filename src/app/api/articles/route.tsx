@@ -22,26 +22,31 @@ export async function POST(req: Request) {
   const {
     articleID,
     title,
-    category,
+    desc,
+    cluster,
     keyWords,
     author,
+    writer,
     publishedDate,
     img,
     articleBody
   } = await req.json();
   console.log('article body : ', articleID,
   title,
-  category,
+  cluster,
   keyWords,
   author,
   publishedDate,
   img,
-  articleBody)
+  articleBody,
+  desc)
   try {
     const article = await articleModel.create({
       articleID,
       title,
-      category,
+      desc,
+      cluster,
+      writer,
       keyWords,
       author,
       publishedDate,
@@ -82,7 +87,7 @@ export async function PUT(req:Request){
       articleID: body.articleID,
       keyWords: body.keyWords,
       title : body.title,
-      category : body.category,
+      cluster : body.cluster,
       author : body.author,
       publishedDate : body.publishedDate,
       img : body.img,

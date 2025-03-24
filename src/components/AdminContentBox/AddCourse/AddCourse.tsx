@@ -7,7 +7,6 @@ import { createANewCourse } from "@/Redux/courses/Courses";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 const { uuid } = require("uuidv4");
 
 const ArticleEditor = dynamic(

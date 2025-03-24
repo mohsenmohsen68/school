@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <Providers>
-      <html lang='en' dir='rtl'>
+      <html lang='en' dir='rtl' suppressHydrationWarning={true}>
         <body className={`${inter.className} relative`}>
           <ThemeProvider attribute='class'>
             <AOSInit />

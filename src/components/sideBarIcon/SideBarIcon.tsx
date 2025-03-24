@@ -22,7 +22,8 @@ import { useDispatch } from "react-redux";
 import { VscAccount } from "react-icons/vsc";
 import { PiListPlus } from "react-icons/pi";
 import { FaRegSquarePlus } from "react-icons/fa6";
-
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { RiUserSettingsLine } from "react-icons/ri";
 
 
 type Props = {
@@ -84,6 +85,9 @@ const dispatch = useDispatch()
         <HiOutlineUserRemove  className="font-light text-lg my-1 " onClick={()=>dispatch(selectOption("REMOVE_USER"))}/>
         <LiaUserEditSolid className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_USER"))}/>
         </div>}
+      {props.showSubMenu && props.title === 'clusters' && <div className="flex flex-col justify-center items-center my-1">
+        <IoIosAddCircleOutline className="font-light text-lg my-1 " onClick={()=>dispatch(selectOption("MANAGE_CLUSTERS"))}/>
+        </div>}
 
       {props.showSubMenu && props.title === 'articles' && <div className="flex flex-col justify-center items-center my-1">
         <TbArticle className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_ARTICLE"))}/>
@@ -93,6 +97,9 @@ const dispatch = useDispatch()
       {props.showSubMenu && props.title === 'courses' && <div className="flex flex-col justify-center items-center my-1">
         <SiGoogleclassroom className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_COURSE"))}/>
         <FaRegSquarePlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_COURSE"))}/>
+        </div>}
+      {props.showSubMenu && props.title === 'setting' && <div className="flex flex-col justify-center items-center my-1">
+        <RiUserSettingsLine className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADMIN_SETTING"))}/>
         </div>}
 
       {props.showSubMenu && props.title === 'posts' && <div className="flex flex-col justify-center items-center my-1">

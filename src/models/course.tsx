@@ -50,7 +50,8 @@ const schema = new mongoose.Schema({
     },
     stisfiction:{
         type : Number,
-        require: true
+        require: true,
+        default:5,
     },
     img:{
         type : String,
@@ -60,8 +61,20 @@ const schema = new mongoose.Schema({
         type : String,
     },
     teacher:{
-        type : String,
+        type : mongoose.Types.ObjectId,
+        ref:'User',
         require: true
+    },
+    cluster:{
+        type:String,
+        require: true
+    },
+    
+    comments:{
+        type:[{
+            type: mongoose.Types.ObjectId,
+            ref: "Comment"
+        }]
     }
 
 })

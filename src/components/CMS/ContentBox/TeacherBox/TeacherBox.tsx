@@ -1,6 +1,7 @@
+"use client"
 import React from 'react'
-import { UseSelector, useSelector,useStore } from 'react-redux'
-import type { AppDispatch, AppStore, RootState } from './../../../../Redux/Store'
+import { useSelector } from 'react-redux'
+import type { RootState } from './../../../../Redux/Store'
 
 export default function TeacherBox() {
 
@@ -10,27 +11,6 @@ const action = useAppSelector(state=>state.menuOptions)
 console.log("action : ", action)
   return (
     <div>
-{/* user menu */}
-      {/* {action === "LIST_USER" && (
-          <div>
-            list user
-          </div>
-      )} */}
-      {/* {action === "ADD_USER" && (
-          <div>
-            add user
-          </div>
-      )}
-      {action === "REMOVE_USER" && (
-          <div>
-            remove user
-          </div>
-      )}
-      {action === "EDIT_USER" && (
-          <div>
-            edit user
-          </div>
-      )} */}
 
       {/* article menu */}
       {action === "ADD_ARTICLE" && (
@@ -40,42 +20,18 @@ console.log("action : ", action)
       )}
       {action === "REMOVE_ARTICLE" && (
           <div>
-            remove article
+           article list
           </div>
       )}
-      {action === "EDIT_ARTICLE" && (
-          <div>
-            edit article
-          </div>
-      )}
-{/* comment menu */}
-{action === "LIST_COMMENT" && (
+      
+
+      {/* comment menu */}
+      {action === "LIST_COMMENT" && (
           <div>
            list comment
           </div>
       )}
-      {action === "VALIDATE_COMMENT" && (
-          <div>
-            validate comment
-          </div>
-      )}
 
-      {/* post menu */}
-      {action === "ADD_POST" && (
-          <div>
-           Add post
-          </div>
-      )}
-      {action === "REMOVE_POST" && (
-          <div>
-            remove post
-          </div>
-      )}
-      {action === "EDIT_POST" && (
-          <div>
-            edit post
-          </div>
-      )}
       {/* course menu */}
       {action === "ADD_COURSE" && (
           <div>
@@ -92,6 +48,11 @@ console.log("action : ", action)
             edit course
           </div>
       )}
+
+      {/* setting profiles */}
+      <div>
+        setting profile
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
+"use client"
 import React from 'react'
-import { UseSelector, useSelector,useStore } from 'react-redux'
-import type { AppDispatch, AppStore, RootState } from './../../../../Redux/Store'
+import { useSelector } from 'react-redux'
+import type {  RootState } from './../../../../Redux/Store'
 
 export default function StudentBox() {
 

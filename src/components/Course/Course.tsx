@@ -49,7 +49,7 @@ const Course = (props: prop): JSX.Element => {
             <div className='font-dana text-sm'>امتیاز</div>
             <Rating
               name='read-only'
-              className='text-sm'
+              className='text-xs'
               value={props.rate}
               readOnly
             />

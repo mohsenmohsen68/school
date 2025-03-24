@@ -1,10 +1,10 @@
-import SignUpModule from "@/components/SignUp/SignUpModule";
+"use client"
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { userData } from "@/components/SignUp/SignUpModule";
-import { UseDispatch, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateUser } from "@/Redux/users/Users";
 import { AppDispatch } from "@/Redux/Store";
 import Image from "next/image";

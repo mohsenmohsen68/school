@@ -29,6 +29,19 @@ const schema = new mongoose.Schema({
     },
     answers : {
         type : [String],
+    },
+    user:{
+        type:mongoose.Types.ObjectId,
+        ref:"User",
+        require : true,
+    },
+    article:{
+        type:mongoose.Types.ObjectId,
+        ref:"Article"
+    },
+    course:{
+        type:mongoose.Types.ObjectId,
+        ref:"Course"
     }
 })
 

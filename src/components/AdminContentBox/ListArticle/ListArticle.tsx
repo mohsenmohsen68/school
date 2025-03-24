@@ -115,17 +115,17 @@ export default function ListArticles() {
       cellClassName:
         "font-dana justify-center item-center text-center dark:text-white",
       headerAlign: "center",
-      width: 200
+      width: 300
     },
     {
-      field: "author",
+      field: "writer",
       headerName: "نویسنده",
       headerClassName:
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
         "font-dana justify-center item-center text-center dark:text-white",
       headerAlign: "center",
-      width: 100
+      width: 200
     },
     {
       field: "publishedDate",
@@ -138,7 +138,7 @@ export default function ListArticles() {
       width: 100
     },
     {
-      field: "category",
+      field: "cluster",
       headerName: "دسته بندی",
       headerClassName:
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",

@@ -14,15 +14,11 @@ const schema = new mongoose.Schema({
         type: String,
 
     },
-    category : {
+    cluster : {
         type:String,
         require : true,
     },
     publishedDate : {
-        type : String,
-        require : true,
-    },
-    author : {
         type : String,
         require : true,
     },
@@ -31,6 +27,29 @@ const schema = new mongoose.Schema({
     },
     articleID:{
         type : String,
+    },
+    comments:{
+        type:[{
+            type: mongoose.Types.ObjectId,
+            ref: "Comment"
+        }]
+    },
+    author:{
+        type:mongoose.Types.ObjectId,
+        ref:"User",
+        require: true,
+    },
+    writer:{
+        type:String,
+        require: true,
+    },
+    rate:{
+        type:Number,
+        default:5,
+    },
+    desc:{
+        type:String,
+        require:true,
     }
 
 })

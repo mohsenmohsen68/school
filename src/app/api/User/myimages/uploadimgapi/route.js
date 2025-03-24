@@ -3,10 +3,10 @@ import connectToDB from "@/utils/connectToDB"
 
 export async function PUT(req) {
   connectToDB
-  const { userCode, img } = await req.json();
-  console.log("usercodee", userCode, "imagee", img)
+  const { userID, img } = await req.json();
+  console.log("usercodee", userID, "imagee", img)
 
-  const user = await userModel.findOneAndUpdate({ userCode }, {
+  const user = await userModel.findOneAndUpdate({ _id:userID }, {
     img
   });
   return Response.json({
