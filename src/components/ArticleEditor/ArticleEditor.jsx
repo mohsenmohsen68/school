@@ -86,7 +86,7 @@ export default function ArticleEditor({
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
-
+console.log("initdata", initData)
   const handleChange = () => {
     onHandleAddArticle(data);
   };

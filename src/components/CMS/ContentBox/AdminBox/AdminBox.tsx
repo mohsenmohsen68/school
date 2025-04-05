@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "./../../../../Redux/Store";
@@ -11,16 +11,15 @@ import ListArticle from "@/components/AdminContentBox/ListArticle/ListArticle";
 import AddPost from "@/components/AdminContentBox/AddPost/AddPost";
 import ListPost from "./../../../AdminContentBox/ListPost/ListPost";
 import ListCourse from "@/components/AdminContentBox/ListCourse/ListCourse";
-import ListComment from "@/components/AdminContentBox/ListComment/ListComment"
+import ListComment from "@/components/AdminContentBox/ListComment/ListComment";
 import AddCourse from "@/components/AdminContentBox/AddCourse/AddCourse";
-import ManageClusters from "@/components/ManageClusters/ManageClusters"
-import AdminSetting from "@/components/AdminSetting/AdminSetting"
+import ManageClusters from "@/components/ManageClusters/ManageClusters";
+import AdminSetting from "@/components/AdminSetting/AdminSetting";
+import ListTicket from "@/components/ListTicket/ListTicket";
 
-export default function AdminBox({user}) {
+export default function AdminBox({ user }) {
   const useAppSelector = useSelector.withTypes<RootState>();
   const action = useAppSelector((state) => state.menuOptions);
-  
-
 
   return (
     <div>
@@ -55,20 +54,26 @@ export default function AdminBox({user}) {
       {/* article menu */}
       {action === "ADD_ARTICLE" && (
         <div>
-          <AddArticle user={JSON.parse(JSON.stringify(user))}/>
+          <AddArticle user={JSON.parse(JSON.stringify(user))} />
         </div>
       )}
       {action === "LIST_ARTICLE" && (
         <div>
-          <ListArticle />
+          <ListArticle user={JSON.parse(JSON.stringify(user))} />
         </div>
       )}
 
       {/* comment menu */}
-      {action === "LIST_COMMENT" && <div>
-        <ListComment/>
-        </div>}
-      {/* {action === "VALIDATE_COMMENT" && <div>validate comment</div>} */}
+      {action === "LIST_COMMENT" && (
+        <div>
+          <ListComment />
+        </div>
+      )}
+      {action === "LIST_TICKET" && (
+        <div>
+          <ListTicket />
+        </div>
+      )}
 
       {/* post menu */}
       {action === "LIST_POST" && (
@@ -82,12 +87,23 @@ export default function AdminBox({user}) {
         </div>
       )}
       {/* course menu */}
-      {action === "LIST_COURSE" && <div><ListCourse/></div>}
-      {action === "ADD_COURSE" && <div><AddCourse/></div>}
+      {action === "LIST_COURSE" && (
+        <div>
+          <ListCourse user={JSON.parse(JSON.stringify(user))} />
+        </div>
+      )}
+      {action === "ADD_COURSE" && (
+        <div>
+          <AddCourse user={JSON.parse(JSON.stringify(user))} />
+        </div>
+      )}
 
       {/* setting menu */}
-      {action === "ADMIN_SETTING" && <div><AdminSetting/></div>}
-      
+      {action === "ADMIN_SETTING" && (
+        <div>
+          <AdminSetting />
+        </div>
+      )}
     </div>
   );
 }

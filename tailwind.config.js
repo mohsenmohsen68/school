@@ -25,10 +25,16 @@ module.exports = {
     },
 
   },
-  plugins: [function ({ addVariant }) {
+  plugins: [
+  function ({ addVariant }) {
     addVariant('child', '&>*');
-    addVariant('child-hover', '&>*:hover');
-  }],
+    addVariant('child-hover', '&>*:hover');  
+  },
+  // require('flowbite/plugin'),
+  require("@xpd/tailwind-3dtransforms"),
+  require('tailwind-scrollbar'),
+],
   darkMode: 'class',
 }
+
 

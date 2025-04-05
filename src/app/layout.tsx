@@ -5,6 +5,8 @@ import { Providers } from "@/Redux/Providers";
 import { ThemeProvider } from "next-themes";
 import AOSInit from "@/utils/AOSInit";
 import ScrollToTop from "@/utils/scrollToTop";
+import Header from "@/components/header/header";
+import { getMe } from "@/utils/getMe";
 require("dotenv").config();
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,16 +17,21 @@ export const metadata: Metadata = {
   icons: "/img/logo.webp"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getMe();
+  console.log("user : ", user);
   return (
     <Providers>
       <html lang='en' dir='rtl' suppressHydrationWarning={true}>
         <body className={`${inter.className} relative`}>
           <ThemeProvider attribute='class'>
+          {/* <div className=' flex justify-center h-full sticky top-0 z-50'>
+              <Header user={JSON.parse(JSON.stringify(user))} />
+            </div> */}
             <AOSInit />
             {children}
           </ThemeProvider>

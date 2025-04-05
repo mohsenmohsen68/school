@@ -13,12 +13,12 @@ export default async function ContentBox(props: propsType) {
     <div>
       {props.cmsType === "teacher" && (
         <div className='w-full h-full '>
-          <TeacherBox />
+          <TeacherBox user={JSON.parse(JSON.stringify(props.user))}/>
         </div>
       )}
       {props.cmsType === "student" && (
         <div className='w-full h-full '>
-          <StudentBox />
+          <StudentBox  user={JSON.parse(JSON.stringify(props.user))}/>
         </div>
       )}
       {props.cmsType === "admin" && (

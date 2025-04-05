@@ -12,7 +12,7 @@ import { deleteCourse, getCoursesFromServer } from "@/Redux/courses/Courses";
 import CoursePreviewHandler from '@/components/CoursePreviewHandler/CoursePreviewHandler'
 import UpdateCourseEditor from "@/components/UpdateCourseEditor/UpdateCourseEditor";
 
-export default function ListCourses() {
+export default function ListCourses({user}) {
   const dispatch = useDispatch<AppDispatch>();
   const courses = useSelector<RootState>((state) => state.courses);
   const [showUpdateCourse,setShowUpdateCourse] = useState(false)

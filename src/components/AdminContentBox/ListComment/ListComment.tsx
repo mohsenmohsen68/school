@@ -30,7 +30,8 @@ const style = {
 
 export default function ListComment() {
   const dispatch = useDispatch<AppDispatch>();
-  const comments = useSelector<RootState>((state) => state.comments);
+  // const comments = useSelector<RootState>((state) => state.comments);
+  const [comments, setComments] = useState([])
   const [showUpdateComment,setShowUpdateComment] = useState(false)
   const [rowData,setRowData] = useState({})
   const [open, setOpen] = React.useState(false);
@@ -74,10 +75,10 @@ export default function ListComment() {
       cancelButtonText:"خیر",
       cancelButtonColor: 'blue'
 
-    }).then(result => {
+    }).then(async result => {
       // the user confirms to remove the selected user ...
       if(result.isConfirmed === true){
-        dispatch(deleteComment(params.row.commentID)).then(result => {
+        const result = await dispatch(deleteComment(params.row._id))
           console.log('remove comment result : ',result)
           if(result.payload.status === 200){
             Toast.fire({
@@ -87,8 +88,8 @@ export default function ListComment() {
                },
               title: "پیام با موفقیت حذف شد ..."
             });
-            dispatch(getCommentsFromServer());
-            
+            const res = await dispatch(getCommentsFromServer());
+            setComments(res.payload.data)
 
           }else if(result.payload.status === 404){
             Toast.fire({
@@ -98,8 +99,7 @@ export default function ListComment() {
                },
               title: "پیامی با این کد وجود ندارد ..."
             });
-          }
-         })         
+          }         
      }
      else{
       console.log("cancel shod ...")
@@ -116,28 +116,27 @@ const showHandler=(params)=>{
   setMyBody(params.row.commentBody)
   setMyTitle(params.row.commentTitle)
   handleOpen()
-
-
 }
 
   const editHandler = async( params ) => {
     console.log('params' , params.row)
     setRowData(params.row)
     setShowUpdateComment(true); 
-
   };
 
 
   const validationHandler = async( params ) => {
    setIsValidComment(prev => !prev)
     const body = {
-      commentID:  params.row.commentID,
+      id: params.row._id,
       commentTitle:  params.row.commentTitle,
       commentBody:  params.row.body,
       commentDate:  params.row.commentDate,
-      commentAuthor:  params.row.commentAuthor,
+      user:  params.row.user,
       commentToBeShown: !params.row.commentToBeShown,
-      answers:  params.row.answers
+      answers:  params.row.answers,
+      score: params.row.score,
+      course: params.row.course,
     };
     console.log(" ----  bodddddddddy ---", body);
     const result = await dispatch(updateComment(body));
@@ -165,7 +164,8 @@ const showHandler=(params)=>{
         icon: "error"
       });
     }
-    dispatch(getCommentsFromServer())
+    const res = await dispatch(getCommentsFromServer());
+      setComments(res.payload.data)
   };
 
 
@@ -198,6 +198,12 @@ const showHandler=(params)=>{
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
         "font-dana justify-center item-center text-center dark:text-white",
+        renderCell: (params)=>{
+          return (
+           <div>{new Intl.DateTimeFormat("fa-IR").format(params.row.commentDate)} 
+           </div>
+          )
+       },
       headerAlign: "center",
       width: 100
     },
@@ -226,8 +232,14 @@ const showHandler=(params)=>{
         "bg-slate-200 dark:bg-slate-700 dark:text-white font-moraba",
       cellClassName:
         "font-dana justify-center item-center text-center dark:text-white",
+        renderCell: (params)=>{
+          return (
+           <div>{params.row.user.firstName} {params.row.user.lastName }
+           </div>
+          )
+       },
       headerAlign: "center",
-      width: 90
+      width: 150
     },
     {
       field: "actions",
@@ -281,19 +293,24 @@ const showHandler=(params)=>{
   ];
 
   const rows = [...comments];
-  console.log('rows' , rows)
+  console.log('rows' , comments)
   // const usersData;
   useEffect(() => {
-    dispatch(getCommentsFromServer("/api/comment"));
+    const a = async()=>{
+      const res = await dispatch(getCommentsFromServer());
+      console.log("res : ",res)
+      setComments(res.payload.data)
+    }
+    a()
   }, []);
   // console.log("user data: ", usersData)
   return (
-    <div className=' '>
+    <div className=' font-dana '>
       { !showUpdateComment && (<Box
         className=''
         sx={{
           height: "85vh",
-          width: "100%"
+          width: "100%",
         }}
       >
         <DataGrid
@@ -302,7 +319,7 @@ const showHandler=(params)=>{
           getRowId={(row) => uuidv4()}
           rows={rows}
           columns={columns}
-          className='bg-slate-200 dark:bg-slate-700'
+          className='bg-slate-200 dark:bg-slate-700 font-dana'
           localeText={faIR.components.MuiDataGrid.defaultProps.localeText}
         />
       </Box>)}
@@ -315,10 +332,10 @@ const showHandler=(params)=>{
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h6" component="h2" className="font-dana">
             {myTitle}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }} className="font-dana">
           {myBody}
           </Typography>
         </Box>

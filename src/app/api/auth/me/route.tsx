@@ -19,3 +19,16 @@ export async function GET( req : Request){
       return Response.json({message:"the user is valid ..",data:user},{status:200})
     }
 }
+
+export async function POST(req) {
+  connectToDB();
+  const { _id } = await req.json();
+  console.log(_id);
+
+  const user = await userModel.findOne({_id});
+  return Response.json({
+      message: "کاربر یافت شد ...",
+      status: 200,
+      data: user,
+  });
+}

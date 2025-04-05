@@ -6,6 +6,7 @@ import PostReducer from './posts/Posts'
 import CommentsReducer from './comments/Comments'
 import CourseReducer from './courses/Courses'
 import ClusterReducer from "./clusters/Clusters"
+import requestReducer from "./request/Request"
 
 
 const store = configureStore({
@@ -17,6 +18,7 @@ const store = configureStore({
         courses: CourseReducer,
         menuOptions : menuOptions,
         clusters: ClusterReducer,
+        requests : requestReducer
 
     }
 })

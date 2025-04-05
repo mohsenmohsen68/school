@@ -147,8 +147,9 @@ export default function ListUsers() {
   };
   const editHandler = async (params) => {
     const userToEdit = await fetch(`/api/user?id=${params.row.userCode}`)
-      .then((res) => res.json())
-      .then((data) => data);
+    .then((res) => res.json())
+    .then(data => data);
+    console.log("ddd :", userToEdit)
     if (userToEdit.status === 200) {
       setUser(userToEdit.data);
       console.log("user to user to edit.", userToEdit.data);

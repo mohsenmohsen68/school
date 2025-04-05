@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Formik, FormikErrors } from "formik";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { AppDispatch } from "@/Redux/Store";
 import Swal from 'sweetalert2'
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
 import Image from "next/image";
+import { getClustersFromServer } from "@/Redux/clusters/Clusters";
 
 const ArticleEditor = dynamic(
   () => import("./../../components/ArticleEditor/ArticleEditor"),
@@ -26,7 +27,7 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
+export default function UpdateArticleEditor( {rowData, onUpdate, user} ):JSX.Element {
   console.log('rrrrr', rowData)
   const dispatch = useDispatch<AppDispatch>()
   const [articleData, setArticleData] = useState(rowData.articleData);
@@ -34,6 +35,21 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
   const [img, setImg] = useState([]);
   const [selectedImage, setSelectedImage] = useState("");
   const [fileName, setFileName] = useState("");
+  const [writer,setWriter] = useState("")
+  const [clusters,setClusters] = useState([])
+
+  const getUserAndClusters =async ()=>{
+    const res = await dispatch(getClustersFromServer())
+    console.log("rs : ", res)
+    setClusters(res.payload.data)
+    const result = fetch(`/api/user?id=${user._id}`).then(res=>res.json()).then(data=>setWriter(`${data.data.firstName} ${data.data.lastName}`))
+    // setWriter(`${result.data.firstName} ${result.data.lastName}`)
+    console.log("returned user : ", writer)
+  }
+  
+    useEffect(()=>{
+      getUserAndClusters()
+    },[])
 
   const handleAddArticle = (data: string) => {
     setArticleData(data);
@@ -89,13 +105,15 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
       <Formik
         initialValues={{
           title: rowData.title,
-          category: rowData.categoty,
-          keyWords: rowData.keyWords
+          cluster: rowData.cluster,
+          keyWords: rowData.keyWords,
+          desc: rowData.desc,
         }}
         validate={(values) => {
           const errors= {
             title: "",
-            category: "",
+            cluster: "",
+            desc:"",
             keyWords: ""
           };
           //firstname validation
@@ -113,15 +131,19 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
           //username validation
 
           //grade validation
-          if (values.category == "") {
-            errors.category = "انتخاب دسته بندی الزامی است.";
+          if (values.cluster == "") {
+            errors.cluster = "انتخاب دسته بندی الزامی است.";
+          }
+          if (values.desc == "") {
+            errors.desc = "وارد کردن توضیحات الزامی است.";
           }
           //role validation
 
           if (
-            errors.category === "" &&
+            errors.cluster === "" &&
             errors.keyWords === "" &&
-            errors.title === ""
+            errors.title === ""&&
+            errors.desc === ""
           ) {
             return {};
           } else {
@@ -130,7 +152,7 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
         }}
         onSubmit={async (values, { setSubmitting }) => {
           console.log("mmmmm", articleData);
-          const author = "mohsen";
+          const author = user._id;
           const d = new Date()
           let year = d.getFullYear();
           let month = d.getMonth();
@@ -141,9 +163,11 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
           const body = {
             articleID:rowData.articleID,
             title: values.title,
-            category: values.category,
+            desc: values.desc,
+            cluster: values.cluster,
             keyWords: values.keyWords,
             author,
+            writer,
             publishedDate,
             img: img ? `/uploads/articlesImage/${fileName} ` : '',
             articleBody:articleData
@@ -223,38 +247,43 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
               </div>
             </div>
 
+            <div className='flex flex-col mt-2 '>
+              <input
+                type='text'
+                name='desc'
+                placeholder='توضیحات ...'
+                className={`bg-slate-200 p-2  outline-none `}
+                onChange={handleChange}
+                value={values.desc}
+                onBlur={handleBlur}
+              />
+              <div className='text-xs text-red-500'>
+                {errors.desc && touched.desc && errors.desc}
+              </div>
+            </div>
+
             <div className=' grid grid-cols-1 md:grid-cols-2'>
               <div className='flex flex-col mt-2'>
                 <select
-                  name='category'
-                  id='category'
+                  name='cluster'
+                  id='cluster'
                   className={`bg-slate-200 p-2 font-moraba  outline-none `}
                   onChange={handleChange}
-                  value={values.category}
+                  value={values.cluster}
                   onBlur={handleBlur}
                 >
                   <option value='-1'>خوشه علمی مربوطه ؟</option>
-                  <option value='ریاضیات'>ریاضیات</option>
-                  <option value='زیست شناسی'>زیست شناسی</option>
-                  <option value='زمین شناسی'>زمین شناسی</option>
-                  <option value='شیمی'>شیمی</option>
-                  <option value='فیزیک'>فیزیک</option>
-                  <option value='برق و الکترونیک'>برق و الکترونیک</option>
-                  <option value='رباتیک'>رباتیک</option>
-                  <option value='برنامه نویسی'>برنامه نویسی</option>
-                  <option value='هوش مصنوعی'>هوش مصنوعی</option>
-                  <option value='نجوم'>نجوم</option>
-                  <option value='انرژی های نوین'>انرژی های نوین</option>
-                  <option value='هوافضا'>هوافضا</option>
+                  {clusters.map(item=><option value={`${item.title}`} key={item._id}>{item.title}</option>)}
+                  
                 </select>
                 <div className='text-xs text-red-500'>
-                  {errors.category && touched.category && errors.category}
+                  {errors.cluster && touched.cluster && errors.cluster}
                 </div>
               </div>
 
-              <div className='flex justify-center items-center mt-2'>
-                {/* articleimage uploader ... */}
-                <label
+              <div className='flex justify-center items-center mt-2 '>
+                
+                  <label
                         htmlFor='file'
                         className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
                       >
@@ -274,14 +303,18 @@ export default function UpdateArticleEditor( {rowData, onUpdate} ):JSX.Element {
                       )}
                       <button
                         className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
-                        onClick={(e) => uploadIMG(e, rowData.articleID)}
+                        onClick={(e) => uploadIMG(e)}
                       >
                         ثبت
                       </button>
 
 
               </div>
+
             </div>
+
+
+            
 
             <div className='w-full'>
               <ArticleEditor onHandleAddArticle={handleAddArticle} imgPath={'/api/articles/image'} initData={rowData.articleBody}/>

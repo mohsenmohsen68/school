@@ -1,10 +1,13 @@
 import commentModel from "@/models/comment";
+import courseModel from "@/models/course";
 import connectToDB from "@/utils/connectToDB";
 
 export async function GET() {
   connectToDB();
   try {
-    const comment = await commentModel.find({});
+    const comment = await commentModel
+      .find({})
+      .populate("user", "firstName lastName").populate("course", "teacher ");
     return Response.json({
       message: "the written comment are sent back to you ...",
       data: comment,
@@ -20,14 +23,14 @@ export async function DELETE(req: Request) {
   const myUrl = new URL(req.url);
   const commentID = myUrl.searchParams.get("id");
   // console.log("request, commentCode : ", prm)
-  const iscommentExist = await commentModel.findOne({ commentID: commentID });
+  const iscommentExist = await commentModel.findOne({ _id: commentID });
   if (!iscommentExist) {
     return Response.json({
       message: "چنین پیغامی وجود ندارد ...",
       status: 404
     });
   } else {
-    await commentModel.findOneAndDelete({ commentID: commentID });
+    await commentModel.findOneAndDelete({ _id: commentID });
     return Response.json({
       message: "پیام مورد نظر حذف گردید ...",
       status: 200
@@ -39,36 +42,40 @@ export async function DELETE(req: Request) {
 export async function POST(req: Request) {
   connectToDB();
   // const data = req.body
-  console.log("req", req);
+  // console.log("req", req);
   const {
-    commentID,
-    commentBody,
     commentTitle,
-    commentAuthor,
+    commentBody,
+    score,
     commentDate,
     commentToBeShown,
-    answers
+    answers,
+    user,
+    course
   } = await req.json();
-  console.log(
-    "hjkjh",
-    commentID,
-    commentBody,
-    commentTitle,
-    commentAuthor,
-    commentDate,
-    commentToBeShown,
-    answers
-  );
+
+  console.log("ct", commentTitle);
+
   try {
     const comment = await commentModel.create({
-      commentID,
-      commentBody,
       commentTitle,
-      commentAuthor,
+      commentBody,
+      score,
       commentDate,
       commentToBeShown,
-      answers
+      answers,
+      user,
+      course
     });
+
+    await courseModel.findOneAndUpdate(
+      { _id: course },
+      {
+        $push: {
+          comments: comment._id
+        }
+      }
+    );
 
     return Response.json({
       message: "نظر با موفقیت ثبت شد ...",
@@ -76,7 +83,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     return Response.json({
-      message: "مشکلی در سمت سرور به وجود آمده است ...",
+      message: err,
       status: 500
     });
   }
@@ -86,18 +93,29 @@ export async function PUT(req: Request) {
   connectToDB();
   // const data = req.body
   const {
-    commentID,
+    id,
     commentBody,
-    commentTitle,
-    commentAuthor,
     commentDate,
     commentToBeShown,
-    answers
+    answers,
+    commentTitle,
+    user,
+    score,
+    course
   } = await req.json();
 
+  console.log("jjj",id,
+    commentBody,
+    commentDate,
+    commentToBeShown,
+    answers,
+    commentTitle,
+    user,
+    score,
+    course)
   //validations....
 
-  const iscommentExist = await commentModel.findOne({ commentID });
+  const iscommentExist = await commentModel.findOne({ _id: id });
   if (!iscommentExist) {
     return Response.json({
       message: "پیامی با این شماره وجود ندارد ...",
@@ -105,15 +123,16 @@ export async function PUT(req: Request) {
     });
   }
   const comment = await commentModel.findOneAndUpdate(
-    { commentID },
+    { _id: id },
     {
-      commentID,
       commentBody,
-      commentTitle,
-      commentAuthor,
       commentDate,
       commentToBeShown,
-      answers
+      answers,
+      commentTitle,
+      user,
+      score,
+      course
     }
   );
   return Response.json({

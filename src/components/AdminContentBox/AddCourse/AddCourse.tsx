@@ -7,6 +7,8 @@ import { createANewCourse } from "@/Redux/courses/Courses";
 import Image from "next/image";
 import Swal from "sweetalert2";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
+import { getClustersFromServer } from "@/Redux/clusters/Clusters";
+import { getUsersFromServer } from "@/Redux/users/Users";
 const { uuid } = require("uuidv4");
 
 const ArticleEditor = dynamic(
@@ -26,13 +28,31 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function AddCourse() {
+export default function AddCourse({user}) {
   const dispatch = useDispatch();
   const [courseData, setCourseData] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
   const [showImage, setShowImage] = useState(false);
   const [fileName, setFileName] = useState("");
   const [img, setImg] = useState([]);
+  const [clusters,setClusters] = useState([])
+  const [teachers,setTeachers] = useState([])
+
+  const getClusters = async () => {
+    const res = await dispatch(getClustersFromServer());
+    console.log("rs : ", res);
+    setClusters(res.payload.data);
+    const userRes = await dispatch(getUsersFromServer())
+    console.log("userRes :", userRes)
+    const allteachers = userRes.payload.data.filter(item =>item.role === "معلم") 
+    setTeachers(allteachers)
+    console.log("teachers :  ", allteachers)
+  };
+
+  useEffect(() => {
+    getClusters();
+  }, []);
+
 
   const handleAddCourse = (data: string) => {
     setCourseData(data);
@@ -52,14 +72,6 @@ export default function AddCourse() {
     const body = await res.json();
     console.log("res :........ ", res, "body.....", body);
     if (res.status === 200) {
-      // const res = await fetch('/api/course/titleImage/uploadimgapi', {
-      //   method: 'PUT',
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify({courseID:id , img: `http://localhost:3000/uploads/usersImage/${body.data}`}),
-      // })
-      // console.log("imgUpload res ..", res)
       setSelectedImage(`http://localhost:3000/uploads/coursesImg/${body.data}`)
       setShowImage(true)
       setFileName(body.data);
@@ -103,6 +115,7 @@ export default function AddCourse() {
           studentNo: "",
           stisfiction: "",
           teacher: "",
+          cluster:"",
           img: ""
         }}
         validate={(values) => {
@@ -116,7 +129,8 @@ export default function AddCourse() {
             preRequisite: "",
             courseType: "",
             studentNo: "",
-            teacher: ""
+            teacher: "",
+            cluster:"",
           };
           //course title validation
           if (!values.title) {
@@ -151,6 +165,9 @@ export default function AddCourse() {
           //course status validation
           if (!values.status) {
             errors.status = "وارد کردن وضعیت دوره الزامی است.";
+          }
+          if (!values.cluster) {
+            errors.cluster = "وارد کردن خوشه علمی دوره الزامی است.";
           }
           //course session validation
           if (!values.sessionNo) {
@@ -201,6 +218,7 @@ export default function AddCourse() {
             errors.preRequisite === "" &&
             errors.courseType === "" &&
             errors.studentNo === "" &&
+            errors.cluster === "" &&
             errors.teacher === ""
           ) {
             return {};
@@ -213,6 +231,7 @@ export default function AddCourse() {
           console.log("img : ", img)
           if (img) {
             const d = new Date();
+            const teacherIdentity = values.teacher.split("-")
             let year = d.getFullYear();
             let month = d.getMonth();
             let day = d.getDay();
@@ -237,7 +256,9 @@ export default function AddCourse() {
               stisfiction: 5,
               img: `/uploads/coursesImg/${fileName} `,
               courseBody: courseData,
-              teacher: values.teacher
+              teacher: teacherIdentity[1],
+              teacherName: teacherIdentity[0],
+              cluster: values.cluster
             };
             console.log(" ----  bodddddddddy ---", body);
             const result = await dispatch(createANewCourse(body));
@@ -451,7 +472,7 @@ export default function AddCourse() {
                 </div>
               </div>
 
-              <div className='flex flex-col mt-2'>
+              <div className='flex flex-col mt-2 font-moraba'>
                 <select
                   name='courseType'
                   id='courseType'
@@ -472,21 +493,54 @@ export default function AddCourse() {
             </div>
 
             <div className=' grid grid-cols-1 md:grid-cols-2'>
+              
+              <div className='flex flex-col mt-2 ml-1'>
+                <select
+                  name='cluster'
+                  id='cluster'
+                  className={`bg-slate-200 p-2 font-moraba  outline-none `}
+                  onChange={handleChange}
+                  value={values.cluster}
+                  onBlur={handleBlur}
+                >
+                  <option value='-1'>خوشه علمی مربوطه ؟</option>
+                  {clusters.map((item) => (
+                    <option value={`${item.title}`} key={item._id}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+                <div className='text-xs text-red-500'>
+                  {errors.cluster && touched.cluster && errors.cluster}
+                </div>
+              </div>
+
               <div className='flex flex-col mt-2 font-moraba'>
-                <input
-                  type='text'
+
+               <select
                   name='teacher'
-                  placeholder=' مدرس دوره  ...'
-                  className={`bg-slate-200 p-2  outline-none `}
+                  id='teacher'
+                  className={`bg-slate-200 p-2 font-moraba  outline-none `}
                   onChange={handleChange}
                   value={values.teacher}
                   onBlur={handleBlur}
-                />
+                >
+                  <option value='-1'>مدرس مربوطه ؟</option>
+                  {teachers.map(item => {
+                    console.log("clstt",values.cluster)
+                    if( item.cluster === values.cluster ){
+                       return <option value={`${item.firstName} ${item.lastName}-${item._id}`} key={item._id} >
+                      {`${item.firstName} ${item.lastName}`}
+                    </option>
+                    }})}
+                </select>
+
                 <div className='text-xs text-red-500'>
                   {errors.teacher && touched.teacher && errors.teacher}
                 </div>
               </div>
             </div>
+
 
             <div className='w-full'>
               <ArticleEditor

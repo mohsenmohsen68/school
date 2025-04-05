@@ -1,9 +1,9 @@
 
 import mongoose from 'mongoose'
-
+require('./course')
 
 const schema = new mongoose.Schema({
-    commentID:{
+    commentTitle : {
         type : String,
         require : true,
     },
@@ -11,13 +11,9 @@ const schema = new mongoose.Schema({
         type : String,
         require : true,
     },
-    commentTitle : {
-        type : String,
-        require : true,
-    },
-    commentAuthor : {
-        type :String,
-        require : true,
+    score:{
+       type:Number,
+       default:5,
     },
     commentDate: {
         type : String,
@@ -28,20 +24,17 @@ const schema = new mongoose.Schema({
         require : true,
     },
     answers : {
-        type : [String],
+        type : String,
     },
     user:{
         type:mongoose.Types.ObjectId,
         ref:"User",
         require : true,
     },
-    article:{
-        type:mongoose.Types.ObjectId,
-        ref:"Article"
-    },
     course:{
         type:mongoose.Types.ObjectId,
-        ref:"Course"
+        ref:"Course",
+        default: "",
     }
 })
 

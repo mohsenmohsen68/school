@@ -9,6 +9,8 @@ import userModel from "@/models/users";
 
 export default async function CMS({user}) {
 
+  console.log("USER ==>>", user)
+
   return (
     <div>
       <div
@@ -38,12 +40,15 @@ export default async function CMS({user}) {
 
       <div className='w-full flex p-1'>
         <div className="w-1/12  h-[calc(100vh-94px)] ">
-          {/* <CmsSidebar cmsType={"teacher"}  /> */}
-          <CmsSidebar cmsType={'admin'} /> 
-          {/* <CmsSidebar cmsType={'student'} />  */}
+          {user.role === "معلم" && <CmsSidebar cmsType={'teacher'} /> }
+          {user.role === "مدیر" && <CmsSidebar cmsType={'admin'} /> }
+          {user.role === "دانش آموز" && <CmsSidebar cmsType={'student'} /> }
         </div>
         <div className='w-11/12  h-[calc(100vh-94px)] '>
-          <ContentBox cmsType={"admin"} user={JSON.parse(JSON.stringify(user))} />
+        {user.role === "معلم" && <ContentBox cmsType={"teacher"} user={JSON.parse(JSON.stringify(user))}/> }
+        {user.role === "مدیر" && <ContentBox cmsType={"admin"} user={JSON.parse(JSON.stringify(user))}/> }
+        {user.role === "دانش آموز" && <ContentBox cmsType={"student"} user={JSON.parse(JSON.stringify(user))}/> }
+          
         </div>
       </div>
     </div>

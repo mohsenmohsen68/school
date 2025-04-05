@@ -91,7 +91,8 @@ export async function PUT(req:Request){
       author : body.author,
       publishedDate : body.publishedDate,
       img : body.img,
-      articleBody : body.articleBody
+      articleBody : body.articleBody,
+      desc: body.desc,
      })
 
      return Response.json({message:'the article updated successfully', status:200})

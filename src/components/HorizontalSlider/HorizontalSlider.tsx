@@ -79,7 +79,7 @@ export default function HorizontalSlider(props: prop): JSX.Element {
       className={styles.swiper}
     >
       {props.courses.map((item) => (
-        <SwiperSlide className={styles.swiperSlide}>
+        <SwiperSlide key={item._id} className={styles.swiperSlide}>
           <Course
             key={item._id}
             title={item.title}

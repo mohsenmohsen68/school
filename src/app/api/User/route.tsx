@@ -16,9 +16,11 @@ export async function GET(req:Request){
              return Response.json({message:"no users available .."})
          }
      }else{
+        
         const isUserExist = await userModel.findOne({
-            $or:[{userName:userID},{ phoneNumber:userID}, {userCode:userID}, {_id:userID}]
+            $or:[{userName:userID},{ phoneNumber:userID}, {userCode:userID}]
         })
+        console.log("is User Exist : ", isUserExist)
         if(isUserExist){
             return Response.json({message:'کاربر با این نام کاربری با شماره همراه وجود دارد ...',status:200,data:isUserExist})
         }else{

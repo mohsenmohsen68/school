@@ -17,7 +17,7 @@ function ArticlePagination({articles}) {
 
     console.log("articles ...",articles)
 let element =[]
-{articles.forEach(item => element.push( <Article title={item.title} img={item.img} writerName={item.author.firstName} writerLastName={item.author.lastName} rate={item.rate}  desc={item.desc} datePublished={item.publishedDate} key={uuidv4()}/>))}
+{articles.forEach(item => element.push( <Article title={item.title} id={item._id} img={item.img} writerName={item.author.firstName} writerLastName={item.author.lastName} rate={item.rate}  desc={item.desc} datePublished={item.publishedDate} key={item._id}/>))}
 
    
 
@@ -28,9 +28,7 @@ let element =[]
 
     return (
         <>
-            <div className=' flex justify-center h-full sticky top-0 z-50'>
-                <Header />
-            </div>
+           
 
 
             <div>
@@ -40,12 +38,12 @@ let element =[]
 
                 <div className='md:container mx-auto '>
                     <div className="p-4 grid gap-y-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {articles.slice((pageNum - 1) * 12, ((pageNum - 1) * 12 + 12 < articles.length ? (pageNum - 1) * 12 + 12 : articles.length)).map((item) => item)}
+                        {element.slice((pageNum - 1) * 12, ((pageNum - 1) * 12 + 12 < element.length ? (pageNum - 1) * 12 + 12 : element.length)).map((item) => item)}
                     </div>
                     <div className='w-full flex justify-center '>
 
                         <Pagination
-                            count={Math.floor(articles.length / 12) + 1}
+                            count={Math.floor(element.length / 12) + 1}
                             page={pageNum}
                             onChange={handleChange}
                             renderItem={(item) => (
@@ -61,9 +59,6 @@ let element =[]
             </div>
 
 
-            <div className='flex justify-center w-full '>
-                <Footer />
-            </div>
         </>
     )
 }

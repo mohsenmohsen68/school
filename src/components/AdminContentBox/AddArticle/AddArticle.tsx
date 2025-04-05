@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { createANewArticle } from "@/Redux/articles/Articles";
-const { uuid } = require('uuidv4');
-import Swal from 'sweetalert2'
+const { uuid } = require("uuidv4");
+import Swal from "sweetalert2";
 import { selectOption } from "@/Redux/CMS/CMSRoutes";
 import Image from "next/image";
 import { getClustersFromServer } from "@/Redux/clusters/Clusters";
@@ -28,44 +28,41 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function AddArticle({user}) {
-
-  
-  const dispatch = useDispatch()
+export default function AddArticle({ user }) {
+  console.log("user ..", user)
+  const dispatch = useDispatch();
   const [articleData, setArticleData] = useState("");
-  const [uploaded,setUploaded] = useState(false)
+  const [uploaded, setUploaded] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [fileName,setFileName] = useState('');
-  const [articleID, setArticleID] = useState("")
+  const [fileName, setFileName] = useState("");
+  const [articleID, setArticleID] = useState("");
   const [showImage, setShowImage] = useState(false);
   const [img, setImg] = useState([]);
-  const [writer,setWriter] = useState("")
-  const [clusters,setClusters] = useState([])
+  const [writer, setWriter] = useState("");
+  const [clusters, setClusters] = useState([]);
 
-const getUserAndClusters =async ()=>{
-  const res = await dispatch(getClustersFromServer())
-  console.log("rs : ", res)
-  setClusters(res.payload.data)
-  const result = fetch(`/api/user?id=${user._id}`).then(res=>res.json()).then(data=>setWriter(`${data.data.firstName} ${data.data.lastName}`))
-  // setWriter(`${result.data.firstName} ${result.data.lastName}`)
-  console.log("returned user : ", writer)
-}
+  const getUserAndClusters = async () => {
+    const res = await dispatch(getClustersFromServer());
+    console.log("rs : ", res);
+    setClusters(res.payload.data);
+    setWriter(`${user.firstName} ${user.lastName}`);
+  };
 
-  useEffect(()=>{
-    getUserAndClusters()
-  },[])
+  useEffect(() => {
+    getUserAndClusters();
+  }, []);
   const handleAddArticle = (data: string) => {
     setArticleData(data);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setUploaded(true);
-  },[uploaded])
+  }, [uploaded]);
 
   const uploadIMG = async (e) => {
     e.preventDefault();
-    setArticleID(uuid())
+    setArticleID(uuid());
     const formData = new FormData();
     console.log("img", img);
     formData.append("img", img);
@@ -84,7 +81,9 @@ const getUserAndClusters =async ()=>{
         },
         title: "عکس بارگذاری شد ..."
       });
-      setSelectedImage(`http://localhost:3000/uploads/articlesImage/${body.data}`);
+      setSelectedImage(
+        `http://localhost:3000/uploads/articlesImage/${body.data}`
+      );
       setShowImage(true);
       setFileName(body.data);
     } else {
@@ -105,14 +104,14 @@ const getUserAndClusters =async ()=>{
           title: "",
           cluster: "",
           keyWords: "",
-          desc:"",
+          desc: ""
         }}
         validate={(values) => {
           const errors = {
             title: "",
             cluster: "",
             keyWords: "",
-            desc:""
+            desc: ""
           };
           //firstname validation
           if (!values.title) {
@@ -151,13 +150,13 @@ const getUserAndClusters =async ()=>{
         onSubmit={async (values, { setSubmitting }) => {
           console.log("mmmmm", articleData);
           const author = user._id;
-          const articleWriter = writer
-          const d = new Date()
+          const articleWriter = writer;
+          const d = new Date();
           let year = d.getFullYear();
           let month = d.getMonth();
           let day = d.getDay();
-          const pdate = new Date(year,month,day)
-          const publishedDate = new Intl.DateTimeFormat('fa-IR').format(pdate);
+          const pdate = new Date(year, month, day);
+          const publishedDate = new Intl.DateTimeFormat("fa-IR").format(pdate);
           const body = {
             articleID,
             title: values.title,
@@ -167,14 +166,14 @@ const getUserAndClusters =async ()=>{
             author,
             writer: articleWriter,
             publishedDate,
-            img:img ? `/uploads/uarticlesImage/${fileName} ` : '',
-            articleBody:articleData,
-            rate:5,
+            img: img ? `/uploads/articlesImage/${fileName} ` : "",
+            articleBody: articleData,
+            rate: 5
           };
-           console.log("my body...",body)
-          const result = await dispatch(createANewArticle(body))
-          console.log('result of adding article :',result.payload.status)
-          if(result.payload.status === 201){
+          console.log("my body...", body);
+          const result = await dispatch(createANewArticle(body));
+          console.log("result of adding article :", result.payload.status);
+          if (result.payload.status === 201) {
             Toast.fire({
               toast: true,
               customClass: {
@@ -185,8 +184,8 @@ const getUserAndClusters =async ()=>{
               title: " مقاله با موفقیت ثبت گردید ...",
               icon: "success"
             });
-            dispatch( selectOption("") ) 
-          }else{
+            dispatch(selectOption(""));
+          } else {
             Toast.fire({
               toast: true,
               customClass: {
@@ -197,9 +196,7 @@ const getUserAndClusters =async ()=>{
               icon: "error"
             });
           }
-
-        }
-      }
+        }}
       >
         {({
           values,
@@ -266,8 +263,11 @@ const getUserAndClusters =async ()=>{
                   onBlur={handleBlur}
                 >
                   <option value='-1'>خوشه علمی مربوطه ؟</option>
-                  {clusters.map(item=><option value={`${item.title}`} key={item._id}>{item.title}</option>)}
-                  
+                  {clusters.map((item) => (
+                    <option value={`${item.title}`} key={item._id}>
+                      {item.title}
+                    </option>
+                  ))}
                 </select>
                 <div className='text-xs text-red-500'>
                   {errors.cluster && touched.cluster && errors.cluster}
@@ -275,39 +275,39 @@ const getUserAndClusters =async ()=>{
               </div>
 
               <div className='flex justify-center items-center mt-2 '>
-                
-                  <label
-                        htmlFor='file'
-                        className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
-                      >
-                        انتخاب عکس
-                      </label>
-                      <input
-                        type='file'
-                        name='img'
-                        id='file'
-                        className='bg-slate-200 p-2'
-                        accept='image/*'
-                        hidden
-                        onChange={(e) => setImg(e.target.files[0])}
-                      />
-                      {showImage && (
-                        <Image src={selectedImage} width={40} height={40} alt='عکس'/>
-                      )}
-                      <button
-                        className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
-                        onClick={(e) => uploadIMG(e)}
-                      >
-                        ثبت
-                      </button>
-
-
+                <label
+                  htmlFor='file'
+                  className='bg-sky-500 border-sky-700 text-white p-2 rounded-lg cursor-pointer hover:bg-sky-300 transition-all delay-75 shadow-xl font-dana text-sm'
+                >
+                  انتخاب عکس
+                </label>
+                <input
+                  type='file'
+                  name='img'
+                  id='file'
+                  className='bg-slate-200 p-2'
+                  accept='image/*'
+                  hidden
+                  onChange={(e) => setImg(e.target.files[0])}
+                />
+                {showImage && (
+                  <Image src={selectedImage} width={40} height={40} alt='عکس' />
+                )}
+                <button
+                  className='p-2 bg-green-500 hover:bg-green-400 rounded-md hover:text-white'
+                  onClick={(e) => uploadIMG(e)}
+                >
+                  ثبت
+                </button>
               </div>
-
             </div>
 
             <div className='w-full'>
-              <ArticleEditor onHandleAddArticle={handleAddArticle} imgPath={'/api/articles/image'} initData={'<p>  من ویرایشگر مقاله های شما هستم ... </p>'}/>
+              <ArticleEditor
+                onHandleAddArticle={handleAddArticle}
+                imgPath={"/api/articles/image"}
+                initData={"<p>  من ویرایشگر مقاله های شما هستم ... </p>"}
+              />
             </div>
 
             <div className='w-full'>

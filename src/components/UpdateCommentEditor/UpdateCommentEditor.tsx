@@ -35,7 +35,8 @@ export default function UpdateCommentEditor({
       <Formik
         initialValues={{
           title: rowData.commentTitle,
-          body: rowData.commentBody
+          body: rowData.commentBody,
+          answers : rowData.answers
         }}
         validate={(values) => {
           const errors = {
@@ -65,13 +66,15 @@ export default function UpdateCommentEditor({
         onSubmit={async (values, { setSubmitting }) => {
           
           const body = {
-            commentID: rowData.commentID,
+            id: rowData._id,
             commentTitle: values.title,
             commentBody: values.body,
-            commentDate: rowData.publishedDate,
-            commentAuthor: rowData.commentAuthor,
+            commentDate: rowData.commentDate,
+            user: rowData.user,
+            course: rowData.course,
+            score: rowData.score,
             commentToBeShown: rowData.commentToBeShown,
-            answers: rowData.answers
+            answers: values.answers
           };
           console.log(" ----  bodddddddddy ---", body);
           const result = await dispatch(updateComment(body));
@@ -135,7 +138,7 @@ export default function UpdateCommentEditor({
 
             <div className=' grid grid-cols-1'>
               <div className='flex flex-col mt-2 font-moraba'>
-                <textarea id="" cols="30" rows="10" name='body'
+                <textarea id="body" cols="30" rows="7" name='body'
                   placeholder=' متن پیام  ...'
                   className={`bg-slate-200 p-2  outline-none `}
                   onChange={handleChange}
@@ -145,6 +148,18 @@ export default function UpdateCommentEditor({
                 <div className='text-xs text-red-500'>
                   {errors.body && touched.body && errors.body}
                 </div>
+              </div>
+            </div>
+
+
+            <div className=' grid grid-cols-1'>
+              <div className='flex flex-col mt-2 font-moraba'>
+                <textarea id="answers" cols="30" rows="7" name='answers'
+                  placeholder=' پاسخ به پیام  ...'
+                  className={`bg-slate-200 p-2  outline-none `}
+                  onChange={handleChange}
+                  value={values.answers}
+                  onBlur={handleBlur} />
               </div>
             </div>
 

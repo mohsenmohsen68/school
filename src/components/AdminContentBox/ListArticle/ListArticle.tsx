@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import UpdateArticleEditor from './../../UpdateArticleEditor/UpdateArticleEditor'
 import ArticlePreviewHandler from "@/components/ArticlePreviewHandler/ArticlePreviewHandler";
 
-export default function ListArticles() {
+export default function ListArticles({user}) {
   const dispatch = useDispatch<AppDispatch>();
   const articles = useSelector<RootState>((state) => state.articles);
   const [showUpdateArticle,setShowUpdateArticle] = useState(false)
@@ -100,7 +100,7 @@ export default function ListArticles() {
 
   };
   const infoHandler = async( params ) => {
-    console.log('params' , params.row)
+    console.log('params' , rowData)
     setRowData(params.row)
     setShowPreviewArticle(true)
     setShowUpdateArticle(false);  
@@ -219,9 +219,9 @@ export default function ListArticles() {
       </Box>)}
 
 
-     {showUpdateArticle && !showPreviewArticle && <UpdateArticleEditor rowData={rowData} onUpdate={updateDone} />}
+     {showUpdateArticle && !showPreviewArticle && <UpdateArticleEditor user={JSON.parse(JSON.stringify(user))} rowData={rowData} onUpdate={updateDone} />}
 
-     {showPreviewArticle && !showUpdateArticle && <ArticlePreviewHandler data={rowData} />}
+     {showPreviewArticle && !showUpdateArticle && <ArticlePreviewHandler data={rowData.articleBody} sentFromCMS={true}/>}
     </div>
   );
 }

@@ -24,7 +24,9 @@ import { PiListPlus } from "react-icons/pi";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { RiUserSettingsLine } from "react-icons/ri";
-
+import { LuMailQuestion } from "react-icons/lu";
+import { FaRegEdit } from "react-icons/fa";
+import { LuView } from "react-icons/lu";
 
 type Props = {
   icon: JSX.Element;
@@ -49,28 +51,31 @@ const dispatch = useDispatch()
      {/* TEACHER ICONS */}
       {props.cmsType === 'teacher' && (<>
 
-      {/* {props.showSubMenu && props.title === 'users' &&  */}
+        {props.showSubMenu && props.title === 'clusters' && <div className="flex flex-col justify-center items-center my-1">
+        <FaRegEdit className="font-light text-lg my-1 " onClick={()=>dispatch(selectOption("MANAGE_CLUSTERS"))}/>
+        <LuView className="font-light text-lg my-1 " onClick={()=>dispatch(selectOption("PREVIEW_CLUSTER"))}/>
+        </div>}
 
       {props.showSubMenu && props.title === 'articles' && <div className="flex flex-col justify-center items-center my-1">
-        <TbArticle className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_ARTICLE"))}/>
-        <TbArticleOff className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_ARTICLE"))}/>
-        <EditNoteIcon className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_ARTICLE"))}/>
+      <TbArticle className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_TEACHER_ARTICLE"))}/>
+        <PiListPlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_TEACHER_ARTICLE"))}/>
+        
         </div>}
 
       {props.showSubMenu && props.title === 'courses' && <div className="flex flex-col justify-center items-center my-1">
-        <TbChalkboard className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_COURSE"))}/>
-        <TbChalkboardOff  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("REMOVE_COURSE"))}/>
-        < LuClipboardEdit className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("EDIT_COURSE"))}/>
+      <SiGoogleclassroom className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_TEACHER_COURSE"))}/>
+        <FaRegSquarePlus className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_TEACHER_COURSE"))}/>
+       
         </div>}
 
-      {props.showSubMenu && props.title === 'posts' && <div className="flex flex-col justify-center items-center my-1">
-        <CgPlayListRemove  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_POST"))}/>
-        <MdOutlinePlaylistAdd className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("ADD_POST"))}/>
-         </div>}
+      
 
       {props.showSubMenu && props.title === 'comments' && <div className="flex flex-col justify-center items-center my-1">
-        <BiCommentDetail  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_COMMENT"))}/>
-        <BiCommentCheck className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("VALIDATE_COMMENT"))}/>
+      <BiCommentDetail  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_TEACHER_COMMENT"))}/>
+      </div>}
+
+        {props.showSubMenu && props.title === 'setting' && <div className="flex flex-col justify-center items-center my-1">
+        <RiUserSettingsLine className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("TEACHER_SETTING"))}/>
         </div>}
         
       </>)}
@@ -109,7 +114,7 @@ const dispatch = useDispatch()
 
       {props.showSubMenu && props.title === 'comments' && <div className="flex flex-col justify-center items-center my-1">
         <BiCommentDetail  className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_COMMENT"))}/>
-        <BiCommentCheck className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("VALIDATE_COMMENT"))}/>
+        <LuMailQuestion className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("LIST_TICKET"))}/>
         </div>}
 
       </>)}
@@ -132,6 +137,9 @@ const dispatch = useDispatch()
         <CiViewList className="font-light text-lg my-1"  onClick={()=>dispatch(selectOption("VIEW_COURSE"))}/>
         </div>}
 
+        {props.showSubMenu && props.title === 'setting' && <div className="flex flex-col justify-center items-center my-1">
+        <RiUserSettingsLine className="font-light text-lg my-1" onClick={()=>dispatch(selectOption("STUDENT_SETTING"))}/>
+        </div>}
 
 
       </>)}
